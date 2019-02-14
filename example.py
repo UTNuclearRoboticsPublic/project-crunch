@@ -47,7 +47,13 @@ def on_script_push():
     # Ask user for installation directory for catkin
     catkin_dir = get_catkin_dir()
     
-    subprocess.run(['bash', 'test.sh', '-p {}'.format(password)], check=True)
+    install_args = [
+        '-c', '{}'.format(catkin_dir), 
+        '-i', '{}'.format(install_dir), 
+        '-p', '{}'.format(password)
+    ]
+    
+    subprocess.run(['bash', 'install.sh', *install_args], check=True)
     # Run sudo prelim stuff
     # Run ros, other packages
     # Run post sudo stuff

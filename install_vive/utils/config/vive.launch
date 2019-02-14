@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="rviz" 
+	type="rviz" 
+	name="rviz"
+	args="-l -d $(find rviz_textured_sphere)/rviz_cfg/vive_launch_config.rviz"
+	output="screen"
+	launch-prefix="/home/btandersen/.steam/ubuntu12_32/steam-runtime/run.sh" />
+</launch>
