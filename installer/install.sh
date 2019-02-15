@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+#
+# Written by John Sigmon and Bryce Fuller
+# 
+# This script does some of the heavy lifting for the install process,
+# including installing the necessary system-wide dependencies and
+# installing ROS if not installed. All of the necessary catkin work-
+# space source code is installed here, although not all of the configuring
+# is done inside this script.
+# 
+# For a complete stand-alone bash installation, please see:
+# https://github.com/UTNuclearRoboticsPublic/ece-senior-design/tree/master/vive/install
+# 
+# That version may become outdated and is considered deprecated and 
+# is replaced with this installer.
 
 #####################################################################
 # Parse args
@@ -8,7 +22,7 @@ MYFILENAME="install.sh"
  
 if [ $# -lt 4 ];
 then
-    echo "[ERROR: $MYFILENAME $LINENO] Fewer than four arguments passed in."
+    echo "[ERROR: $MYFILENAME $LINENO] Incorrect number of arguments passed in."
     exit 1
 fi
 
@@ -35,16 +49,12 @@ case $key in
 esac
 done
 
-BUILD="build"
-SRC="src"
 OPENCV_DEST="video_stream_opencv"
-TXTSPHERE_DEST=""  #TODO
+TXTSPHERE_DEST="rviz_textured_sphere"
 STEAMVR_DEST=""	   #TODO
-LAUNCH="launch"
-CONFIG="config"
-SINGLECAM="single-cam.launch"
-DUALCAM="dual-cam.launch"
 
+mkdir -p "$CATKIN"/"$BUILD"
+mkdir -p "$CATKIN"/"$SRC"
 
 #####################################################################
 # Install dependencies
@@ -83,14 +93,41 @@ fi
 #####################################################################
 # Install OpenCV Video streaming package
 #####################################################################
-mkdir -p "$CATKIN"/"$BUILD"
-mkdir -p "$CATKIN"/"$SRC"
-
+#TODO possibly checkout specific version of repo
 if [ ! -d "$CATKIN"/"$SRC"/"$OPENCV_DEST" ];
 then
     echo "[INFO: $MYFILENAME $LINENO] Installing video_stream_opencv into $CATKIN/$SRC/$OPENCV_DEST"
     git clone https://github.com/ros-drivers/video_stream_opencv.git "$CATKIN"/"$SRC"/"$OPENCV_DEST"/ &&
     echo "[INFO: $MYFILENAME $LINENO] Installed video_stream_opencv into $CATKIN/$SRC/$OPENCV_DEST"
 fi
+
+#####################################################################
+# Install rviz textured sphere
+#####################################################################
+if [ ! -d "$CATKIN"/"$SRC"/"$DEST" ];
+then
+	echo "[INFO: $MYFILENAME $LINENO] Cloning $DEST into $CATKIN/$SRC."
+    git clone https://github.com/UTNuclearRoboticsPublic/rviz_textured_sphere.git "$CATKIN"/"$SRC"/"$DEST" &&
+	echo "[INFO: $MYFILENAME $LINENO] $DEST cloned to $CATKIN/$SRC/$DEST"
+else
+    echo "[INFO: $MYFILENAME $LINENO] $DEST is already cloned, skipping installation."
+fi
+
+##############################
+# rviz file copy 
+##############################
+#TODO update for openhmd install, possibly move into python
+LINETOEDIT=8
+PATHTOLAUNCH="$CATKIN"/"$SRC"/"$DEST"/"$LAUNCH"/"$VIVELAUNCH"
+LINEBEFORE=$(head -"$LINETOEDIT" "$PATHTOLAUNCH" | tail -1)
+    sed -i "8s|.*|        launch-prefix=\"${HOME}/.steam/ubuntu12_32/steam-runtime/run.sh\" />|" "$CATKIN"/"$SRC"/"$DEST"/"$LAUNCH"/"$VIVELAUNCH"
+LINEAFTER=$(head -"$LINETOEDIT" "$PATHTOLAUNCH" | tail -1)
+echo "[INFO: $MYFILENAME $LINENO] $SPHERELAUNCH Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
+
+# Move rviz config file to proper location
+# TODO make this work, currently launches with default config
+#cp $MYPATH/$CONFIG/$RVIZ_CONFIG $CATKIN/$SRC/$DEST/$RVIZ_CONFIG_FOLDER/$RVIZ_CONFIG
+
+
 
 echo "end of script"
