@@ -3,9 +3,15 @@ from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import QObjectCleanupHandler
 import functools
 import sys
+
+#TODO: Run kill_launch.sh on exit
+#TODO: Add "back"  buttons to each page
+#TODO: Make pretty layout
+#TODO: Implement backend (actually configuring stuff/calling launch script)
 
 class GUIWindow(QMainWindow):
 
@@ -50,41 +56,86 @@ class GUIWindow(QMainWindow):
                 outer_self.show()
             return new_function
 
+    #######################################
+    # Logic and page definitions start here
+    #######################################
     @ChangeLayout(size=(250,150),title='Launch System')
     def first_page(self):
         '''Create layout of the first page'''
         layout = QVBoxLayout()
         launcher_button = QPushButton('Launch System')
-        launcher_button.clicked.connect(self.on_launcher_button_click)
+        launcher_button.clicked.connect(self.tutorial_page1)
         advanced_button = QPushButton('Advanced Configurations...')
-        advanced_button.clicked.connect(self.on_advanced_button_click)
+        advanced_button.clicked.connect(self.advanced_page)
         layout.addWidget(launcher_button)
         layout.addWidget(advanced_button)
         return layout
-    
-    @ChangeLayout(size=(400,400))
-    def second_page(self):
+   
+    @ChangeLayout(title="Launch Configurations")
+    def advanced_page(self):
+        # TODO combo box for # Headsets
         layout = QVBoxLayout()
-        one_button = QPushButton('I am the only button on this page')
-        layout.addWidget(one_button)
+        config_and_return_button = QPushButton("Configure and Return")
+        config_and_return_button.clicked.connect(self.on_config_and_return_btn_clicked)
+        layout.addWidget(config_and_return_button)
         return layout
 
-    def on_launcher_button_click(self):
-        print('Running on launcher button click')
-        self.second_page()
+    def on_config_and_return_btn_clicked(self):
+        # TODO: Set config parameters on the backend
+        self.first_page() # Go back to the first page
+    
+    @ChangeLayout(size=(400,400))
+    def tutorial_page1(self):
+        layout = QVBoxLayout()
+        tutorial_text = QLabel("Step 1: Make sure Vive is plugged into base \
+station computer (this computer) and turned on.")
+        done_button = QPushButton('Done')
+        done_button.clicked.connect(self.on_done1_button_click)
+        layout.addWidget(tutorial_text)
+        layout.addWidget(done_button)
+        return layout
 
-    def on_advanced_button_click(self):
-        print("Running on advanced button click")
-    # def advanced_config_page(self):
+    def on_done1_button_click(self):
+        vive_plugged_in = True # TODO: Implement actual check
+        if vive_plugged_in:
+            self.tutorial_page2()
+        else: 
+            print("Error: Vive is not detected") # TODO: Make this text appear on the GUI in Red
+
+    @ChangeLayout()
+    def tutorial_page2(self):
+        layout = QVBoxLayout()
+        tutorial_text = QLabel("Step 2: Make sure cameras are plugged into the \
+robot computer and turned on.")
+        done_button = QPushButton('Done')
+        done_button.clicked.connect(self.on_done2_button_click)
+        layout.addWidget(tutorial_text)
+        layout.addWidget(done_button)
+        return layout
+    
+    def on_done2_button_click(self):
+        cams_plugged_in = True # TODO: Implement actual check
+        if cams_plugged_in:
+            self.launch_system()
+        else: 
+            print("Error: Cameras are not detected") # TODO: Make this text appear on the GUI in Red
+
+    def launch_system(self):
+        self.buffer_page()
+        # TODO: Run base launch script locally with proper configs
+        # TODO: Run the robo launch script remotely with proper configs (if any)
+        # TODO: Launch RViz & hopefully embed it into window & display stats
+    @ChangeLayout()
+    def buffer_page(self):
+        layout = QVBoxLayout()
+        text = QLabel("Launching System...")
+        done_button = QPushButton('Done')
+        done_button.clicked.connect(self.on_done2_button_click)
+        layout.addWidget(text)
+        return layout
         
-   # def walk_through_setup(self):
-
-   # def on_launch_button_push(self):
-      #  walk_through_setup() 
-     
 
 if __name__ == "__main__":
     app = QApplication([sys.argv])
     main_window = GUIWindow()
-    #main_window.show()
     app.exec_()
