@@ -73,7 +73,6 @@ sudo apt-get update
 
 if ! dpkg -s ros-kinetic-desktop-full > /dev/null
 then
-    echo "inside if statement 1"
     # Replaced $(lsb_release -sc) with xenial 
     # shellcheck disable=SC2016
     sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros-latest.list'
