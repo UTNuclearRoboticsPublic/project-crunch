@@ -1,0 +1,13 @@
+# default network config
+# ece-senior-design
+
+# LINE 11 : "address <IP>"
+
+auto lo
+iface lo inet loopback
+
+auto eno1
+iface eno1 inet static
+address 8.8.8.8
+netmask 255.255.255.0
+

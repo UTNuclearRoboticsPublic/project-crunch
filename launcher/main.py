@@ -15,6 +15,7 @@ from PyQt5.QtCore import QObjectCleanupHandler
 from PyQt5.QtCore import QSize
 import functools
 import sys
+import subprocess
 
 #TODO: Run kill_launch.sh on exit
 #TODO: Add "back"  buttons to each page
@@ -119,8 +120,7 @@ class GUIWindow(QMainWindow):
     @ChangeLayout(size=(400,400))
     def tutorial_page1(self):
         layout = QVBoxLayout()
-        tutorial_text = QLabel("Step 1: Make sure Vive is plugged into base \
-station computer (this computer) and turned on.")
+        tutorial_text = QLabel("Step 1: Make sure Vive is plugged into base station computer (this computer) and turned on.")
         done_button = QPushButton('Done')
         done_button.clicked.connect(self.on_done1_button_click)
         layout.addWidget(tutorial_text)
@@ -137,8 +137,7 @@ station computer (this computer) and turned on.")
     @ChangeLayout()
     def tutorial_page2(self):
         layout = QVBoxLayout()
-        tutorial_text = QLabel("Step 2: Make sure cameras are plugged into the \
-robot computer and turned on.")
+        tutorial_text = QLabel("Step 2: Make sure cameras are plugged into the robot computer and turned on.")
         done_button = QPushButton('Done')
         done_button.clicked.connect(self.on_done2_button_click)
         layout.addWidget(tutorial_text)
@@ -154,8 +153,8 @@ robot computer and turned on.")
 
     def launch_system(self):
         self.buffer_page() 
-
         # TODO: Run base launch script locally with proper configs
+        subprocess.call('launch_scripts/base_launch.sh')
         # TODO: Run the robo launch script remotely with proper configs (if any)
         # TODO: Launch RViz & hopefully embed it into window & display stats
     @ChangeLayout()

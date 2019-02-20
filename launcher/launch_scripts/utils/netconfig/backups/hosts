@@ -1,0 +1,11 @@
+# default network config
+# ece-senior-design
+
+# LINE 9 : "<IP> <localhost>"
+# LINE 10 : "<IP> <basehostname>"
+# LINE 11 : "<IP> <robohostname>"
+
+
+127.0.0.1 localhost
+8.8.8.8 great
+9.9.9.9 b8m
