@@ -1,10 +1,18 @@
+###############################################################
+# Purpose:      Creates GUI for the system launcher to wrap the
+#               configuration and launch scripts.
+# Written by:   Kate Baumli
+# Modified:     Wednesday February 20, 2019
+###############################################################
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QLabel
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QObjectCleanupHandler
+from PyQt5.QtCore import QSize
 import functools
 import sys
 
@@ -39,6 +47,8 @@ class GUIWindow(QMainWindow):
                 child = layout.takeAt(0)
                 if child.widget():
                     child.widget().deleteLater()
+                if child.layout():
+                    self.clear_layout(child.layout())
 
         def __call__(inner_self,func):
             @functools.wraps(func) # Just keeps original function's special attributes
@@ -64,25 +74,47 @@ class GUIWindow(QMainWindow):
         '''Create layout of the first page'''
         layout = QVBoxLayout()
         launcher_button = QPushButton('Launch System')
-        launcher_button.clicked.connect(self.tutorial_page1)
-        advanced_button = QPushButton('Advanced Configurations...')
-        advanced_button.clicked.connect(self.advanced_page)
+        launcher_button.clicked.connect(self.tutorial_page0)
+     #   advanced_button = QPushButton('Advanced Configurations...')
+   #     advanced_button.clicked.connect(self.advanced_page)
         layout.addWidget(launcher_button)
-        layout.addWidget(advanced_button)
+      #  layout.addWidget(advanced_button)
         return layout
    
-    @ChangeLayout(title="Launch Configurations")
-    def advanced_page(self):
-        # TODO combo box for # Headsets
+    @ChangeLayout(size=(440,300),title="Launch Configurations")
+    def tutorial_page0(self):
         layout = QVBoxLayout()
-        config_and_return_button = QPushButton("Configure and Return")
-        config_and_return_button.clicked.connect(self.on_config_and_return_btn_clicked)
-        layout.addWidget(config_and_return_button)
+        num_headset_label = QLabel("How many headsets?")
+        
+        # Create horizontal layout for the two buttons
+        btn_hbox = QHBoxLayout()
+
+        one_headset_button = QPushButton(icon=QIcon("one-headset.png"))
+        one_headset_button.setFixedHeight(200)
+        one_headset_button.setFixedWidth(200)
+        one_headset_button.setIconSize(QSize(200,200))
+        one_headset_button.clicked.connect(self.one_headset_config)
+        btn_hbox.addWidget(one_headset_button)
+
+        two_headset_button= QPushButton(icon=QIcon("two-headsets.png"))
+        two_headset_button.setFixedHeight(200)
+        two_headset_button.setFixedWidth(200)
+        one_headset_button.setIconSize(QSize(200,200))
+        two_headset_button.clicked.connect(self.two_headset_config)
+        btn_hbox.addWidget(two_headset_button)
+        
+        layout.addWidget(num_headset_label)
+        layout.addLayout(btn_hbox)
         return layout
 
-    def on_config_and_return_btn_clicked(self):
-        # TODO: Set config parameters on the backend
-        self.first_page() # Go back to the first page
+
+    def one_headset_config(self):
+        #TODO: set config = 1 headset
+        self.tutorial_page1()    
+     
+    def two_headset_config(self):
+        #TODO: set config = 2 headset
+        self.tutorial_page1()    
     
     @ChangeLayout(size=(400,400))
     def tutorial_page1(self):
@@ -122,6 +154,7 @@ robot computer and turned on.")
 
     def launch_system(self):
         self.buffer_page()
+        
         # TODO: Run base launch script locally with proper configs
         # TODO: Run the robo launch script remotely with proper configs (if any)
         # TODO: Launch RViz & hopefully embed it into window & display stats
