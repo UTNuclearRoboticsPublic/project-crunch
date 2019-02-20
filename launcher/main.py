@@ -81,7 +81,7 @@ class GUIWindow(QMainWindow):
       #  layout.addWidget(advanced_button)
         return layout
    
-    @ChangeLayout(size=(440,300),title="Launch Configurations")
+    @ChangeLayout(size=(460,160),title="Launch Configurations")
     def tutorial_page0(self):
         layout = QVBoxLayout()
         num_headset_label = QLabel("How many headsets?")
@@ -90,16 +90,16 @@ class GUIWindow(QMainWindow):
         btn_hbox = QHBoxLayout()
 
         one_headset_button = QPushButton(icon=QIcon("one-headset.png"))
-        one_headset_button.setFixedHeight(200)
-        one_headset_button.setFixedWidth(200)
-        one_headset_button.setIconSize(QSize(200,200))
+        one_headset_button.setFixedHeight(131)
+        one_headset_button.setFixedWidth(224)
+        one_headset_button.setIconSize(QSize(129,222))
         one_headset_button.clicked.connect(self.one_headset_config)
         btn_hbox.addWidget(one_headset_button)
 
         two_headset_button= QPushButton(icon=QIcon("two-headsets.png"))
-        two_headset_button.setFixedHeight(200)
-        two_headset_button.setFixedWidth(200)
-        one_headset_button.setIconSize(QSize(200,200))
+        two_headset_button.setFixedHeight(131)
+        two_headset_button.setFixedWidth(224)
+        two_headset_button.setIconSize(QSize(129,222))
         two_headset_button.clicked.connect(self.two_headset_config)
         btn_hbox.addWidget(two_headset_button)
         
@@ -153,8 +153,8 @@ robot computer and turned on.")
             print("Error: Cameras are not detected") # TODO: Make this text appear on the GUI in Red
 
     def launch_system(self):
-        self.buffer_page()
-        
+        self.buffer_page() 
+
         # TODO: Run base launch script locally with proper configs
         # TODO: Run the robo launch script remotely with proper configs (if any)
         # TODO: Launch RViz & hopefully embed it into window & display stats
