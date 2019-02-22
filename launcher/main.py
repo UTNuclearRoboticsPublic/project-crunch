@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QObjectCleanupHandler
 from PyQt5.QtCore import QSize
@@ -144,16 +145,45 @@ class GUIWindow(QMainWindow):
     def on_done2_button_click(self):
         cams_plugged_in = True # TODO: Implement actual check
         if cams_plugged_in:
-            self.launch_system()
+            self.choose_catkin_directory()
         else: 
             print("Error: Cameras are not detected") # TODO: Make this text appear on the GUI in Red
 
+  #  @ChangeLayout()
+  #  def tutorial_page3(self):
+  #      layout = QVBoxLayout()
+  #      selection_prompt = "Please select your catkin directory"
+  #      layout.addWidget(QLabel(selection_prompt))
+  #      self.choose_catkin_directory()
+  #      return layout
+
+    @ChangeLayout()
+    def choose_catkin_directory(self):
+        # Have the user select her desired catkin workspace
+        layout = QVBoxLayout()
+        double_check_prompt = "Use this catkin directory?"
+        layout.addWidget(QLabel(double_check_prompt))
+        
+        dialog = QFileDialog()
+        finder_layout = QVBoxLayout()
+        finder_layout.addWidget(dialog)
+        selection_prompt = "Please select your catkin directory"
+        text = dialog.getExistingDirectory(QWidget(), selection_prompt)
+        if text != "": #TODO: Error checking for a proper catkin dir
+            self.catkin = str(text)
+            layout.addWidget(QLabel(self.catkin))
+            ok_button = QPushButton("Yes")
+            ok_button.clicked.connect(self.launch_system)
+            layout.addWidget(ok_button)
+        return layout
+
     def launch_system(self):
-        self.buffer_page() 
+        self.buffer_page()
         # TODO: Run base launch script locally with proper configs
-        subprocess.call('launch_scripts/base_launch.sh')
+        subprocess.call(["launch_scripts/base_launch.sh","--catkin",self.catkin])
         # TODO: Run the robo launch script remotely with proper configs (if any)
         # TODO: Launch RViz & hopefully embed it into window & display stats
+
     @ChangeLayout()
     def buffer_page(self):
         layout = QVBoxLayout()
