@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QVBoxLayout,
                             QMessageBox, QInputDialog, QLineEdit, QFileDialog,
-                            QDialogButtonBox, QMainWindow, QLabel)
+                           QDialogButtonBox, QMainWindow, QLabel)
 from PyQt5.QtCore import QObjectCleanupHandler
 import os
 import sys
@@ -8,7 +8,17 @@ from shutil import copyfile
 import subprocess
 import functools
 
-#def get_ip_configs():
+def get_ip_configs():
+
+    # Ask user for custom IP configs
+    ip_configs = get_ip_configs()
+    if ip_configs is None:
+        self.ip_configs = {
+            "robot_ip": "10.0.0.2",
+            "base_ip": "10.0.0.1",
+            "robot_hostname": "base",
+            "base_hostname": "robot"
+        }
 #    """Prompt user for custom IP and hostnames."""
     # https://stackoverflow.com/questions/319279/how-to-validate-ip-address-in-python
 
@@ -18,7 +28,44 @@ import functools
 #    pass #stub
 
 
-def launch_file_config(catkin_dir):
+def exec_install():
+    """Install process on press of install button."""
+
+    install_args = [
+        '-c', '{}'.format(self.catkin_dir), 
+        '-i', '{}'.format(self.install_dir), 
+        '-p', '{}'.format(self.password)
+    ]
+    
+    subprocess.run(['bash', 'install_dependencies.sh', *install_args], check=True)
+
+    # Copy over launch and config files
+    #launch_file_config(catkin_dir)
+
+    if self.current_computer_is_robot == True:
+        isbase = "n"
+    else:
+        isbase = "y"
+
+    install_args = [
+        '--isbase', isbase,
+        '--robotip', ip_configs['robot_ip'], 
+        '--baseip', ip_configs['base_ip'], 
+        '--robothostname', ip_configs['robot_hostname'],
+        '--basehostname', ip_configs['base_hostname'], 
+        '-p', '{}'.format(password)
+    ]
+    subprocess.run(['bash', 'configure_network.sh', *install_args], check=True)
+    subprocess.run(['udevadm', 'control', '--reload-rules'])
+    # Set up main app
+
+    # Set up icons?
+
+    # Remind user to restart and configure ssh keys
+
+    #print('end')
+
+
     """Copy all necessary configuration files into app and catkin."""
     #TODO find location of these files
     #TODO probably remove unnecessary error handling (change to asserts?)
@@ -45,53 +92,6 @@ def launch_file_config(catkin_dir):
     if not os.path.isfile(path_to_vive_launch):
         file_dest = os.path.join(txtsphere_dest_dir, dual_cam_launch)
         copyfile(path_to_vive_launch, file_dest)
-
-    #"""Install process on press of install button."""
-    #
-    # Ask user for custom IP configs
-    #    ip_configs = get_ip_configs()
-    #if ip_configs is None:
-    #    ip_configs = {
-    #        "robot_ip": "10.0.0.2",
-    #        "base_ip": "10.0.0.1",
-    #        "robot_hostname": "base",
-    #        "base_hostname": "robot"
-    #    }
-
-    #install_args = [
-    #    '-c', '{}'.format(catkin_dir), 
-    #    '-i', '{}'.format(install_dir), 
-    #    '-p', '{}'.format(password)
-    #]
-    
-    #subprocess.run(['bash', 'install_dependencies.sh', *install_args], check=True)
-
-    # Copy over launch and config files
-    #launch_file_config(catkin_dir)
-
-    #if computer == "robot":
-    #    isbase = "n"
-    #else:
-    #    isbase = "y"
-
-    #install_args = [
-    #    '--isbase', isbase,
-    #    '--robotip', ip_configs['robot_ip'], 
-    #    '--baseip', ip_configs['base_ip'], 
-    #    '--robothostname', ip_configs['robot_hostname'],
-    #    '--basehostname', ip_configs['base_hostname'], 
-    #    '-p', '{}'.format(password)
-    #]
-    #TODO subprocess command not checked 
-    #subprocess.run(['bash', 'configure_network.sh', *install_args], check=True)
-
-    # Set up main app
-
-    # Set up icons?
-
-    # Remind user to restart and configure ssh keys
-
-    #print('end')
 
 
 class GUIWindow(QMainWindow):
