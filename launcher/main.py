@@ -76,10 +76,7 @@ class GUIWindow(QMainWindow):
         layout = QVBoxLayout()
         launcher_button = QPushButton('Launch System')
         launcher_button.clicked.connect(self.tutorial_page0)
-     #   advanced_button = QPushButton('Advanced Configurations...')
-   #     advanced_button.clicked.connect(self.advanced_page)
         layout.addWidget(launcher_button)
-      #  layout.addWidget(advanced_button)
         return layout
    
     @ChangeLayout(size=(460,160),title="Launch Configurations")
