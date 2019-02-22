@@ -36,7 +36,7 @@ class GUIWindow(QMainWindow):
     def closeEvent(self, event):
         # Override main window's function called when the red X is clicked 
         print("You closed the app!")
-        #TODO: Have this call kill_launch.sh
+        #subprocess.call(["launch_scripts/kill_launch.sh"])
 
 
     def get_env_vars(self):
@@ -177,8 +177,9 @@ class GUIWindow(QMainWindow):
                                bufsize=0)
         # Screen so that process keeps running after ssh closes
         ssh_process.stdin.write("screen\n")
+        # OR ssh root@blah 'screen -S backup -d -m /tmp/robo_launch.sh'
         # Run robo_launch.sh
-        ssh_process.stdin.write("bash tmp/robo_launch.sh --catkin{}\n".format(self.robo_catkin)) # Scre
+        ssh_process.stdin.write("bash tmp/robo_launch.sh --catkin{}\n".format(self.robo_catkin)) 
         # Close ssh
         ssh_process.stdin.close()
 
