@@ -112,21 +112,7 @@ else
     echo "[INFO: $MYFILENAME $LINENO] $DEST is already cloned, skipping installation."
 fi
 
-##############################
-# rviz file copy 
-##############################
-#TODO update for openhmd install, possibly move into python
-LINETOEDIT=8
-PATHTOLAUNCH="$CATKIN"/"$SRC"/"$DEST"/"$LAUNCH"/"$VIVELAUNCH"
-LINEBEFORE=$(head -"$LINETOEDIT" "$PATHTOLAUNCH" | tail -1)
-    sed -i "8s|.*|        launch-prefix=\"${HOME}/.steam/ubuntu12_32/steam-runtime/run.sh\" />|" "$CATKIN"/"$SRC"/"$DEST"/"$LAUNCH"/"$VIVELAUNCH"
-LINEAFTER=$(head -"$LINETOEDIT" "$PATHTOLAUNCH" | tail -1)
-echo "[INFO: $MYFILENAME $LINENO] $SPHERELAUNCH Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
+#####################################################################
+# Install OpenHMD plugin
+#####################################################################
 
-# Move rviz config file to proper location
-# TODO make this work, currently launches with default config
-#cp $MYPATH/$CONFIG/$RVIZ_CONFIG $CATKIN/$SRC/$DEST/$RVIZ_CONFIG_FOLDER/$RVIZ_CONFIG
-
-
-
-echo "end of script"

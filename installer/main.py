@@ -8,28 +8,21 @@ from shutil import copyfile
 import subprocess
 import functools
 
-def get_ip_configs():
-
-    # Ask user for custom IP configs
-    ip_configs = get_ip_configs()
-    if ip_configs is None:
-        self.ip_configs = {
-            "robot_ip": "10.0.0.2",
-            "base_ip": "10.0.0.1",
-            "robot_hostname": "base",
-            "base_hostname": "robot"
-        }
-#    """Prompt user for custom IP and hostnames."""
-    # https://stackoverflow.com/questions/319279/how-to-validate-ip-address-in-python
-
-    # ask if they want to use custom ip, if not then return none
-    # if yes, get them as strings and return a dictionary with the same form
-    # as in on_install_push()
-#    pass #stub
 
 
 def exec_install():
     """Install process on press of install button."""
+
+    # Export Environment Variables to respective machine
+    if self.current_computer_is_robot is True:
+        with open("~/.bashrc", "a") as f:
+            f.write("export ROBO_CATKIN={}".format(self.catkin_dir))
+    else:        
+        with open("~/.bashrc", "a") as f:
+            f.write("export BASE_CATKIN={}".format(self.catkin_dir))
+    with open("~/.bashrc", "a") as f:
+        f.write("export ROBO_HOSTNAME={}".format(self.ip_configs['robot_hostname']))
+        f.write("export PROJECT_CRUNCH_INSTALL_PATH={}".format(self.install_dir)) 
 
     install_args = [
         '-c', '{}'.format(self.catkin_dir), 
@@ -39,36 +32,8 @@ def exec_install():
     
     subprocess.run(['bash', 'install_dependencies.sh', *install_args], check=True)
 
-    # Copy over launch and config files
-    #launch_file_config(catkin_dir)
-
-    if self.current_computer_is_robot == True:
-        isbase = "n"
-    else:
-        isbase = "y"
-
-    install_args = [
-        '--isbase', isbase,
-        '--robotip', ip_configs['robot_ip'], 
-        '--baseip', ip_configs['base_ip'], 
-        '--robothostname', ip_configs['robot_hostname'],
-        '--basehostname', ip_configs['base_hostname'], 
-        '-p', '{}'.format(password)
-    ]
-    subprocess.run(['bash', 'configure_network.sh', *install_args], check=True)
-    subprocess.run(['udevadm', 'control', '--reload-rules'])
-    # Set up main app
-
-    # Set up icons?
-
-    # Remind user to restart and configure ssh keys
-
-    #print('end')
-
-
     """Copy all necessary configuration files into app and catkin."""
     #TODO find location of these files
-    #TODO probably remove unnecessary error handling (change to asserts?)
     single_cam_launch = 'single-cam.launch'
     dual_cam_launch = 'dual-cam.launch'
     vive_launch = 'vive.launch'
@@ -93,6 +58,31 @@ def exec_install():
         file_dest = os.path.join(txtsphere_dest_dir, dual_cam_launch)
         copyfile(path_to_vive_launch, file_dest)
 
+    if self.current_computer_is_robot == True:
+        isbase = "n"
+    else:
+        isbase = "y"
+
+    install_args = [
+        '--isbase', isbase,
+        '--robotip', self.ip_configs['robot_ip'], 
+        '--baseip', self.ip_configs['base_ip'], 
+        '--robothostname', self.ip_configs['robot_hostname'],
+        '--basehostname', self.ip_configs['base_hostname'], 
+        '-p', '{}'.format(password)
+    ]
+    subprocess.run(['bash', 'configure_network.sh', *install_args], check=True)
+    subprocess.run(['udevadm', 'control', '--reload-rules'])
+    # Set up main app
+
+    # Set up icons?
+
+    # Remind user to restart and configure ssh keys
+
+    #print('end')
+
+
+
 
 class GUIWindow(QMainWindow):
     password = ""
@@ -109,6 +99,12 @@ class GUIWindow(QMainWindow):
         self.setCentralWidget(self.main_widget)
         self.main_widget.setLayout(QVBoxLayout())
         self.first_page()
+        self.ip_configs = {
+            "robot_ip": "10.0.0.2",
+            "base_ip": "10.0.0.1",
+            "robot_hostname": "base",
+            "base_hostname": "robot"
+        }
     
     class ChangeLayout:
         ''' 
@@ -274,7 +270,12 @@ class GUIWindow(QMainWindow):
 
         return layout
  
-   
+	def get_ip_configs():
+	    """Prompt user for custom IP and hostnames."""
+ 	     # https://stackoverflow.com/questions/319279/how-to-validate-ip-address-in-python	
+   	     # TODO Ask user for custom IP (y/n)
+	     	# If yes, override defaults. Else return.
+
 if __name__ == "__main__":
     app = QApplication([sys.argv])
     main_window = GUIWindow()
