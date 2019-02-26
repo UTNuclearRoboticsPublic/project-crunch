@@ -192,34 +192,31 @@ class AppContext(ApplicationContext):
         Prompt user for whether they want custom IP and hostnames.
 
         """
-        #TODO make this take in four inputs
         widget = QWidget()
-        layout = QVBoxLayout()
         base_ip_dialog = QInputDialog()
         robot_ip_dialog = QInputDialog()
         base_hostname_dialog = QInputDialog()
         robot_hostname_dialog = QInputDialog()
-        layout.addWidget(
-                base_ip_dialog,
-#                robot_ip_dialog,
-#                base_hostname_dialog,
-#                robot_hostname_dialog,
-        )
-        text, ok = base_ip_dialog.getMultiLineText(
-                widget, 
-                '', 
-                'Please enter the desired IP address for the base station.\n\
+        base_ip, ok_1 = base_ip_dialog.getText(
+                widget,
+                '',
+                'Enter the desired IP for the base station.\n\
                         Leave this field blank to use the defaults.', 
                 QLineEdit.Normal, 
-                ""
-        ) 
-        if ok:
-
-            self.first_page()
+                '' 
+        )#TODO this structure works just finish writing it 
+        if ok_1:
+            robot_ip, ok_2 = robot_ip_dialog.getText(
+                    widget,
+                    '',
+                    'Enter the desired IP for the robot station.\n\
+                            Leave this field blank to use the defaults.', 
+                    QLineEdit.Normal, 
+                    '' 
+            )
         else:
             self.password = None
             self.first_page()
-        return layout 
     
     def exec_install(self):
         """
@@ -284,10 +281,14 @@ class AppContext(ApplicationContext):
         single_cam_launch = 'single-cam.launch'
         dual_cam_launch = 'dual-cam.launch'
         vive_launch = 'vive.launch'
+        openhmd_rules = '50-openhmd.rules'
         opencv_dir = 'video_stream_opencv'
         txtsphere_dir = 'rviz_textured_sphere'
-        txtsphere_dest_dir = os.path.join(catkin_dir, 'src', opencv_dir, 'launch')
+        openhmd_dir = ''
+
+        txtsphere_dest_dir = os.path.join(catkin_dir, 'src', txtsphere_dir, 'launch')
         opencv_dest_dir = os.path.join(catkin_dir, 'src', opencv_dir, 'launch')
+        openhmd_dest_dir = '/etc/udev/rules'
 
         # Copy single cam launch
         file_dest = os.path.join(opencv_dest_dir, single_cam_launch)
@@ -300,10 +301,20 @@ class AppContext(ApplicationContext):
             copyfile(self.get_resource(dual_cam_launch), file_dest)
         
         # Copy rviz launch file
-        file_dest = os.path.join(txtsphere_dest_dir, dual_cam_launch)
+        file_dest = os.path.join(txtsphere_dest_dir, vive_launch)
         if not os.path.isfile(file_dest):
             copyfile(self.get_resource(vive_launch), file_dest)
 
+        # Copy OpenHMD rules file (requires reloading system rules later
+        # via udevadm)
+        file_dest = os.path.join(openhmd_dest_dir, openhmd_rules)
+        if not os.path.isfile(file_dest):
+            #TODO run this as sudo in bash
+            copyfile(self.get_resource(openhmd_rules), file_dest)
+
+        # Reload rules, necessary for OpenHMD install
+        subprocess.run(['udevadm', 'control', '--reload-rules'])
+        
         # Set up network configurations via /etc/hostnames
         if self.current_computer_is_robot == True:
             isbase = "n"
@@ -326,9 +337,6 @@ class AppContext(ApplicationContext):
                 ], 
                 check=True
         )
-        
-        # Reload rules, necessary for OpenHMD install
-        subprocess.run(['udevadm', 'control', '--reload-rules'])
         
         
         # Set up main app

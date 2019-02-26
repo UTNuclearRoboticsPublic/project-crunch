@@ -11,7 +11,7 @@
 # For a complete stand-alone bash installation, please see:
 # https://github.com/UTNuclearRoboticsPublic/ece-senior-design/tree/master/vive/install
 # 
-# That version may become outdated and is considered deprecated and 
+# The linked version above may become outdated and is considered deprecated and 
 # is replaced with this installer.
 
 #####################################################################
@@ -51,7 +51,7 @@ done
 
 OPENCV_DEST="video_stream_opencv"
 TXTSPHERE_DEST="rviz_textured_sphere"
-STEAMVR_DEST=""	   #TODO
+OPENHMD_DEST="rviz_openhmd"
 
 mkdir -p "$CATKIN"/"$BUILD"
 mkdir -p "$CATKIN"/"$SRC"
@@ -103,16 +103,63 @@ fi
 #####################################################################
 # Install rviz textured sphere
 #####################################################################
-if [ ! -d "$CATKIN"/"$SRC"/"$DEST" ];
+if [ ! -d "$CATKIN"/"$SRC"/"$TXTSPHERE_DEST" ];
 then
-	echo "[INFO: $MYFILENAME $LINENO] Cloning $DEST into $CATKIN/$SRC."
-    git clone https://github.com/UTNuclearRoboticsPublic/rviz_textured_sphere.git "$CATKIN"/"$SRC"/"$DEST" &&
-	echo "[INFO: $MYFILENAME $LINENO] $DEST cloned to $CATKIN/$SRC/$DEST"
+	echo "[INFO: $MYFILENAME $LINENO] Cloning $TXTSPHERE_DEST into $CATKIN/$SRC."
+    git clone https://github.com/UTNuclearRoboticsPublic/rviz_textured_sphere.git "$CATKIN"/"$SRC"/"$TXTSPHERE_DEST" &&
+	echo "[INFO: $MYFILENAME $LINENO] $TXTSPHERE_DEST cloned to $CATKIN/$SRC/$TXTSPHERE_DEST"
 else
-    echo "[INFO: $MYFILENAME $LINENO] $DEST is already cloned, skipping installation."
+    echo "[INFO: $MYFILENAME $LINENO] $TXTSPHERE_DEST is already cloned, skipping installation."
 fi
 
 #####################################################################
 # Install OpenHMD plugin
 #####################################################################
+echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
+                        libglu1-mesa-dev \
+                        mesa-common-dev \
+                        libogre-1.9-dev \
+                        libudev-dev \
+                        libusb-1.0-0-dev \
+                        libfox-1.6-dev \
+                        autotools-dev \
+                        autoconf \
+                        automake \
+                        libtool \
+                        libsdl2-dev \
+                        libxmu-dev \
+                        libxi-dev \
+                        libgl-dev \
+                        libglew1.5-dev \
+                        libglew-dev \
+                        libglewmx1.5-dev \
+                        libglewmx-dev \
+                        libhidapi-dev \
+                        freeglut3-dev
 
+# Install OpenHMD Lib inside our install folder
+if [ ! -d "$INSTALL"/OpenHMD ];
+then
+	echo "[INFO: $MYFILENAME $LINENO] Cloning OpenHMD Lib into $INSTALL."
+    git clone https://github.com/OpenHMD/OpenHMD.git "$INSTALL"/OpenHMD #TODO extra slash here??
+    cd "$INSTALL"/OpenHMD || exit 1
+    git checkout 4ca169b49ab4ea4bee2a8ea519d9ba8dcf662bd5
+    cmake .
+    make
+    ./autogen.sh
+    ./configure
+    make
+    cd - || exit 1
+else
+    echo "[INFO: $MYFILENAME $LINENO] OpenHMD Lib is already cloned, skipping installation."
+fi
+
+# Install the OpenHMD plugin
+if [ ! -d "$CATKIN"/"$SRC"/"$OPENHMD_DEST" ];
+then
+	echo "[INFO: $MYFILENAME $LINENO] Cloning $OPENHMD_DEST into $CATKIN/$SRC."
+    git clone https://github.com/UTNuclearRoboticsPublic/#TODO.git "$CATKIN"/"$SRC"/"$OPENHMD_DEST" &&
+	echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_DEST cloned to $CATKIN/$SRC/$OPENHMD_DEST"
+else
+    echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_DEST is already cloned, skipping installation."
+fi
