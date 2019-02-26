@@ -3,3 +3,6 @@
 .e/
 .venv/
 
+# Compiled code
+target/
+__pycache__/
