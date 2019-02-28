@@ -18,14 +18,20 @@ import functools
 import sys
 import subprocess
 import os
-#TODO: Run kill_launch.sh on exit
+from fbs_runtime.application_context import ApplicationContext
 #TODO: Add "back"  buttons to each page
 #TODO: Make layout pretty
 
 class GUIWindow(QMainWindow):
 
-    def __init__(self):
+    def __init__(self,one_headest_img,two_headset_img, robo_launch,
+                    base_launch, kill_launch):
         super(GUIWindow, self).__init__()
+        self.one_headset_img = one_headset_img
+        self.two_headset_img = two_heaset_img
+        self.robo_launch = robo_launch
+        self.base_launch = base_launch
+        self.kill_launch = kill_launch
         # Setup central widget for the window
         self.main_widget = QWidget(self)
         self.setCentralWidget(self.main_widget)
@@ -36,7 +42,7 @@ class GUIWindow(QMainWindow):
     def closeEvent(self, event):
         # Override main window's function called when the red X is clicked 
         print("You closed the app!")
-        #subprocess.call(["launch_scripts/kill_launch.sh"])
+        #subprocess.call([self.kill_launch])
 
 
     def get_env_vars(self):
@@ -54,7 +60,6 @@ class GUIWindow(QMainWindow):
         def __init__(self, size=None, title=None):
             self.size = size
             self.title = title
-            self.catkins= dict() # Will store both robo and base catkin dirs
 
         def clear_layout(self,layout):
             while layout.count():
@@ -100,14 +105,14 @@ class GUIWindow(QMainWindow):
         # Create horizontal layout for the two buttons
         btn_hbox = QHBoxLayout()
 
-        one_headset_button = QPushButton(icon=QIcon("one-headset.png"))
+        one_headset_button = QPushButton(icon=QIcon(self.one_headset_img))
         one_headset_button.setFixedHeight(131)
         one_headset_button.setFixedWidth(224)
         one_headset_button.setIconSize(QSize(129,222))
         one_headset_button.clicked.connect(self.one_headset_config)
         btn_hbox.addWidget(one_headset_button)
 
-        two_headset_button= QPushButton(icon=QIcon("two-headsets.png"))
+        two_headset_button= QPushButton(icon=QIcon(self.two_headest_img))
         two_headset_button.setFixedHeight(131)
         two_headset_button.setFixedWidth(224)
         two_headset_button.setIconSize(QSize(129,222))
@@ -141,8 +146,10 @@ class GUIWindow(QMainWindow):
         vive_plugged_in = True # TODO: Implement actual check
         if vive_plugged_in:
             self.tutorial_page2()
-        else: 
-            print("Error: Vive is not detected") # TODO: Make this text appear on the GUI in Red
+        else:
+            error_label = QLabel("Error: Vive is not detected") #TODO: This doesnt work lol
+            self.main_widget.layout.addWidget(error_label)
+            #print("Error: Vive is not detected") # TODO: Make this text appear on the GUI in Red
 
     @ChangeLayout()
     def tutorial_page2(self):
@@ -167,7 +174,7 @@ class GUIWindow(QMainWindow):
 
     def launch_robo(self):
         robo_client = self.robo_username + "@" + self.robo_hostname
-        scp_cmd = "scp launch_scripts/robo_launch.sh {}:tmp/robo_launch.sh".format(robo_client)
+        scp_cmd = "scp {} {}:tmp/robo_launch.sh".format(self.robo_launch, robo_client)
         subprocess.call(scp_cmd.split(" "))
         
         ssh_process = subprocess.Popen(['ssh',robo_client],
@@ -183,11 +190,29 @@ class GUIWindow(QMainWindow):
         # Close ssh
         ssh_process.stdin.close()
 
-
     def launch_base(self):
-        subprocess.call(["launch_scripts/base_launch.sh","--catkin",self.base_catkin])
+        subprocess.call([self.base_launch,"--catkin",self.base_catkin])
     
+
+class AppContext(ApplicationContext):
+    def run(self):
+        # Get resources from resources folder
+        # one headset image
+        one_headset_img = self.get_resource("one-headset.png")
+        # two headset image
+        two_headset_img = self.get_resource("two-headset.png")
+        # robo_launch.sh
+        robo_launch = self.get_resource("robo_launch.sh")
+        # base_launch.sh
+        base_launch = self.get_resource("base_launch.sh")
+        # kill_launch.sh
+        kill_launch = self.get_resource("kill_launch.sh")
+        main_window = GUIWindow(one_headset_img,two_headset_image,robo_launch,
+                        base_launch, kill_launch)
+        return self.app.exec_()
+        
 if __name__ == "__main__":
-    app = QApplication([sys.argv])
-    main_window = GUIWindow()
-    app.exec_()
+    appctxt = AppContext()
+    exit_code = appctxt.run()
+    sys.exit(exit_code)
+    
