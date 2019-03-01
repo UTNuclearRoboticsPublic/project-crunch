@@ -46,12 +46,26 @@ case $key in
     shift
     shift
     ;;
+    --openhmdrules)
+    OPENHMDRULES=$2
+    shift
+    shift
+    ;;
+    --viveconf)
+    VIVECONF=$2
+    shift
+    shift
+    ;;
 esac
 done
 
 OPENCV_DEST="video_stream_opencv"
 TXTSPHERE_DEST="rviz_textured_sphere"
 OPENHMD_DEST="rviz_openhmd"
+OPENHMDRULES_DEST="/etc/udev/rules/"
+VIVECONF_DEST="/usr/share/x11/xorg.conf.d/"
+BUILD="build"
+SRC="src"
 
 mkdir -p "$CATKIN"/"$BUILD"
 mkdir -p "$CATKIN"/"$SRC"
@@ -158,8 +172,63 @@ fi
 if [ ! -d "$CATKIN"/"$SRC"/"$OPENHMD_DEST" ];
 then
 	echo "[INFO: $MYFILENAME $LINENO] Cloning $OPENHMD_DEST into $CATKIN/$SRC."
-    git clone https://github.com/UTNuclearRoboticsPublic/#TODO.git "$CATKIN"/"$SRC"/"$OPENHMD_DEST" &&
+    git clone https://github.com/UTNuclearRoboticsPublic/rviz_openhmd.git "$CATKIN"/"$SRC"/"$OPENHMD_DEST" &&
 	echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_DEST cloned to $CATKIN/$SRC/$OPENHMD_DEST"
 else
     echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_DEST is already cloned, skipping installation."
 fi
+
+#####################################################################
+# Vive and OpenHMD configuration
+#####################################################################
+# NVIDIA drivers
+# Add apt-repo updates list of available drivers (which requires the user to hit enter)
+# Checks for recommended drivers and installs them
+echo | sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt update
+DRIVER=$(sudo ubuntu-drivers devices | grep "recommended" | awk '{print $3}')
+if dpkg -s "$DRIVER" &> /dev/null
+then
+    echo "[INFO: $MYFILENAME $LINENO] The recommended graphics drivers ($DRIVER) are already installed." 
+else
+    sudo apt-get -y install "$DRIVER" &&
+    echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
+fi
+
+# Copy over configuration files #TODO what are these for @Beathan
+if ! sudo cp "$OPENHMDRULES" "$OPENHMDRULES_DEST"
+then
+echo "[ERROR: $MYFILENAME $LINENO] Copy $OPENHMDRULES to $OPENHMDRULES_DEST failed"
+    exit 1
+fi
+
+# Updates rules in OS for USB port access by OpenHMD plugin that come from the
+# modified openHMD rules file above.
+sudo udevadm control --reload-rules
+
+if ! sudo cp "$VIVECONF" "$VIVECONF_DEST"
+then
+    echo "[ERROR: $MYFILENAME $LINENO] Copy $VIVECONF to $VIVECONF_DEST failed"
+    exit 1
+fi
+
+# Edit files #TODO fix these comments @Beathan
+# Point source file to location of "resources" file.
+LINETOEDIT=73
+FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_DEST"/"$SRC"/openhmd_display.cpp
+LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
+sed -i "${LINETOEDIT}s|.*|    mResourcesCfg = \"${CATKIN}/src/rviz_openhmd/src/resources.cfg\";|" "$FILETOEDIT"
+LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
+echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
+
+# Point resource file to openHMD plugin source code @Beathan
+LINETOEDIT=3
+FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_DEST"/"$SRC"/resources.cfg
+LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
+sed -i "${LINETOEDIT}s|.*|FileSystem=${CATKIN}/src/rviz_openhmd/src/resources/|" "$FILETOEDIT"
+LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
+echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
+
+# Change permissions on USB ports to all users
+# Note potential vulnerability ? @Beathan
+sudo chmod a+rw /dev/hidraw/*

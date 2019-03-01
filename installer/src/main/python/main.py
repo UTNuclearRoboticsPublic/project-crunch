@@ -260,17 +260,21 @@ class AppContext(ApplicationContext):
             ) 
 
         # Set up catkin workspace and install dependencies.
+        # Script also sets up local hardware configurations for
+        # Vive and OpenHMD.
         # Bash arguments are passed in via a dictionary and must match the
         # command line arguments of the script.
         install_args = [
             '-c', '{}'.format(self.catkin_dir), 
             '-i', '{}'.format(self.install_dir), 
             '-p', '{}'.format(self.password)
+            '--openhmdrules', ''.format(self.get_resource('50-openhmd.rules'))
+            '--viveconf', ''.format(self.get_resource('50-Vive.conf'))
         ]
         subprocess.run(
                 [
                     'bash', 
-                    self.get_resources('install_dependencies.sh'), 
+                    self.get_resources('install.sh'), 
                     *install_args
                 ], 
                 check=True
@@ -281,14 +285,11 @@ class AppContext(ApplicationContext):
         single_cam_launch = 'single-cam.launch'
         dual_cam_launch = 'dual-cam.launch'
         vive_launch = 'vive.launch'
-        openhmd_rules = '50-openhmd.rules'
         opencv_dir = 'video_stream_opencv'
         txtsphere_dir = 'rviz_textured_sphere'
-        openhmd_dir = ''
 
         txtsphere_dest_dir = os.path.join(catkin_dir, 'src', txtsphere_dir, 'launch')
         opencv_dest_dir = os.path.join(catkin_dir, 'src', opencv_dir, 'launch')
-        openhmd_dest_dir = '/etc/udev/rules'
 
         # Copy single cam launch
         file_dest = os.path.join(opencv_dest_dir, single_cam_launch)
@@ -305,23 +306,13 @@ class AppContext(ApplicationContext):
         if not os.path.isfile(file_dest):
             copyfile(self.get_resource(vive_launch), file_dest)
 
-        # Copy OpenHMD rules file (requires reloading system rules later
-        # via udevadm)
-        file_dest = os.path.join(openhmd_dest_dir, openhmd_rules)
-        if not os.path.isfile(file_dest):
-            #TODO run this as sudo in bash
-            copyfile(self.get_resource(openhmd_rules), file_dest)
-
-        # Reload rules, necessary for OpenHMD install
-        subprocess.run(['udevadm', 'control', '--reload-rules'])
-        
         # Set up network configurations via /etc/hostnames
         if self.current_computer_is_robot == True:
             isbase = "n"
         else:
             isbase = "y"
 
-        install_args = [
+        ip_args = [
             '--isbase', isbase,
             '--robotip', self.ip_configs['robot_ip'], 
             '--baseip', self.ip_configs['base_ip'], 
@@ -333,7 +324,7 @@ class AppContext(ApplicationContext):
                 [
                     'bash', 
                     self.get_resource('configure_network.sh'), 
-                    *install_args
+                    *ip_args
                 ], 
                 check=True
         )
