@@ -25,9 +25,13 @@ case $key in
 esac
 done
 
-ssh-keygen -f id_rsa -t rsa -N '' || exit 1
-echo "$ROBOT_PASSWORD" > .tmp.txt
-sshpass -f .tmp.txt ssh-copy-id "$ROBOT_USER"@"$ROBOT_HOSTNAME" || exit 1 
+ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' || exit 1
+sshpass -p "$ROBOT_PASSWORD" ssh-copy-id "$ROBOT_USER"@"$ROBOT_HOSTNAME" || exit 1 
+ROBOT_PASSWORD=""
+
+ssh -i "$ROBOT_USER"@"$ROBOT_HOSTNAME" || echo "Unable to ssh into Robot after ssh key configuration" && exit 1
+
+printenv | grep "ROBO_CATKIN"   
 
 # stash ssh command
 # ssh root@remoteserver 'screen -S backup -d -m /root/backup.sh'
