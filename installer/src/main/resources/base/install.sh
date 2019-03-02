@@ -61,11 +61,12 @@ done
 
 OPENCV_DEST="video_stream_opencv"
 TXTSPHERE_DEST="rviz_textured_sphere"
-OPENHMD_DEST="rviz_openhmd"
+OPENHMD_PLUGIN_DEST="rviz_openhmd"
 OPENHMDRULES_DEST="/etc/udev/rules/"
 VIVECONF_DEST="/usr/share/x11/xorg.conf.d/"
 BUILD="build"
 SRC="src"
+OPENHMD_INSTALL_DEST="$INSTALL/OpenHMD"
 
 mkdir -p "$CATKIN"/"$BUILD"
 mkdir -p "$CATKIN"/"$SRC"
@@ -78,6 +79,7 @@ echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
                         cmake=3.5.1-1ubuntu3\
                         git\
                         libgtest-dev=1.7.0-4ubuntu1\
+                        sshpass\
                         v4l-utils=1.10.0-1 2>&1
 
 #####################################################################
@@ -152,11 +154,11 @@ echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
                         freeglut3-dev
 
 # Install OpenHMD Lib inside our install folder
-if [ ! -d "$INSTALL"/OpenHMD ];
+if [ ! -d "$OPENHMD_INSTALL_DEST" ];
 then
 	echo "[INFO: $MYFILENAME $LINENO] Cloning OpenHMD Lib into $INSTALL."
-    git clone https://github.com/OpenHMD/OpenHMD.git "$INSTALL"/OpenHMD #TODO extra slash here??
-    cd "$INSTALL"/OpenHMD || exit 1
+    git clone https://github.com/OpenHMD/OpenHMD.git "$OPENHMD_INSTALL_DEST" #TODO extra slash here??
+    cd "$OPENHMD_INSTALL_DEST" || exit 1
     git checkout 4ca169b49ab4ea4bee2a8ea519d9ba8dcf662bd5
     cmake .
     make
@@ -169,13 +171,13 @@ else
 fi
 
 # Install the OpenHMD plugin
-if [ ! -d "$CATKIN"/"$SRC"/"$OPENHMD_DEST" ];
+if [ ! -d "$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST" ];
 then
-	echo "[INFO: $MYFILENAME $LINENO] Cloning $OPENHMD_DEST into $CATKIN/$SRC."
-    git clone https://github.com/UTNuclearRoboticsPublic/rviz_openhmd.git "$CATKIN"/"$SRC"/"$OPENHMD_DEST" &&
-	echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_DEST cloned to $CATKIN/$SRC/$OPENHMD_DEST"
+	echo "[INFO: $MYFILENAME $LINENO] Cloning $OPENHMD_PLUGIN_DEST into $CATKIN/$SRC."
+    git clone https://github.com/UTNuclearRoboticsPublic/rviz_openhmd.git "$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST" &&
+	echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_PLUGIN_DEST cloned to $CATKIN/$SRC/$OPENHMD_PLUGIN_DEST"
 else
-    echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_DEST is already cloned, skipping installation."
+    echo "[INFO: $MYFILENAME $LINENO] $OPENHMD_PLUGIN_DEST is already cloned, skipping installation."
 fi
 
 #####################################################################
@@ -206,6 +208,7 @@ fi
 # modified openHMD rules file above.
 sudo udevadm control --reload-rules
 
+# TODO Beathan explain this
 if ! sudo cp "$VIVECONF" "$VIVECONF_DEST"
 then
     echo "[ERROR: $MYFILENAME $LINENO] Copy $VIVECONF to $VIVECONF_DEST failed"
@@ -215,7 +218,7 @@ fi
 # Edit files #TODO fix these comments @Beathan
 # Point source file to location of "resources" file.
 LINETOEDIT=73
-FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_DEST"/"$SRC"/openhmd_display.cpp
+FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST"/"$SRC"/openhmd_display.cpp
 LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 sed -i "${LINETOEDIT}s|.*|    mResourcesCfg = \"${CATKIN}/src/rviz_openhmd/src/resources.cfg\";|" "$FILETOEDIT"
 LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
@@ -223,7 +226,7 @@ echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LIN
 
 # Point resource file to openHMD plugin source code @Beathan
 LINETOEDIT=3
-FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_DEST"/"$SRC"/resources.cfg
+FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST"/"$SRC"/resources.cfg
 LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 sed -i "${LINETOEDIT}s|.*|FileSystem=${CATKIN}/src/rviz_openhmd/src/resources/|" "$FILETOEDIT"
 LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
@@ -232,3 +235,9 @@ echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LIN
 # Change permissions on USB ports to all users
 # Note potential vulnerability ? @Beathan
 sudo chmod a+rw /dev/hidraw/*
+
+# Export OpenHMD library and header location for CMakeLists in Catkin
+echo "export OPENHMD_INSTALL_DEST=$OPENHMD_INSTALL_DEST" >> ~/.bashrc
+
+# Update port rules to allow for ssh configuration
+sudo ufw allow 22

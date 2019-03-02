@@ -8,30 +8,32 @@ key="$1"
 
 case $key in
     -p)
-    ROBOT_PASSWORD=$2
+    ROBO_PASSWORD=$2
     shift
     shift
     ;;
     -u)
-    ROBOT_USER=$2
+    ROBO_USER=$2
     shift
     shift
     ;;
     -h)
-    ROBOT_HOSTNAME=$2
+    ROBO_HOSTNAME=$2
     shift
     shift
     ;;
 esac
 done
 
-ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' || exit 1
-sshpass -p "$ROBOT_PASSWORD" ssh-copy-id "$ROBOT_USER"@"$ROBOT_HOSTNAME" || exit 1 
-ROBOT_PASSWORD=""
+ssh-keygen -f ~/.ssh/id_rsa -t rsa -N '' || echo "keygen failed" && exit 1
+sshpass -p "$ROBO_PASSWORD" ssh-copy-id "$ROBO_USER"@"$ROBO_HOSTNAME" || echo "sshpass copy ID failed" && exit 1 
+ROBO_PASSWORD=""
 
-ssh -i "$ROBOT_USER"@"$ROBOT_HOSTNAME" || echo "Unable to ssh into Robot after ssh key configuration" && exit 1
+ssh -i "$ROBO_USER"@"$ROBO_HOSTNAME" || echo "Unable to ssh into Robot after ssh key configuration" && exit 1
 
-printenv | grep "ROBO_CATKIN"   
+ROBO_CATKIN=$(ssh "$ROBO_USER"@"$ROBO_HOSTNAME" 'printf $ROBO_CATKIN')
+echo "export ROBO_CATKIN=$ROBO_CATKIN" >> ~/.bashrc
+echo "export ROBO_USER=$ROBO_USER" >> ~/.bashrc
 
 # stash ssh command
 # ssh root@remoteserver 'screen -S backup -d -m /root/backup.sh'
