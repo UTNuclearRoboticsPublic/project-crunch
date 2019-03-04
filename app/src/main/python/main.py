@@ -36,6 +36,7 @@ class GUIWindow(QMainWindow):
         self.main_widget = QWidget(self)
         self.setCentralWidget(self.main_widget)
         self.main_widget.setLayout(QVBoxLayout())
+        self.headset_refs = []
         self.get_env_vars()
         self.first_page()
 
@@ -71,7 +72,7 @@ class GUIWindow(QMainWindow):
 
         def __call__(inner_self,func):
             @functools.wraps(func) # Just keeps original function's special attributes
-            def new_function(outer_self):
+            def new_function(outer_self,**kwargs):
                 if inner_self.size:
                     outer_self.resize(*inner_self.size)
                 if inner_self.title:
@@ -80,7 +81,10 @@ class GUIWindow(QMainWindow):
                 inner_self.clear_layout(outer_self.main_widget.layout())
                 QObjectCleanupHandler().add(outer_self.main_widget.layout())
                 # Get and set the new layout
-                new_layout = func(outer_self)
+                if kwargs:
+                    new_layout = func(outer_self,**kwargs)
+                else:
+                    new_layout = func(outer_self)
                 outer_self.main_widget.setLayout(new_layout)
                 outer_self.show()
             return new_function
@@ -93,12 +97,23 @@ class GUIWindow(QMainWindow):
         '''Create layout of the first page'''
         layout = QVBoxLayout()
         launcher_button = QPushButton('Launch System')
-        launcher_button.clicked.connect(self.tutorial_page0)
+        launcher_button.clicked.connect(self.info_page)
         layout.addWidget(launcher_button)
         return layout
    
+    @ChangeLayout(size=(300,100))
+    def info_page(self):
+        layout = QVBoxLayout()
+        info = QLabel("Make sure cameras are plugged into robot computer and turned on!")
+        ok_button = QPushButton("OK, Got It!")
+        ok_button.clicked.connect(self.how_many_headsets)
+        layout.addWidget(info)
+        layout.addWidget(ok_button)
+        return layout
+
+
     @ChangeLayout(size=(300,100),title="One or Two Headsets?")
-    def tutorial_page0(self):
+    def how_many_headsets(self):
         layout = QVBoxLayout()
         num_headset_label = QLabel("How many headsets?")
         
@@ -126,49 +141,55 @@ class GUIWindow(QMainWindow):
 
     def one_headset_config(self):
         #TODO: set config = 1 headset
-        self.tutorial_page1()    
+        self.two_headsets = False
+        self.plug_in_headset()
      
     def two_headset_config(self):
         #TODO: set config = 2 headset
-        self.tutorial_page1()    
+        self.two_headsets = True
+        self.plug_in_headset(extra_str=" first ")    
     
     @ChangeLayout(size=(200,100),title="Prepare for System Launch")
-    def tutorial_page1(self):
+    def plug_in_headset(self,extra_str=" ",error=False):
         layout = QVBoxLayout()
-        tutorial_text = QLabel("Step 1: Make sure Vive is plugged into base station computer (this computer) and turned on.")
+        if error: 
+            label_str = "ERROR: headset not found. Please make sure Vive is turned on and try again."
+        else: 
+            label_str = "Plug in the"+extra_str+"headset, turn it on, and click \'Done\'"
+        
+        tutorial_text = QLabel(label_str)
         done_button = QPushButton('Done')
-        done_button.clicked.connect(self.on_done1_button_click)
+        done_button.clicked.connect(self.on_done_button_click)
         layout.addWidget(tutorial_text)
         layout.addWidget(done_button)
         return layout
 
-    def on_done1_button_click(self):
-        vive_plugged_in = True # TODO: Implement actual check
-        if vive_plugged_in:
-            self.tutorial_page2()
+    def on_done_button_click(self):
+        new_vive_ref = self.get_new_vive_port()
+        if new_vive_ref:
+            self.headset_refs.append(new_vive_ref)
+            if self.two_headsets and len(self.headset_refs) == 1:
+                self.plug_in_headset(extra_str=" second ")
+            else: 
+                self.launch_page()
+                self.launch_system_backend()
         else:
-            error_label = QLabel("Error: Vive is not detected") #TODO: This doesnt work lol
-            self.main_widget.layout.addWidget(error_label)
-            #print("Error: Vive is not detected") # TODO: Make this text appear on the GUI in Red
+            self.plug_in_headset(error=True)
+
+    def get_new_vive_port(self):
+        # TODO: Have this function find the port where the vive was just plugged
+        #in, return None if there wasn't one plugged in. If there are multiple
+        # vives plugged in, return port of most recently plugged in vive
+        return "dummy"
 
     @ChangeLayout()
-    def tutorial_page2(self):
+    def launch_page(self):
         layout = QVBoxLayout()
-        tutorial_text = QLabel("Step 2: Make sure cameras are plugged into the robot computer and turned on.")
-        done_button = QPushButton('Done')
-        done_button.clicked.connect(self.on_done2_button_click)
-        layout.addWidget(tutorial_text)
-        layout.addWidget(done_button)
+        text = QLabel("Launching system...")
+        layout.addWidget(text)
         return layout
-    
-    def on_done2_button_click(self):
-        cams_plugged_in = True # TODO: Implement actual check
-        if cams_plugged_in:
-            self.launch_system()
-        else: 
-            print("Error: Cameras are not detected") # TODO: Make this text appear on the GUI in Red
 
-    def launch_system(self):
+    def launch_system_backend(self):
         #   self.launch_robo()
         self.launch_base()
 
