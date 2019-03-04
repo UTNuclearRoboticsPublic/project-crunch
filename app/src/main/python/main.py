@@ -24,11 +24,11 @@ from fbs_runtime.application_context import ApplicationContext
 
 class GUIWindow(QMainWindow):
 
-    def __init__(self,one_headest_img,two_headset_img, robo_launch,
+    def __init__(self,one_headset_img,two_headset_img, robo_launch,
                     base_launch, kill_launch):
         super(GUIWindow, self).__init__()
         self.one_headset_img = one_headset_img
-        self.two_headset_img = two_heaset_img
+        self.two_headset_img = two_headset_img
         self.robo_launch = robo_launch
         self.base_launch = base_launch
         self.kill_launch = kill_launch
@@ -112,7 +112,7 @@ class GUIWindow(QMainWindow):
         one_headset_button.clicked.connect(self.one_headset_config)
         btn_hbox.addWidget(one_headset_button)
 
-        two_headset_button= QPushButton(icon=QIcon(self.two_headest_img))
+        two_headset_button= QPushButton(icon=QIcon(self.two_headset_img))
         two_headset_button.setFixedHeight(131)
         two_headset_button.setFixedWidth(224)
         two_headset_button.setIconSize(QSize(129,222))
@@ -207,8 +207,8 @@ class AppContext(ApplicationContext):
         base_launch = self.get_resource("base_launch.sh")
         # kill_launch.sh
         kill_launch = self.get_resource("kill_launch.sh")
-        main_window = GUIWindow(one_headset_img,two_headset_image,robo_launch,
-                        base_launch, kill_launch)
+        main_window = GUIWindow(one_headset_img,two_headset_img,robo_launch,
+                    base_launch, kill_launch)
         return self.app.exec_()
         
 if __name__ == "__main__":
