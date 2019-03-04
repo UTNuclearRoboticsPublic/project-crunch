@@ -2,7 +2,7 @@
 # Purpose:      Creates GUI for the system launcher to wrap the
 #               configuration and launch scripts.
 # Written by:   Kate Baumli
-# Modified:     Wednesday February 20, 2019
+# Modified:     Monday March 4, 2019
 ###############################################################
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QWidget
@@ -97,7 +97,7 @@ class GUIWindow(QMainWindow):
         layout.addWidget(launcher_button)
         return layout
    
-    @ChangeLayout(size=(460,160),title="Launch Configurations")
+    @ChangeLayout(size=(300,100),title="One or Two Headsets?")
     def tutorial_page0(self):
         layout = QVBoxLayout()
         num_headset_label = QLabel("How many headsets?")
@@ -132,7 +132,7 @@ class GUIWindow(QMainWindow):
         #TODO: set config = 2 headset
         self.tutorial_page1()    
     
-    @ChangeLayout(size=(400,400))
+    @ChangeLayout(size=(200,100),title="Prepare for System Launch")
     def tutorial_page1(self):
         layout = QVBoxLayout()
         tutorial_text = QLabel("Step 1: Make sure Vive is plugged into base station computer (this computer) and turned on.")
