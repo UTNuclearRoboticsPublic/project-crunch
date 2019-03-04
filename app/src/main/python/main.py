@@ -174,22 +174,9 @@ class GUIWindow(QMainWindow):
 
     def launch_robo(self):
         robo_client = self.robo_username + "@" + self.robo_hostname
-        scp_cmd = "scp {} {}:tmp/robo_launch.sh".format(self.robo_launch, robo_client)
-        subprocess.call(scp_cmd.split(" "))
+        ssh_robo_launch_cmd = "ssh {} source {}".format(robo_client,self.robo_launch)
+        subprocess.call(ssh_robo_launch_cmd.split(" "))
         
-        ssh_process = subprocess.Popen(['ssh',robo_client],
-                               stdin=subprocess.PIPE,
-                               stdout = subprocess.PIPE,
-                               universal_newlines=True,
-                               bufsize=0)
-        # Screen so that process keeps running after ssh closes
-        ssh_process.stdin.write("screen\n")
-        # OR ssh root@blah 'screen -S backup -d -m /tmp/robo_launch.sh'
-        # Run robo_launch.sh
-        ssh_process.stdin.write("bash tmp/robo_launch.sh --catkin{}\n".format(self.robo_catkin)) 
-        # Close ssh
-        ssh_process.stdin.close()
-
     def launch_base(self):
         subprocess.call([self.base_launch,"--catkin",self.base_catkin])
     
