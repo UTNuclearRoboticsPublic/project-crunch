@@ -31,6 +31,10 @@ class AppContext(ApplicationContext):
     catkin_dir = None
     current_computer_is_robot = None
     use_default_net_config = None
+
+    robo_username = None
+    robo_password = None
+    robo_hostname = None
     
     def run(self):
         # Set up window
@@ -267,8 +271,8 @@ class AppContext(ApplicationContext):
         install_args = [
             '-c', '{}'.format(self.catkin_dir), 
             '-i', '{}'.format(self.install_dir), 
-            '-p', '{}'.format(self.password)
-            '--openhmdrules', ''.format(self.get_resource('50-openhmd.rules'))
+            '-p', '{}'.format(self.password),
+            '--openhmdrules', ''.format(self.get_resource('50-openhmd.rules')),
             '--viveconf', ''.format(self.get_resource('50-Vive.conf'))
         ]
         subprocess.run(
@@ -343,22 +347,109 @@ class AppContext(ApplicationContext):
         
         # run bash script to setup keys
         # run bash script to test keys
-    
+        
+        #These are the return values for StandardButtons
+        #https://www.tutorialspoint.com/pyqt/pyqt_qmessagebox.htm
+        CANCEL_BUTTON = 0x00400000
+        OK_BUTTON =  0x00000400
+        
         #TODO stub
-        layout = QVBoxLayout()
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("This must be run on base station and robot must be plugged in.\n" + 
+                    "You must also have the username and password for the robot. " + 
+                    "If you chose a custom robot hostname you will need that as well.")
+        #msg.setInformativeText("This is additional information")
+        msg.setWindowTitle("SSH key configuration")
+        #msg.setDetailedText("The details are as follows:")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        #Checking retval from StandardButtons to decide if installation continues
+        retval = msg.exec_()
+        if retval == CANCEL_BUTTON:
+            return
+        elif retval == OK_BUTTON:
+            self.get_robo_username()
+   
+    def print_stub(self):
+        print("STUB")
+
+    def get_robo_username(self):
+        """
+        Prompt user for robot username.
+        """
         dialog = QInputDialog()
-        layout.addWidget(dialog)
-        item, ok = dialog.getItem(
-                         QWidget(),
-                         'Stub TODO',
-                         "TODO",
-                         ['todo'],
+        text, ok = dialog.getText(
+                QWidget(),
+                'Administrative Privileges Needed!',
+                'Please enter the username for the robot.',
+                QLineEdit.Normal,
+                ""
         )
         if ok:
-            print("stub")
+            self.robo_username = str(text)
+            self.get_robo_password()
+        else:
+            print("something bad happened :(")
+            self.robo_username = None
+            self.first_page()
+    
+    def get_robo_password(self):
+        """
+        Prompt user for robot password.
+        """
+        dialog = QInputDialog()
+        text, ok = dialog.getText(
+                QWidget(),
+                'Administrative Privileges Needed!',
+                'Please enter the password for the robot.',
+                QLineEdit.Password,
+                ""
+        )
+        if ok:
+            self.robo_password = str(text)
+            self.get_robo_hostname()
+        else:
+            print("something bad happened :(")
+            self.robo_password = None
+            self.first_page()
 
-        return layout
- 
+    #TODO add apropriate comments explaining optional usage
+    def get_robo_hostname(self):
+        """
+        Prompt user for robot hostname.
+        """
+        dialog = QInputDialog()
+        text, ok = dialog.getText(
+                QWidget(),
+                'Administrative Privileges Needed!',
+                'Please enter the hostname for the robot.',
+                QLineEdit.Normal,
+                ""
+        )
+        if ok:
+            self.robo_hostname = str(text)
+            self.exec_ssh_config()
+        else:
+            print("something bad happened :(")
+            self.robo_hostname = None
+            self.first_page()
+    
+    def exec_ssh_config(self):
+        ssh_config_args = [
+            '--password', '{}'.format(self.robo_password),
+            '--username', '{}'.format(self.robo_username),
+            '--hostname', '{}'.format(self.robo_hostname)
+        ]
+        subprocess.run(
+                [
+                    'bash', 
+                    self.get_resource('configure_ssh_keys.sh'), 
+                    *ssh_config_args
+                ], 
+                check=True
+        )
+        
+        pass
 
 if __name__ == "__main__":
     appctxt = AppContext()

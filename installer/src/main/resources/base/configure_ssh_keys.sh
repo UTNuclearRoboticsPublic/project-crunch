@@ -7,17 +7,17 @@ do
 key="$1"
 
 case $key in
-    -p)
+    --password)
     ROBO_PASSWORD=$2
     shift
     shift
     ;;
-    -u)
+    --username)
     ROBO_USER=$2
     shift
     shift
     ;;
-    -h)
+    --hostname)
     ROBO_HOSTNAME=$2
     shift
     shift
