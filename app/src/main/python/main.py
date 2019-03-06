@@ -45,7 +45,6 @@ class GUIWindow(QMainWindow):
         print("You closed the app!")
         #subprocess.call([self.kill_launch])
 
-
     def get_env_vars(self):
         self.robo_catkin = os.environ.get("ROBO_CATKIN")
         self.base_catkin = os.environ.get("BASE_CATKIN")
