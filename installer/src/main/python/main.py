@@ -341,38 +341,37 @@ class AppContext(ApplicationContext):
         # Remind user to restart and configure ssh keys
 
     def on_ssh_config_push(self):
-        # Running from base ?
-        # Robot plugged in ?
-        # Install ran on robot already ?
+        """
+        This function begins execution of the SSH Key configuration chain of 
+        events. The user is informed of assumptions, then is prompted for the
+        robot username and password, as well as any custom hostname. The 
+        configuration happens in the final step in exec_ssh_config().
+        """
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText(
+                "The installation must have already been run on both the robot " +
+                "and the base station.\n\nThe two computers must be connected " +
+                "with a crossover ethernet cable, and you will need the username " +
+                "and password for the robot, as well as any custom hostname it " +
+                "may have been assigned."
+        )
+        msg.setWindowTitle("SSH key configuration")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         
-        # run bash script to setup keys
-        # run bash script to test keys
-        
-        #These are the return values for StandardButtons
+        #These are macros for the return values for StandardButtons
         #https://www.tutorialspoint.com/pyqt/pyqt_qmessagebox.htm
         CANCEL_BUTTON = 0x00400000
         OK_BUTTON =  0x00000400
         
-        #TODO stub
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setText("This must be run on base station and robot must be plugged in.\n" + 
-                    "You must also have the username and password for the robot. " + 
-                    "If you chose a custom robot hostname you will need that as well.")
-        #msg.setInformativeText("This is additional information")
-        msg.setWindowTitle("SSH key configuration")
-        #msg.setDetailedText("The details are as follows:")
-        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        #Checking retval from StandardButtons to decide if installation continues
+        # If user cancels we return, if they choose OK we ask for information and then
+        # execute the configuration.
         retval = msg.exec_()
         if retval == CANCEL_BUTTON:
             return
         elif retval == OK_BUTTON:
             self.get_robo_username()
    
-    def print_stub(self):
-        print("STUB")
-
     def get_robo_username(self):
         """
         Prompt user for robot username.
@@ -380,8 +379,9 @@ class AppContext(ApplicationContext):
         dialog = QInputDialog()
         text, ok = dialog.getText(
                 QWidget(),
-                'Administrative Privileges Needed!',
-                'Please enter the username for the robot.',
+                'SSH Key Configuration',
+                'Please enter the username for the robot. This is the same'\
+                + 'username that you log into Ubuntu with.',
                 QLineEdit.Normal,
                 ""
         )
@@ -389,7 +389,6 @@ class AppContext(ApplicationContext):
             self.robo_username = str(text)
             self.get_robo_password()
         else:
-            print("something bad happened :(")
             self.robo_username = None
             self.first_page()
     
@@ -400,7 +399,7 @@ class AppContext(ApplicationContext):
         dialog = QInputDialog()
         text, ok = dialog.getText(
                 QWidget(),
-                'Administrative Privileges Needed!',
+                'SSH Key Configuration',
                 'Please enter the password for the robot.',
                 QLineEdit.Password,
                 ""
@@ -409,32 +408,38 @@ class AppContext(ApplicationContext):
             self.robo_password = str(text)
             self.get_robo_hostname()
         else:
-            print("something bad happened :(")
             self.robo_password = None
             self.first_page()
 
-    #TODO add apropriate comments explaining optional usage
     def get_robo_hostname(self):
         """
-        Prompt user for robot hostname.
+        Prompt user for robot hostname for SSH key configuration. If there
+        is none, the user should input an empty string.
         """
         dialog = QInputDialog()
         text, ok = dialog.getText(
                 QWidget(),
-                'Administrative Privileges Needed!',
-                'Please enter the hostname for the robot.',
+                'SSH Key Configuration',
+                'If you installed with custom IP configurations, enter the '\
+                + 'robot hostname now. Otherwise leave this entry blank.',
                 QLineEdit.Normal,
                 ""
         )
         if ok:
-            self.robo_hostname = str(text)
+            if str(text) == "":
+                self.robo_hostname = self.ip_configs['robot_hostname']
+            else:
+                self.robo_hostname = str(text)
             self.exec_ssh_config()
         else:
-            print("something bad happened :(")
             self.robo_hostname = None
             self.first_page()
     
     def exec_ssh_config(self):
+        """
+        This function takes the previously gathered information and executes
+        a bash script to complete the actual configuration steps.
+        """
         ssh_config_args = [
             '--password', '{}'.format(self.robo_password),
             '--username', '{}'.format(self.robo_username),
@@ -449,7 +454,6 @@ class AppContext(ApplicationContext):
                 check=True
         )
         
-        pass
 
 if __name__ == "__main__":
     appctxt = AppContext()
