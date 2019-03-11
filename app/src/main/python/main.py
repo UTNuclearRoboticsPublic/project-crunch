@@ -197,6 +197,10 @@ class GUIWindow(QMainWindow):
         ssh_robo_launch_cmd = "ssh {} source {}".format(robo_client,self.robo_launch)
         subprocess.call(ssh_robo_launch_cmd.split(" "))
         
+    def launch_robo(self):
+        robo_client = self.robo_username + "@" + self.robo_hostname
+        subprocess.call(["ssh",robo_client,"source",self.robo_launch_script])
+    
     def launch_base(self):
         subprocess.call([self.base_launch,"--catkin",self.base_catkin])
     
