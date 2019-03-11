@@ -62,8 +62,8 @@ done
 OPENCV_DEST="video_stream_opencv"
 TXTSPHERE_DEST="rviz_textured_sphere"
 OPENHMD_PLUGIN_DEST="rviz_openhmd"
-OPENHMDRULES_DEST="/etc/udev/rules/"
-VIVECONF_DEST="/usr/share/x11/xorg.conf.d/"
+OPENHMDRULES_DEST="/etc/udev/rules.d/"
+VIVECONF_DEST="/usr/share/X11/xorg.conf.d/"
 BUILD="build"
 SRC="src"
 OPENHMD_INSTALL_DEST="$INSTALL/OpenHMD"
@@ -234,7 +234,7 @@ echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LIN
 
 # Change permissions on USB ports to all users
 # Note potential vulnerability ? @Beathan
-sudo chmod a+rw /dev/hidraw/*
+sudo chmod a+rw /dev/hidraw*
 
 # Export OpenHMD library and header location for CMakeLists in Catkin
 echo "export OPENHMD_INSTALL_DEST=$OPENHMD_INSTALL_DEST" >> ~/.bashrc

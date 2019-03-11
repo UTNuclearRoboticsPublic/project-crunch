@@ -45,10 +45,10 @@ class AppContext(ApplicationContext):
         
         # Set default params
         self.ip_configs = {
-            "robot_ip": "10.0.0.2",
+            "robo_ip": "10.0.0.2",
             "base_ip": "10.0.0.1",
-            "robot_hostname": "base",
-            "base_hostname": "robot"
+            "robo_hostname": "base",
+            "base_hostname": "robo"
         }
         self.use_default_net_config = True
         return self.app.exec_()
@@ -247,16 +247,17 @@ class AppContext(ApplicationContext):
         # is OK because the new var is written to the end of the bashrc and 
         # so the definition overwrites any previous one. We need to check the 
         # current computer because the catkin workspace could be different.
+        path_to_bashrc = os.path.join(os.path.expanduser('~'), '.bashrc')
         if self.current_computer_is_robot is True:
-            with open("~/.bashrc", "a") as f:
+            with open(path_to_bashrc, "a") as f:
                 f.write("export ROBO_CATKIN={}".format(self.catkin_dir))
         else:        
-            with open("~/.bashrc", "a") as f:
+            with open(path_to_bashrc, "a") as f:
                 f.write("export BASE_CATKIN={}".format(self.catkin_dir))
-        with open("~/.bashrc", "a") as f:
+        with open(path_to_bashrc, "a") as f:
             f.write(
                     "export ROBO_HOSTNAME={}"\
-                    .format(self.ip_configs['robot_hostname'])
+                    .format(self.ip_configs['robo_hostname'])
             )
             f.write(
                     "export PROJECT_CRUNCH_INSTALL_PATH={}"\
@@ -272,13 +273,13 @@ class AppContext(ApplicationContext):
             '-c', '{}'.format(self.catkin_dir), 
             '-i', '{}'.format(self.install_dir), 
             '-p', '{}'.format(self.password),
-            '--openhmdrules', ''.format(self.get_resource('50-openhmd.rules')),
-            '--viveconf', ''.format(self.get_resource('50-Vive.conf'))
+            '--openhmdrules', '{}'.format(self.get_resource('50-openhmd.rules')),
+            '--viveconf', '{}'.format(self.get_resource('50-Vive.conf'))
         ]
         subprocess.run(
                 [
                     'bash', 
-                    self.get_resources('install.sh'), 
+                    self.get_resource('install.sh'), 
                     *install_args
                 ], 
                 check=True
@@ -292,8 +293,8 @@ class AppContext(ApplicationContext):
         opencv_dir = 'video_stream_opencv'
         txtsphere_dir = 'rviz_textured_sphere'
 
-        txtsphere_dest_dir = os.path.join(catkin_dir, 'src', txtsphere_dir, 'launch')
-        opencv_dest_dir = os.path.join(catkin_dir, 'src', opencv_dir, 'launch')
+        txtsphere_dest_dir = os.path.join(self.catkin_dir, 'src', txtsphere_dir, 'launch')
+        opencv_dest_dir = os.path.join(self.catkin_dir, 'src', opencv_dir, 'launch')
 
         # Copy single cam launch
         file_dest = os.path.join(opencv_dest_dir, single_cam_launch)
@@ -318,11 +319,11 @@ class AppContext(ApplicationContext):
 
         ip_args = [
             '--isbase', isbase,
-            '--robotip', self.ip_configs['robot_ip'], 
+            '--roboip', self.ip_configs['robo_ip'], 
             '--baseip', self.ip_configs['base_ip'], 
-            '--robothostname', self.ip_configs['robot_hostname'],
+            '--robohostname', self.ip_configs['robo_hostname'],
             '--basehostname', self.ip_configs['base_hostname'], 
-            '-p', '{}'.format(password)
+            '-p', '{}'.format(self.password)
         ]
         subprocess.run(
                 [

@@ -57,7 +57,6 @@ else
     echo "Unknown runtime error."
     exit 1
 fi
-
 # Get sudo privileges with the password arg
 # Use it to add IPs and hostnames to files
 echo "$PASSWORD" | sudo -S touch /etc/hosts
@@ -66,7 +65,6 @@ echo "$PASSWORD" | sudo -S touch /etc/hosts
   echo "$BASEIP        $BASENAME"
   echo "$ROBOIP        $ROBONAME"
 } | sudo tee -a /etc/hosts
-
 sudo touch /etc/hostname
 if [ "$ISBASE" == "y" ];
 then
