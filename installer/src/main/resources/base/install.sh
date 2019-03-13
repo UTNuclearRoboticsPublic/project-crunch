@@ -79,7 +79,8 @@ echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
                         cmake=3.5.1-1ubuntu3\
                         git\
                         libgtest-dev=1.7.0-4ubuntu1\
-                        sshpass\
+                        openssh-server\
+			sshpass\
                         v4l-utils=1.10.0-1 2>&1
 
 #####################################################################
