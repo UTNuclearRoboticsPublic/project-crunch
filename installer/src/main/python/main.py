@@ -352,7 +352,8 @@ class AppContext(ApplicationContext):
         msg.setIcon(QMessageBox.Information)
         msg.setText(
                 "The installation must have already been run on both the robot " +
-                "and the base station.\n\nThe two computers must be connected " +
+                "and the base station.\n\nBoth computers should have been restarted." +
+		"\n\nThe two computers must be connected " +
                 "with a crossover ethernet cable, and you will need the username " +
                 "and password for the robot, as well as any custom hostname it " +
                 "may have been assigned."
@@ -382,7 +383,7 @@ class AppContext(ApplicationContext):
                 QWidget(),
                 'SSH Key Configuration',
                 'Please enter the username for the robot. This is the same'\
-                + 'username that you log into Ubuntu with.',
+                + ' username that you log into Ubuntu with.',
                 QLineEdit.Normal,
                 ""
         )
@@ -428,7 +429,7 @@ class AppContext(ApplicationContext):
         )
         if ok:
             if str(text) == "":
-                self.robo_hostname = self.ip_configs['robot_hostname']
+                self.robo_hostname = self.ip_configs['robo_hostname']
             else:
                 self.robo_hostname = str(text)
             self.exec_ssh_config()
