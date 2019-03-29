@@ -190,32 +190,40 @@ class GUIWindow(QMainWindow):
         return layout
 
     def launch_system_backend(self):
-        #   self.launch_robo()
+        #self.launch_robo()
         self.launch_base()
         self.position_windows()
 
     def position_windows(self):
-        # This probably wont work right away
-        opt,err = Popen(['xrandr', '|','grep','2160x1200'], stdin=PIPE,
-                         stdout=PIPE, stderr=PIPE).communicate()
+        p1 = subprocess.Popen(['xrandr'], stdout=subprocess.PIPE)
+        opt, err = subprocess.Popen(['grep','2160x1200'],
+                stdin=p1.stdout,
+                stdout=subprocess.PIPE).communicate()
         list_of_opt = opt.splitlines()
         self.coords = []
         for line in list_of_opt:
-            line = line.split()
-            res_coords = re.match("\d+x\d+\+/d+/d+",line])
-            _ , x, y = line.split("+")
-            self.coords.append((x,y))
-        
-        hmd1 = Popen(["wmctrl","-l","|","grep","HMD1"],stdout=PIPE)
-        hmd2 = Popen(["wmctrl","-l","|","grep","HMD2"],stdout=PIPE)
+            line = line.decode("utf-8", "ignore")
+            try:
+                res_coords = re.search("\d+x\d+\+\d+\+\d+",line).group()
+                _ , x, y = res_coords.split("+")
+                self.coords.append((x,y))
+            except:
+                pass
+       
+        # get HDMI/DP port ID using grep to find window position
+        hmd1, err = subprocess.Popen(["wmctrl","-l","|","grep","HMD1"],
+                stdout=subprocess.PIPE).communicate()
         self.wid1 = hmd1.split()[0]
-        self.wid2 = hmd2.split()[0]
-
         subprocess.call(["wmctrl","-ir",self.wid1,
-                "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1]))
+                "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
         
-        subprocess.call(["wmctrl","-ir",self.wid2,
-                "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1]))
+        if self.two_headsets:
+            hmd2, err = subprocess.Popen(["wmctrl","-l","|","grep","HMD2"],
+                    stdout=subprocess.PIPE).communicate()
+            self.wid2 = hmd2.split()[0]
+
+            subprocess.call(["wmctrl","-ir",self.wid2,
+                    "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
 
 
 

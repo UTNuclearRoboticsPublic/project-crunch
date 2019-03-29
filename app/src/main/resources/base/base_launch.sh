@@ -79,6 +79,6 @@ source "$CATKIN"/devel/setup.bash
  # Launch Rviz and textured sphere
 #####################################################################
 echo "[INFO: $MYFILENAME $LINENO] Attempting to launch rviz textured sphere with $SPHERE_LAUNCH" >> "$LOGFILE"
-roslaunch --wait rviz_textured_sphere $SPHERE_LAUNCH && #configfile:="${RVIZ_CONFIG_FILE}"
+roslaunch --wait rviz_textured_sphere $SPHERE_LAUNCH #&& configfile:="${RVIZ_CONFIG_FILE}"
 echo "[INFO: $MYFILENAME $LINENO] rviz_textured_sphere launched with $SPHERE_LAUNCH" >> "$LOGFILE"
 exit 0
