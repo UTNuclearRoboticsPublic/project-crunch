@@ -5,5 +5,5 @@
 	name="rviz"
 	args="-l -d $(find rviz_textured_sphere)/rviz_cfg/vive_launch_config.rviz"
 	output="screen"
-	launch-prefix="/home/btandersen/.steam/ubuntu12_32/steam-runtime/run.sh" />
+	/>
 </launch>
