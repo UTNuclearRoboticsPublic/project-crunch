@@ -25,20 +25,22 @@ from fbs_runtime.application_context import ApplicationContext
 
 class GUIWindow(QMainWindow):
 
-    def __init__(self,one_headset_img,two_headset_img, robo_launch,
-                    base_launch, kill_launch):
+    def __init__(self,one_headset_img,two_headset_img, 
+                    base_launch):
         super(GUIWindow, self).__init__()
         self.one_headset_img = one_headset_img
         self.two_headset_img = two_headset_img
-        self.robo_launch = robo_launch
         self.base_launch = base_launch
-        self.kill_launch = kill_launch
         # Setup central widget for the window
         self.main_widget = QWidget(self)
         self.setCentralWidget(self.main_widget)
         self.main_widget.setLayout(QVBoxLayout())
         self.headset_refs = []
         self.get_env_vars()
+        self.robo_launch = self.robo_proj_dir + "/app/src/main/resources/base/robo_launch.sh"
+        # TODO: 
+        self.kill_launch = self.robo_proj_dir + "/app/src/main/resources/base/kill_launch.sh"
+        
         self.first_page()
 
     def closeEvent(self, event):
@@ -47,10 +49,11 @@ class GUIWindow(QMainWindow):
         #subprocess.call([self.kill_launch])
 
     def get_env_vars(self):
-        self.robo_catkin = os.environ.get("ROBO_CATKIN")
+        self.robo_catkin = os.environ.get("ROBOT_CATKIN")
         self.base_catkin = os.environ.get("BASE_CATKIN")
-        self.robo_hostname = os.environ.get("ROBO_HOSTNAME")
-        self.robo_username = os.environ.get("ROBO_USERNAME")
+        self.robo_hostname = os.environ.get("ROBOT_HOSTNAME")
+        self.robo_username = os.environ.get("ROBOT_USERNAME")
+        self.robo_proj_dir = os.environ.get("ROBOT_PROJECT_CRUNCH_INSTALL_PATH")
 
     class ChangeLayout:
         ''' 
@@ -225,7 +228,8 @@ class GUIWindow(QMainWindow):
 
     def launch_robo(self):
         robo_client = self.robo_username + "@" + self.robo_hostname
-        ssh_robo_launch_cmd = "ssh {} source {}".format(robo_client,self.robo_launch)
+        ssh_robo_launch_cmd = "ssh {} bash {} -c {}".format(robo_client,self.robo_launch,self.robo_catkin)
+        print(ssh_robo_launch_cmd)
         subprocess.call(ssh_robo_launch_cmd.split(" "))
     
     def launch_base(self):
@@ -239,14 +243,9 @@ class AppContext(ApplicationContext):
         one_headset_img = self.get_resource("one-headset.png")
         # two headset image
         two_headset_img = self.get_resource("two-headset.png")
-        # robo_launch.sh
-        robo_launch = self.get_resource("robo_launch.sh")
         # base_launch.sh
         base_launch = self.get_resource("base_launch.sh")
-        # kill_launch.sh
-        kill_launch = self.get_resource("kill_launch.sh")
-        main_window = GUIWindow(one_headset_img,two_headset_img,robo_launch,
-                    base_launch, kill_launch)
+        main_window = GUIWindow(one_headset_img,two_headset_img, base_launch)
         return self.app.exec_()
         
 if __name__ == "__main__":

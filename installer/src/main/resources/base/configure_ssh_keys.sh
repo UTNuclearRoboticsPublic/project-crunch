@@ -97,9 +97,11 @@ fi
 #	we search through the remote's /.bashrc file for the 'export' command
 #	associated with the environment variable of interest. We copy the
 #	complete export command into our very own /bashrc file.
-#ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USER@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
-#echo "$ROBOT_CATKIN" >> ~/.bashrc
-#echo "export ROBOT_USER=$ROBOT_USER" >> ~/.bashrc
+ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USER@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
+ROBOT_PROJECT_CRUNCH_INSTALL_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USER@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_INSTALL_PATH')
+echo "$ROBOT_CATKIN" >> ~/.bashrc
+echo "export ROBOT_USER=$ROBOT_USER" >> ~/.bashrc
+echo "$ROBOT_PROJECT_CRUNCH_INSTALL_PATH" >> ~/.bashrc
 
 # stash ssh command
 # ssh root@remoteserver 'screen -S backup -d -m /root/backup.sh'
