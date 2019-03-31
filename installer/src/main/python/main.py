@@ -163,6 +163,28 @@ class AppContext(ApplicationContext):
             self.first_page()
         return layout
 
+    def install_finished(self):
+        """
+        Lets the user know that they are finished with the install.
+
+        """
+        layout = QVBoxLayout()
+        dialog = QInputDialog()
+        layout.addWidget(dialog)
+        item, ok = dialog.getItem(
+                     QWidget(),
+                     'Install Complete!',
+                     'You have completed the install process! You can run ' +
+                     'Project Crunch by navigating to {} and clicking on the ' +
+                     'FIX ME icon.\n\n You must restart your computer and ' + #TODO
+                     'configure SSH keys before the application is fully ' +
+                     'functional.',
+                     ['OK'],
+        )
+        if ok:
+            self.first_page()
+        return layout #TODO does this return to first page
+    
     def configure_ip(self):
         """
         Prompt user for whether they want custom IP and hostnames.
@@ -334,12 +356,11 @@ class AppContext(ApplicationContext):
                 check=True
         )
         
-        
         # Set up main app
 
         # Set up icons?
 
-        # Remind user to restart and configure ssh keys
+        self.install_finished()
 
     def on_ssh_config_push(self):
         """
