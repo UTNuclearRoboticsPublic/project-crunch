@@ -275,14 +275,14 @@ class AppContext(ApplicationContext):
                 f.write("export ROBO_CATKIN={}".format(self.catkin_dir))
         else:        
             with open(path_to_bashrc, "a") as f:
-                f.write("export BASE_CATKIN={}".format(self.catkin_dir))
+                f.write("export BASE_CATKIN={}\n".format(self.catkin_dir))
         with open(path_to_bashrc, "a") as f:
             f.write(
-                    "export ROBO_HOSTNAME={}"\
+                    "export ROBO_HOSTNAME={}\n"\
                     .format(self.ip_configs['robo_hostname'])
             )
             f.write(
-                    "export PROJECT_CRUNCH_INSTALL_PATH={}"\
+                    "export PROJECT_CRUNCH_INSTALL_PATH={}\n"\
                     .format(self.install_dir)
             ) 
 
@@ -413,6 +413,7 @@ class AppContext(ApplicationContext):
             self.get_robo_password()
         else:
             self.robo_username = None
+            # TODO what should the Default be? Empty username will crash program
             self.first_page()
     
     def get_robo_password(self):
