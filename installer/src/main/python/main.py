@@ -90,7 +90,9 @@ class AppContext(ApplicationContext):
         ) 
         if ok:
             self.password = str(text)
-            self.install_directory()
+            self.catkin_directory()
+            #self.install_directory() For now we skip this and ask the user to
+            # do it manually.
         else:
             self.password = None
             self.first_page()
@@ -174,13 +176,14 @@ class AppContext(ApplicationContext):
         item, ok = dialog.getItem(
                      QWidget(),
                      'Install Complete!',
-                     'You have completed the install process! You can run ' +
+                     'You have completed the install process! Copy the Project-Crunch directory to the location of your choosing. You can run ' +
                      'Project Crunch by navigating to {} and clicking on the ' +
                      'FIX ME icon.\n\n You must restart your computer and ' + #TODO
                      'configure SSH keys before the application is fully ' +
                      'functional.',
                      ['OK'],
         )
+        #TODO this needs to be fixed. the user may need to create a new symlink
         if ok:
             self.first_page()
         return layout #TODO does this return to first page
@@ -356,8 +359,7 @@ class AppContext(ApplicationContext):
                 check=True
         )
         
-        # Set up main app
-
+        # TODO catkin build /make
         # Set up icons?
 
         self.install_finished()
