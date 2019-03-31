@@ -48,7 +48,7 @@ done
 if [ -z "${CATKIN}" ];
 then
     echo "ERROR: Must provide path to catkin workspace"
-	echo "Usage: base_launch.sh <-c|--catkin path to catkin workspace> [-l|--logfile logfile] [-b basehostname] [-bip baseip] [-r robohostname] [-rip roboip]"
+	echo "Usage: base_launch.sh <-c|--catkin path to catkin workspace> [-l|--logfile logfile]"
     exit 1
     # TODO: Make sure $CATKIN is a valid directory
 fi

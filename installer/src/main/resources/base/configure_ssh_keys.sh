@@ -32,27 +32,37 @@ key="$1"
 
 case $key in
     --password)
-    ROBO_PASSWORD=$2
+    ROBOT_PASSWORD=$2
     shift
     shift
     ;;
     --username)
-    ROBO_USER=$2
+    ROBOT_USER=$2
     shift
     shift
     ;;
     --hostname)
-    ROBO_HOSTNAME=$2
+    ROBOT_HOSTNAME=$2
     shift
     shift
     ;;
 esac
 done
 
+# Check for network connectivity
+ping $ROBOT_HOSTNAME -c 4
+# TODO grab output and use to provide feedback
+
 # You can delete these keys via ssh-add -D
-ssh-keygen -f ~/.ssh/id_rsa -t rsa -N ""
-#ssh-add
-sshpass -p "$ROBO_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBO_USER@$ROBO_HOSTNAME &&
+ssh-keygen -f ~/.ssh/id_rsa -t rsa -N "" \
+        && ssh-add \
+        && cat ~/.ssh/id_rsa.pub | \
+        sshpass -p "$ROBOT_PASSWORD" \
+        ssh -vvv -o StrictHostKeyChecking=no \
+        -o IdentitiesOnly=yes \
+        $ROBOT_USER@$ROBOT_HOSTNAME \
+        "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
 
     
 # Search through remote's .bashrc file for catkin workspace filepath.
@@ -63,9 +73,9 @@ sshpass -p "$ROBO_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -o Identitie
 #	we search through the remote's /.bashrc file for the 'export' command
 #	associated with the environment variable of interest. We copy the
 #	complete export command into our very own /bashrc file.
-#ROBO_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBO_USER@$ROBO_HOSTNAME 'cat ~/.bashrc | grep ROBO_CATKIN')
-#echo "$ROBO_CATKIN" >> ~/.bashrc
-#echo "export ROBO_USER=$ROBO_USER" >> ~/.bashrc
+#ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USER@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
+#echo "$ROBOT_CATKIN" >> ~/.bashrc
+#echo "export ROBOT_USER=$ROBOT_USER" >> ~/.bashrc
 
 # stash ssh command
 # ssh root@remoteserver 'screen -S backup -d -m /root/backup.sh'

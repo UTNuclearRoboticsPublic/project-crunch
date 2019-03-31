@@ -8,28 +8,28 @@ do
 key="$1"
 case $key in
     # Needs y or n
-    --isbase)
-    ISBASE="$2"
+    --is_base)
+    IS_BASE="$2"
     shift # past argument
     shift # past value
     ;;
-    --roboip)
-    ROBOIP="$2"
+    --robot_ip)
+    ROBOT_IP="$2"
     shift # past argument
     shift # past value
     ;;
-    --baseip)
-    BASEIP="$2"
+    --base_ip)
+    BASE_IP="$2"
     shift # past argument
     shift # past value
     ;;
-    --robohostname)
-    ROBONAME="$2"
+    --robot_hostname)
+    ROBOT_NAME="$2"
     shift # past argument
     shift # past value
     ;;
-    --basehostname)
-    BASENAME="$2"
+    --base_hostname)
+    BASE_NAME="$2"
     shift # past argument
     shift # past value
     ;;
@@ -44,15 +44,15 @@ done
 ####################################################################
 # Set ROS environment variables and set up network files
 ####################################################################
-echo "export ROS_MASTER_URI=http://$ROBOIP:11311" >> ~/.bashrc
+echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.bashrc
 
 # Append ROS_IP to bashrc depending on which computer you are
-if [ "$ISBASE" == "y" ];
+if [ "$IS_BASE" == "y" ];
 then
-    echo "export ROS_IP=$BASEIP" >> ~/.bashrc
-elif [ "$ISBASE" == "n" ];
+    echo "export ROS_IP=$BASE_IP" >> ~/.bashrc
+elif [ "$IS_BASE" == "n" ];
 then
-    echo "export ROS_IP=$ROBOIP" >> ~/.bashrc
+    echo "export ROS_IP=$ROBOT_IP" >> ~/.bashrc
 else
     echo "Unknown runtime error."
     exit 1
@@ -62,16 +62,16 @@ fi
 echo "$PASSWORD" | sudo -S touch /etc/hosts
 {
   echo "127.0.0.1       localhost"
-  echo "$BASEIP        $BASENAME"
-  echo "$ROBOIP        $ROBONAME"
+  echo "$BASE_IP        $BASE_NAME"
+  echo "$ROBOT_IP        $ROBOT_NAME"
 } | sudo tee -a /etc/hosts
 sudo touch /etc/hostname
-if [ "$ISBASE" == "y" ];
+if [ "$IS_BASE" == "y" ];
 then
-    echo "$BASENAME" | sudo tee -a /etc/hostname
-elif [ "$ISBASE" == "n" ];
+    echo "$BASE_NAME" | sudo tee -a /etc/hostname
+elif [ "$IS_BASE" == "n" ];
 then
-    echo "$ROBONAME" | sudo tee -a /etc/hostname
+    echo "$ROBOT_NAME" | sudo tee -a /etc/hostname
 else
     echo "Unknown runtime error."
     exit 1

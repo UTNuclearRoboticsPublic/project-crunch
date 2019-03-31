@@ -32,9 +32,9 @@ class AppContext(ApplicationContext):
     current_computer_is_robot = None
     use_default_net_config = None
 
-    robo_username = None
-    robo_password = None
-    robo_hostname = None
+    robot_username = None
+    robot_password = None
+    robot_hostname = None
     
     def run(self):
         # Set up window
@@ -45,10 +45,10 @@ class AppContext(ApplicationContext):
         
         # Set default params
         self.ip_configs = {
-            "robo_ip": "10.0.0.2",
+            "robot_ip": "10.0.0.2",
             "base_ip": "10.0.0.1",
-            "robo_hostname": "base",
-            "base_hostname": "robo"
+            "robot_hostname": "robot",
+            "base_hostname": "base"
         }
         self.use_default_net_config = True
         return self.app.exec_()
@@ -275,14 +275,14 @@ class AppContext(ApplicationContext):
         path_to_bashrc = os.path.join(os.path.expanduser('~'), '.bashrc')
         if self.current_computer_is_robot is True:
             with open(path_to_bashrc, "a") as f:
-                f.write("export ROBO_CATKIN={}".format(self.catkin_dir))
+                f.write("export ROBOT_CATKIN={}".format(self.catkin_dir))
         else:        
             with open(path_to_bashrc, "a") as f:
                 f.write("export BASE_CATKIN={}\n".format(self.catkin_dir))
         with open(path_to_bashrc, "a") as f:
             f.write(
-                    "export ROBO_HOSTNAME={}\n"\
-                    .format(self.ip_configs['robo_hostname'])
+                    "export ROBOT_HOSTNAME={}\n"\
+                    .format(self.ip_configs['robot_hostname'])
             )
             f.write(
                     "export PROJECT_CRUNCH_INSTALL_PATH={}\n"\
@@ -338,16 +338,16 @@ class AppContext(ApplicationContext):
 
         # Set up network configurations via /etc/hostnames
         if self.current_computer_is_robot == True:
-            isbase = "n"
+            is_base = "n"
         else:
-            isbase = "y"
+            is_base = "y"
 
         ip_args = [
-            '--isbase', isbase,
-            '--roboip', self.ip_configs['robo_ip'], 
-            '--baseip', self.ip_configs['base_ip'], 
-            '--robohostname', self.ip_configs['robo_hostname'],
-            '--basehostname', self.ip_configs['base_hostname'], 
+            '--is_base', is_base,
+            '--robot_ip', self.ip_configs['robot_ip'], 
+            '--base_ip', self.ip_configs['base_ip'], 
+            '--robot_hostname', self.ip_configs['robot_hostname'],
+            '--base_hostname', self.ip_configs['base_hostname'], 
             '-p', '{}'.format(self.password)
         ]
         subprocess.run(
@@ -395,9 +395,9 @@ class AppContext(ApplicationContext):
         if retval == CANCEL_BUTTON:
             return
         elif retval == OK_BUTTON:
-            self.get_robo_username()
+            self.get_robot_username()
    
-    def get_robo_username(self):
+    def get_robot_username(self):
         """
         Prompt user for robot username.
         """
@@ -411,14 +411,14 @@ class AppContext(ApplicationContext):
                 ""
         )
         if ok:
-            self.robo_username = str(text)
-            self.get_robo_password()
+            self.robot_username = str(text)
+            self.get_robot_password()
         else:
-            self.robo_username = None
+            self.robot_username = None
             # TODO what should the Default be? Empty username will crash program
             self.first_page()
     
-    def get_robo_password(self):
+    def get_robot_password(self):
         """
         Prompt user for robot password.
         """
@@ -431,13 +431,13 @@ class AppContext(ApplicationContext):
                 ""
         )
         if ok:
-            self.robo_password = str(text)
-            self.get_robo_hostname()
+            self.robot_password = str(text)
+            self.get_robot_hostname()
         else:
-            self.robo_password = None
+            self.robot_password = None
             self.first_page()
 
-    def get_robo_hostname(self):
+    def get_robot_hostname(self):
         """
         Prompt user for robot hostname for SSH key configuration. If there
         is none, the user should input an empty string.
@@ -453,12 +453,12 @@ class AppContext(ApplicationContext):
         )
         if ok:
             if str(text) == "":
-                self.robo_hostname = self.ip_configs['robo_hostname']
+                self.robot_hostname = self.ip_configs['robot_hostname']
             else:
-                self.robo_hostname = str(text)
+                self.robot_hostname = str(text)
             self.exec_ssh_config()
         else:
-            self.robo_hostname = None
+            self.robot_hostname = None
             self.first_page()
     
     def exec_ssh_config(self):
@@ -467,10 +467,16 @@ class AppContext(ApplicationContext):
         a bash script to complete the actual configuration steps.
         """
         ssh_config_args = [
-            '--password', '{}'.format(self.robo_password),
-            '--username', '{}'.format(self.robo_username),
-            '--hostname', '{}'.format(self.robo_hostname)
+            '--password', '{}'.format(self.robot_password),
+            '--username', '{}'.format(self.robot_username),
+            '--hostname', '{}'.format(self.robot_hostname)
         ]
+        print("robot password")
+        print(self.robot_password)
+        print("robot username")
+        print(self.robot_username)
+        print("robot hostname")
+        print(self.robot_hostname)
         subprocess.run(
                 [
                     'bash', 

@@ -140,12 +140,10 @@ class GUIWindow(QMainWindow):
 
 
     def one_headset_config(self):
-        #TODO: set config = 1 headset
         self.two_headsets = False
         self.plug_in_headset()
      
     def two_headset_config(self):
-        #TODO: set config = 2 headset
         self.two_headsets = True
         self.plug_in_headset(extra_str=" first ")    
     
@@ -190,7 +188,7 @@ class GUIWindow(QMainWindow):
         return layout
 
     def launch_system_backend(self):
-        #self.launch_robo()
+        self.launch_robo()
         self.launch_base()
         self.position_windows()
 
@@ -224,8 +222,6 @@ class GUIWindow(QMainWindow):
 
             subprocess.call(["wmctrl","-ir",self.wid2,
                     "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
-
-
 
     def launch_robo(self):
         robo_client = self.robo_username + "@" + self.robo_hostname
