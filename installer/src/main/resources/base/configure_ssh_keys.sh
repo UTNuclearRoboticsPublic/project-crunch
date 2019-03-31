@@ -50,11 +50,24 @@ esac
 done
 
 # Check for network connectivity
-ping $ROBOT_HOSTNAME -c 4
+#ping $ROBOT_HOSTNAME -c 4
 # TODO grab output and use to provide feedback
 
-# You can delete these keys via ssh-add -D
-ssh-keygen -f ~/.ssh/id_rsa -t rsa -N "" \
+# If both files are present don't generate keys, use existing.
+if [[ -f ~/.ssh/id_rsa && -f ~/.ssh/id_rsa.pub ]]; 
+then
+        ssh-add \
+        && cat ~/.ssh/id_rsa.pub | \
+        sshpass -p "$ROBOT_PASSWORD" \
+        ssh -vvv -o StrictHostKeyChecking=no \
+        -o IdentitiesOnly=yes \
+        $ROBOT_USER@$ROBOT_HOSTNAME \
+        "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+# If neither file is present, generate keys.
+elif [[ ! -f ~/.ssh/id_rsa && ! -f ~/.ssh/id_rsa.pub ]];
+then
+        ssh-keygen -f ~/.ssh/id_rsa -t rsa -N "" \
         && ssh-add \
         && cat ~/.ssh/id_rsa.pub | \
         sshpass -p "$ROBOT_PASSWORD" \
@@ -62,6 +75,17 @@ ssh-keygen -f ~/.ssh/id_rsa -t rsa -N "" \
         -o IdentitiesOnly=yes \
         $ROBOT_USER@$ROBOT_HOSTNAME \
         "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys"
+
+# If only one file is present, give error to manually fix it.
+else
+    echo "You have only a private or only a public ssh key. You must either
+        delete one of them, or regenerate new keys, and re-run this."
+    exit 1
+fi 
+
+# If one file is missing 
+
+# You can delete these keys via ssh-add -D
 
 
     

@@ -348,7 +348,7 @@ class AppContext(ApplicationContext):
             '--base_ip', self.ip_configs['base_ip'], 
             '--robot_hostname', self.ip_configs['robot_hostname'],
             '--base_hostname', self.ip_configs['base_hostname'], 
-            '-p', '{}'.format(self.password)
+            '--password', '{}'.format(self.password)
         ]
         subprocess.run(
                 [
@@ -471,12 +471,6 @@ class AppContext(ApplicationContext):
             '--username', '{}'.format(self.robot_username),
             '--hostname', '{}'.format(self.robot_hostname)
         ]
-        print("robot password")
-        print(self.robot_password)
-        print("robot username")
-        print(self.robot_username)
-        print("robot hostname")
-        print(self.robot_hostname)
         subprocess.run(
                 [
                     'bash', 
