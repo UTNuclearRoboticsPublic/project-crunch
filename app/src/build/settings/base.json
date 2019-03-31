@@ -1,6 +1,6 @@
 {
-    "app_name": "SystemLauncher",
-    "author": "Katebaumli",
+    "app_name": "Project-Crunch",
+    "author": "Beathan Andersen, Kate Baumli, Daniel Diamont, Bryce Fuller, Caleb Johnson, John Sigmon",
     "main_module": "src/main/python/main.py",
     "version": "0.0.0"
 }
