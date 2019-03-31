@@ -285,6 +285,10 @@ class AppContext(ApplicationContext):
                     .format(self.ip_configs['robot_hostname'])
             )
             f.write(
+                    "export ROBOT_USERNAME={}\n"\
+                    .format(self.robot_username)
+            )
+            f.write(
                     "export PROJECT_CRUNCH_INSTALL_PATH={}\n"\
                     .format(self.install_dir)
             ) 
