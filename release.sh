@@ -17,7 +17,8 @@ fbs freeze
 cd ..
 mv app/target/ build/Project-Crunch/Project-Crunch/target
 cd build/Project-Crunch
-ln -s Project-Crunch/target/Project-Crunch/Project-Crunch Project-Crunch/Project-Crunch
+cp Project-Crunch/target/Project-Crunch/Project-Crunch Project-Crunch/Project-Crunch.run
+#ln -s Project-Crunch/target/Project-Crunch/Project-Crunch Project-Crunch/Project-Crunch
 cd ../../
 
 cd installer
@@ -25,7 +26,8 @@ fbs freeze
 cd ..
 mv installer/target/ build/Project-Crunch/Install/target
 cd build/Project-Crunch
-ln -s Install/target/Install/Install Install
+cp Install/target/Install/Install Install.run
+#ln -s Install/target/Install/Install Install
 cd ../../
 
 # Create zip and tar
