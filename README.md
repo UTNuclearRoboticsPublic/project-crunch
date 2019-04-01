@@ -10,6 +10,28 @@ Home of the resulting GUI for ece senior design.
 
 ## How to download the app and install it
 
+### Downloading
+
+
+### Installation
+
+
+### Troubleshooting
+
+#### FAQ
+
+> When I configure ssh keys, there is an error that says I only have one ssh key and I must manually reconfigure it. How do I do this?
+
+* You typically generate an ssh key pair, which includes a private key and a public key. The installer was only able to find one of the keys. If you do not have any need for your current key setup or it is a mistake, you can simply delete the extra key and re-run the configuration. If your key was moved by mistake, you can move it back and re-run the configuration. The program looks for keys in the default location, which is `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`. If the program finds a key pair, it will just use the existing keys.
+
+#### In Depth Troubleshooting
+
+We recommend cloning the repository and running the project from the command line to debug more in depth errors. You may also reference the code documentation at #TODO. #TODO add more here as we come across it. Also include instructions for gathering stdout and stderr from the project. 
+
+---
+
+## How to use the app
+
 ---
 
 ## How to modify and maintain this project

@@ -1,8 +1,32 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-#TODO parse args and get v number
+# This script reads in a version number, creates a build directory
+# and freezes both the launcher/app fbs project and the installer 
+# fbs project. It links to the created executables and creates a 
+# tar and a zip.
 
-RELEASE_NAME=project-crunch-0.0.1
+# Print usage
+if [ $# -lt 2 ];
+then
+    echo "Usage:"
+    echo "\tbash release.sh <-v|--version version number of release>"
+    exit 1
+fi
+
+# Parse args
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -v|--version)
+    VERSION="$2"
+    shift # past argument
+    shift # past value
+    ;;
+esac
+done
+
+RELEASE_NAME=project-crunch-$VERSION
 
 # Create build dir to hold our stuff
 rm -rf build
@@ -11,26 +35,24 @@ mkdir -p build/Project-Crunch
 mkdir -p build/Project-Crunch/Project-Crunch
 mkdir -p build/Project-Crunch/Install
 
-# Freeze both fbs projects
+# Freeze both fbs projects and create links to the executables
 cd app
 fbs freeze
 cd ..
 mv app/target/ build/Project-Crunch/Project-Crunch/target
-cd build/Project-Crunch
-cp Project-Crunch/target/Project-Crunch/Project-Crunch Project-Crunch/Project-Crunch.run
-#ln -s Project-Crunch/target/Project-Crunch/Project-Crunch Project-Crunch/Project-Crunch
-cd ../../
+cd build/Project-Crunch/Project-Crunch
+ln -s target/Project-Crunch/Project-Crunch Project-Crunch.run
+cd ../../../
 
 cd installer
 fbs freeze
 cd ..
 mv installer/target/ build/Project-Crunch/Install/target
 cd build/Project-Crunch
-cp Install/target/Install/Install Install.run
-#ln -s Install/target/Install/Install Install
+ln -s Install/target/Install/Install Install.run
 cd ../../
 
-# Create zip and tar
+# Create zip and tar in build folder
 cd build
 zip -r $RELEASE_NAME.zip Project-Crunch
 tar -cvf $RELEASE_NAME.tar.gz Project-Crunch
