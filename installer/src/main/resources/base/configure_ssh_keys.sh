@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 #
-# TODO
-
 # SSH KEY GENERATION
 #
 # Description:
@@ -25,7 +23,7 @@
 #	authentication identity file configured in ssh_config files, even if
 #	ssh-agent offers more identities.
 
-
+# Parse args
 while [[ $# -gt 0 ]]
 do
 key="$1"
@@ -37,7 +35,7 @@ case $key in
     shift
     ;;
     --username)
-    ROBOT_USER=$2
+    ROBOT_USERNAME=$2
     shift
     shift
     ;;
@@ -53,6 +51,10 @@ done
 #ping $ROBOT_HOSTNAME -c 4
 # TODO grab output and use to provide feedback
 
+# First export robot username and hostname to bashrc
+echo "export ROBOT_HOSTNAME=${ROBOT_HOSTNAME}" >> ~/.bashrc
+echo "export ROBOT_USERNAME=${ROBOT_USERNAME}" >> ~/.bashrc
+
 # If both files are present don't generate keys, use existing.
 if [[ -f ~/.ssh/id_rsa && -f ~/.ssh/id_rsa.pub ]]; 
 then
@@ -61,7 +63,7 @@ then
         sshpass -p "$ROBOT_PASSWORD" \
         ssh -vvv -o StrictHostKeyChecking=no \
         -o IdentitiesOnly=yes \
-        $ROBOT_USER@$ROBOT_HOSTNAME \
+        $ROBOT_USERNAME@$ROBOT_HOSTNAME \
         "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys"
 
 # If neither file is present, generate keys.
@@ -73,7 +75,7 @@ then
         sshpass -p "$ROBOT_PASSWORD" \
         ssh -vvv -o StrictHostKeyChecking=no \
         -o IdentitiesOnly=yes \
-        $ROBOT_USER@$ROBOT_HOSTNAME \
+        $ROBOT_USERNAME@$ROBOT_HOSTNAME \
         "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys"
 
 # If only one file is present, give error to manually fix it.
@@ -86,8 +88,6 @@ fi
 # If one file is missing 
 
 # You can delete these keys via ssh-add -D
-
-
     
 # Search through remote's .bashrc file for catkin workspace filepath.
 # Note:
@@ -97,11 +97,10 @@ fi
 #	we search through the remote's /.bashrc file for the 'export' command
 #	associated with the environment variable of interest. We copy the
 #	complete export command into our very own /bashrc file.
-ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USER@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
-ROBOT_PROJECT_CRUNCH_INSTALL_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USER@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_INSTALL_PATH')
+ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
+#ROBOT_PROJECT_CRUNCH_INSTALL_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_INSTALL_PATH')
 echo "$ROBOT_CATKIN" >> ~/.bashrc
-echo "export ROBOT_USER=$ROBOT_USER" >> ~/.bashrc
-echo "$ROBOT_PROJECT_CRUNCH_INSTALL_PATH" >> ~/.bashrc
+#echo "$ROBOT_PROJECT_CRUNCH_INSTALL_PATH" >> ~/.bashrc
 
 # stash ssh command
 # ssh root@remoteserver 'screen -S backup -d -m /root/backup.sh'

@@ -90,6 +90,13 @@ class AppContext(ApplicationContext):
         ) 
         if ok:
             self.password = str(text)
+            #if password is good
+            #    self.catkin_directory()
+            #else:
+            #    dialog with error and call this function again
+            #TODO
+
+
             self.catkin_directory()
             #self.install_directory() For now we skip this and ask the user to
             # do it manually.
@@ -243,6 +250,10 @@ class AppContext(ApplicationContext):
                     QLineEdit.Normal, 
                     '' 
             )
+            if ok_2:
+                self.ip_configs['base_ip'] = base_ip
+                self.ip_configs['robot_ip'] = robot_ip
+                self.exec_install()
         else:
             self.password = None
             self.first_page()
@@ -279,19 +290,19 @@ class AppContext(ApplicationContext):
         else:        
             with open(path_to_bashrc, "a") as f:
                 f.write("export BASE_CATKIN={}\n".format(self.catkin_dir))
-        with open(path_to_bashrc, "a") as f:
-            f.write(
-                    "export ROBOT_HOSTNAME={}\n"\
-                    .format(self.ip_configs['robot_hostname'])
-            )
-            f.write(
-                    "export ROBOT_USERNAME={}\n"\
-                    .format(self.robot_username)
-            )
-            f.write(
-                    "export PROJECT_CRUNCH_INSTALL_PATH={}\n"\
-                    .format(self.install_dir)
-            ) 
+        #with open(path_to_bashrc, "a") as f:
+            #f.write(
+            #        "export ROBOT_HOSTNAME={}\n"\
+            #        .format(self.ip_configs['robot_hostname'])
+            #)
+            #f.write(
+            #        "export ROBOT_USERNAME={}\n"\
+            #        .format(self.robot_username)
+            #)
+            #f.write(
+            #        "export PROJECT_CRUNCH_INSTALL_PATH={}\n"\
+            #        .format(self.install_dir)
+            #) 
 
         # Set up catkin workspace and install dependencies.
         # Script also sets up local hardware configurations for
@@ -383,7 +394,7 @@ class AppContext(ApplicationContext):
 		"\n\nThe two computers must be connected " +
                 "with a crossover ethernet cable, and you will need the username " +
                 "and password for the robot, as well as any custom hostname it " +
-                "may have been assigned."
+                "may have been assigned. This must be run from the base station."
         )
         msg.setWindowTitle("SSH key configuration")
         msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
