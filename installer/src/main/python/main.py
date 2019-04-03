@@ -286,23 +286,15 @@ class AppContext(ApplicationContext):
         path_to_bashrc = os.path.join(os.path.expanduser('~'), '.bashrc')
         if self.current_computer_is_robot is True:
             with open(path_to_bashrc, "a") as f:
-                f.write("export ROBOT_CATKIN={}".format(self.catkin_dir))
+                f.write("export ROBOT_CATKIN={}\n".format(self.catkin_dir))
+                f.write("export ROBOT_PROJECT_CRUNCH_INSTALL_PATH={}\n"\
+                    .format(self.install_dir)) 
         else:        
             with open(path_to_bashrc, "a") as f:
                 f.write("export BASE_CATKIN={}\n".format(self.catkin_dir))
-        #with open(path_to_bashrc, "a") as f:
-            #f.write(
-            #        "export ROBOT_HOSTNAME={}\n"\
-            #        .format(self.ip_configs['robot_hostname'])
-            #)
-            #f.write(
-            #        "export ROBOT_USERNAME={}\n"\
-            #        .format(self.robot_username)
-            #)
-            #f.write(
-            #        "export PROJECT_CRUNCH_INSTALL_PATH={}\n"\
-            #        .format(self.install_dir)
-            #) 
+                f.write("export BASE_PROJECT_CRUNCH_INSTALL_PATH={}\n"\
+                    .format(self.install_dir)) 
+
 
         # Set up catkin workspace and install dependencies.
         # Script also sets up local hardware configurations for
@@ -428,6 +420,12 @@ class AppContext(ApplicationContext):
         if ok:
             self.robot_username = str(text)
             self.get_robot_password()
+            
+            with open(path_to_bashrc, "a") as f:
+                f.write(
+                        "export ROBOT_USERNAME={}\n"\
+                        .format(self.robot_username)
+                )
         else:
             self.robot_username = None
             # TODO what should the Default be? Empty username will crash program
@@ -471,6 +469,12 @@ class AppContext(ApplicationContext):
                 self.robot_hostname = self.ip_configs['robot_hostname']
             else:
                 self.robot_hostname = str(text)
+            
+            with open(path_to_bashrc, "a") as f:
+                f.write(
+                        "export ROBOT_HOSTNAME={}\n"\
+                        .format(self.ip_configs['robot_hostname'])
+                )
             self.exec_ssh_config()
         else:
             self.robot_hostname = None
