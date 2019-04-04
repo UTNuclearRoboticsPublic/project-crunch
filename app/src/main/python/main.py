@@ -20,6 +20,7 @@ import subprocess
 import os
 import re
 from fbs_runtime.application_context import ApplicationContext
+from traceback import print_exc
 #TODO: Add "back"  buttons to each page
 #TODO: Make layout pretty
 
@@ -37,9 +38,9 @@ class GUIWindow(QMainWindow):
         self.main_widget.setLayout(QVBoxLayout())
         self.headset_refs = []
         self.get_env_vars()
-        self.robo_launch = self.robo_proj_dir + "/app/src/main/resources/base/robo_launch.sh"
+        self.robot_launch = self.robot_proj_dir + "/app/src/main/resources/base/robot_launch.sh"
         # TODO: 
-        self.kill_launch = self.robo_proj_dir + "/app/src/main/resources/base/kill_launch.sh"
+        self.kill_launch = self.robot_proj_dir + "/app/src/main/resources/base/kill_launch.sh"
         
         self.first_page()
 
@@ -49,11 +50,11 @@ class GUIWindow(QMainWindow):
         #subprocess.call([self.kill_launch])
 
     def get_env_vars(self):
-        self.robo_catkin = os.environ.get("ROBOT_CATKIN")
-        self.base_catkin = os.environ.get("BASE_CATKIN")
-        self.robo_hostname = os.environ.get("ROBOT_HOSTNAME")
-        self.robo_username = os.environ.get("ROBOT_USERNAME")
-        self.robo_proj_dir = os.environ.get("ROBOT_PROJECT_CRUNCH_INSTALL_PATH")
+        self.robot_catkin = os.environ.get("ROBOT_CATKIN_PATH")
+        self.base_catkin = os.environ.get("BASE_CATKIN_PATH")
+        self.robot_hostname = os.environ.get("ROBOT_HOSTNAME")
+        self.robot_username = os.environ.get("ROBOT_USERNAME")
+        self.robot_proj_dir = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
 
     class ChangeLayout:
         ''' 
@@ -191,7 +192,7 @@ class GUIWindow(QMainWindow):
         return layout
 
     def launch_system_backend(self):
-        self.launch_robo()
+        self.launch_robot()
         self.launch_base()
         self.position_windows()
 
@@ -226,20 +227,25 @@ class GUIWindow(QMainWindow):
             subprocess.call(["wmctrl","-ir",self.wid2,
                     "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
 
-    def launch_robo(self):
-        robo_client = self.robo_username + "@" + self.robo_hostname
-        #ssh_robo_launch_cmd = "ssh -f {} bash {} -c {}".format(robo_client,self.robo_launch,self.robo_catkin)
-        #print(ssh_robo_launch_cmd)
-        #subprocess.call(ssh_robo_launch_cmd.split(" "))
+    def launch_robot(self):
+        try:
+            robot_client = self.robot_username + "@" + self.robot_hostname
+        except TypeError:
+            # Prints the exception to stdout
+            print_exc() #TODO make sure this works
+
+        #ssh_robot_launch_cmd = "ssh -f {} bash {} -c {}".format(robot_client, self.robot_launch, self.robot_catkin)
+        #print(ssh_robot_launch_cmd)
+        #subprocess.call(ssh_robot_launch_cmd.split(" "))
 
         sshProcess = subprocess.Popen(['ssh',
-                                    robo_client],
+                                    robot_client],
                                     stdin=subprocess.PIPE,
                                     universal_newlines=True,
                                     bufsize=0)
         sshProcess.stdin.write("export DISPLAY=:0\n")
-        sshProcess.stdin.write("bash {} -c {}".format(self.robo_launch,
-            self.robo_catkin))
+        sshProcess.stdin.write("bash {} -c {}".format(self.robot_launch,
+            self.robot_catkin))
         sshProcess.stdin.close()
     
     def launch_base(self):
