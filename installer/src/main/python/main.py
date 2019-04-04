@@ -31,7 +31,6 @@ class AppContext(ApplicationContext):
     catkin_dir = None
     current_computer_is_robot = None
     use_default_net_config = None
-
     robot_username = None
     robot_password = None
     robot_hostname = None
@@ -95,57 +94,11 @@ class AppContext(ApplicationContext):
             #else:
             #    dialog with error and call this function again
             #TODO
-
-
-            self.catkin_directory()
-            #self.install_directory() For now we skip this and ask the user to
-            # do it manually.
+            self.select_comp()
         else:
             self.password = None
             self.first_page()
         return layout 
-
-    def install_directory(self):
-        """
-        Prompt user for directory to install app.
-        
-        Assigns the install directory to self as a full path.
-        """
-        layout = QVBoxLayout()
-        dialog = QFileDialog()
-        layout.addWidget(dialog)
-        text = dialog.getExistingDirectory(
-                QWidget(), 
-                'Please choose the directory where you wish to install Project\
-                        Crunch.' 
-        )
-        if text == "":
-            self.first_page()
-        else:    
-            self.install_dir = str(text)
-            self.catkin_directory()
-        return layout
-
-    def catkin_directory(self):
-        """
-        Prompt user for catkin workspace.
-
-        Assigns the catkin directory to self as a full path.
-        """
-        layout = QVBoxLayout()
-        dialog = QFileDialog()
-        layout.addWidget(dialog)
-        text = QFileDialog.getExistingDirectory(
-                QWidget(), 
-                'Please choose the directory where you wish to create your\
-                        catkin workspace.', 
-        )
-        if text == "":
-            self.first_page()
-        else:
-            self.catkin_dir = str(text)
-            self.select_comp()
-        return layout
 
     def select_comp(self):
         """
@@ -167,34 +120,77 @@ class AppContext(ApplicationContext):
                 self.current_computer_is_robot = True
             elif str(item).lower() == "no":
                 self.current_computer_is_robot = False
-            self.configure_ip()
+            # We only need the install directory if the user is on the robot
+            if self.current_computer_is_robot is True
+                self.install_directory()
+            else:
+                self.catkin_directory()
         else:
             self.first_page()
         return layout
-
-    def install_finished(self):
+    
+    def install_directory(self):
         """
-        Lets the user know that they are finished with the install.
-
+        Prompt user for directory to install app.
+        
+        Assigns the install directory to self as a full path.
         """
+        layout = QVBoxLayout()
+        dialog = QFileDialog()
+        layout.addWidget(dialog)
+        text = dialog.getExistingDirectory(
+                QWidget(), 
+                'Please choose the directory where you wish to install Project Crunch.' 
+        )
+        if text == "":
+            self.install_directory() # TODO Where should this go? What triggers this event?
+        else:    
+            self.install_dir = str(text)
+            self.catkin_directory() # change to dialog box
+        return layout
+
+    def install_info(self):
+        """
+        This is a dialog box to warn the user. If you are on the robot, you are 
+        prompted for the install directory, although we can't actually move the
+        application to the install directory for you. We tell the user this, and
+        let them know they will have to move the application to this directory
+        at the end of the process. 
+        """
+        #TODO make note of this in the FAQ- moving into wrong dir could break the app
         layout = QVBoxLayout()
         dialog = QInputDialog()
         layout.addWidget(dialog)
         item, ok = dialog.getItem(
                      QWidget(),
-                     'Install Complete!',
-                     'You have completed the install process! Copy the Project-Crunch directory to the location of your choosing. You can run ' +
-                     'Project Crunch by navigating to {} and clicking on the ' +
-                     'FIX ME icon.\n\n You must restart your computer and ' + #TODO
-                     'configure SSH keys before the application is fully ' +
-                     'functional.',
+                     'Once the install process has finished, you must copy the application over into its final destination, which you just chose. Be sure to write it down if needed, the install process can take up to twenty minutes on a clean machine.\nThe install directory you chose is:\n{}'.format(self.install_directory),
                      ['OK'],
         )
-        #TODO this needs to be fixed. the user may need to create a new symlink
         if ok:
-            self.first_page()
-        return layout #TODO does this return to first page
-    
+            self.catkin_directory()
+        return layout
+   
+
+    def catkin_directory(self):
+        """
+        Prompt user for catkin workspace.
+
+        Assigns the catkin directory to self as a full path.
+        """
+        layout = QVBoxLayout()
+        dialog = QFileDialog()
+        layout.addWidget(dialog)
+        text = QFileDialog.getExistingDirectory(
+                QWidget(), 
+                'Please choose the directory where you wish to create your catkin workspace.', 
+        )
+        if text == "":
+            self.catkin_directory() # TODO Where should this go? What triggers this event?
+        else:
+            self.catkin_dir = str(text)
+            self.configure_ip()
+        return layout
+
     def configure_ip(self):
         """
         Prompt user for whether they want custom IP and hostnames.
@@ -219,15 +215,14 @@ class AppContext(ApplicationContext):
         else:
             self.first_page()
         return layout
-    
+
     def get_custom_ip_settings(self):
-         # https://stackoverflow.com/questions/319279/how-to-validate-ip-address-in-python	
-         # TODO Ask user for custom IP (y/n)
-            # If yes, override defaults. Else return.
         """
         Prompt user for whether they want custom IP and hostnames.
 
         """
+        #TODO validate ip add
+        # https://stackoverflow.com/questions/319279/how-to-validate-ip-address-in-python	
         widget = QWidget()
         base_ip_dialog = QInputDialog()
         robot_ip_dialog = QInputDialog()
@@ -240,7 +235,7 @@ class AppContext(ApplicationContext):
                         Leave this field blank to use the defaults.', 
                 QLineEdit.Normal, 
                 '' 
-        )#TODO this structure works just finish writing it 
+        )#TODO does this work?? 
         if ok_1:
             robot_ip, ok_2 = robot_ip_dialog.getText(
                     widget,
@@ -286,13 +281,12 @@ class AppContext(ApplicationContext):
         path_to_bashrc = os.path.join(os.path.expanduser('~'), '.bashrc')
         if self.current_computer_is_robot is True:
             with open(path_to_bashrc, "a") as f:
-                f.write("export ROBOT_CATKIN={}\n".format(self.catkin_dir))
-                f.write("export ROBOT_PROJECT_CRUNCH_INSTALL_PATH={}\n"\
+                f.write("export ROBOT_CATKIN_PATH={}\n".format(self.catkin_dir))
+                f.write("export ROBOT_PROJECT_CRUNCH_PATH={}\n"\
                     .format(self.install_dir)) 
         else:        
             with open(path_to_bashrc, "a") as f:
-                f.write("export BASE_CATKIN={}\n".format(self.catkin_dir))
-                f.write("export BASE_PROJECT_CRUNCH_INSTALL_PATH={}\n"\
+                f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir))
                     .format(self.install_dir)) 
 
 
@@ -318,7 +312,7 @@ class AppContext(ApplicationContext):
         )
 
         # Copy over necessary configuration files
-        # Still need openhmd file ## TODO fix last launch file
+        # Still need openhmd file ## TODO fix last launch file #TODO 4/4/19 are these comments still accurate?
         single_cam_launch = 'single-cam.launch'
         dual_cam_launch = 'dual-cam.launch'
         vive_launch = 'vive.launch'
@@ -371,6 +365,35 @@ class AppContext(ApplicationContext):
 
         self.install_finished()
 
+    def install_finished(self):
+        """
+        Lets the user know that they are finished with the install.
+
+        """
+        layout = QVBoxLayout()
+        dialog = QInputDialog()
+        layout.addWidget(dialog)
+        item, ok = dialog.getItem(
+                     QWidget(),
+                     'Install Complete!',
+                     'You have completed the install process! Copy the Project-Crunch directory to the location of your choosing. You can run ' +
+                     'Project Crunch by navigating to {} and clicking on the ' +
+                     'FIX ME icon.\n\n You must restart your computer and ' + #TODO
+                     'configure SSH keys before the application is fully ' +
+                     'functional.',
+                     ['OK'],
+        )
+        if ok:
+            self.first_page()
+        return layout
+   
+    def wrong_password(self):
+        """
+        Tells the user they input the wrong password and sends them back to the password screen.
+        """
+        #TODO
+        pass
+
     def on_ssh_config_push(self):
         """
         This function begins execution of the SSH Key configuration chain of 
@@ -420,12 +443,6 @@ class AppContext(ApplicationContext):
         if ok:
             self.robot_username = str(text)
             self.get_robot_password()
-            
-            with open(path_to_bashrc, "a") as f:
-                f.write(
-                        "export ROBOT_USERNAME={}\n"\
-                        .format(self.robot_username)
-                )
         else:
             self.robot_username = None
             # TODO what should the Default be? Empty username will crash program
@@ -469,12 +486,6 @@ class AppContext(ApplicationContext):
                 self.robot_hostname = self.ip_configs['robot_hostname']
             else:
                 self.robot_hostname = str(text)
-            
-            with open(path_to_bashrc, "a") as f:
-                f.write(
-                        "export ROBOT_HOSTNAME={}\n"\
-                        .format(self.ip_configs['robot_hostname'])
-                )
             self.exec_ssh_config()
         else:
             self.robot_hostname = None
@@ -482,8 +493,9 @@ class AppContext(ApplicationContext):
     
     def exec_ssh_config(self):
         """
-        This function takes the previously gathered information and executes
-        a bash script to complete the actual configuration steps.
+        This function takes the previously robot password, username, and 
+        hostname and executes a bash script to complete the actual 
+        configuration steps.
         """
         ssh_config_args = [
             '--password', '{}'.format(self.robot_password),
