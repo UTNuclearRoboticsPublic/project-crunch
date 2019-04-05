@@ -17,6 +17,7 @@ from PyQt5.QtCore import QSize
 import functools
 import sys
 import subprocess
+import signal
 import os
 import re
 from fbs_runtime.application_context import ApplicationContext
@@ -193,7 +194,7 @@ class GUIWindow(QMainWindow):
 
     def launch_system_backend(self):
         self.launch_robot()
-        self.launch_base()
+        #self.launch_base()
         self.position_windows()
 
     def position_windows(self):
@@ -242,15 +243,29 @@ class GUIWindow(QMainWindow):
                                     robot_client],
                                     stdin=subprocess.PIPE,
                                     universal_newlines=True,
-                                    bufsize=0)
+                                    bufsize=0,
+                                    preexec_fn=os.setsid)
+
         sshProcess.stdin.write("export DISPLAY=:0\n")
-        sshProcess.stdin.write("bash {} -c {}".format(self.robot_launch,
+        sshProcess.stdin.write("source .bashrc\n")
+        sshProcess.stdin.write("bash {} -c {}\n".format(self.robot_launch,
             self.robot_catkin))
         sshProcess.stdin.close()
+
+        #sshProcess.kill()
+        # send SIGTERM to all process groups so GUI does not hang.
+        #os.killpg(os.getpgid(sshProcess.pid), signal.SIGTERM)
     
     def launch_base(self):
-        print("here")
-        subprocess.call([self.base_launch,"--catkin",self.base_catkin])
+        my_env = os.environ.copy()
+        my_env["PATH"] = "/usr/sbin:/sbin:" + my_env["PATH"]
+        print(my_env)
+        subprocess.Popen(["bash",
+                            self.base_launch,
+                            "--catkin",
+                            self.base_catkin],
+                            env=my_env)
+        #subprocess.call([self.base_launch,"--catkin",self.base_catkin])
     
 
 class AppContext(ApplicationContext):

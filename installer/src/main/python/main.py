@@ -121,7 +121,7 @@ class AppContext(ApplicationContext):
             elif str(item).lower() == "no":
                 self.current_computer_is_robot = False
             # We only need the install directory if the user is on the robot
-            if self.current_computer_is_robot is True
+            if self.current_computer_is_robot is True:
                 self.install_directory()
             else:
                 self.catkin_directory()
@@ -286,8 +286,7 @@ class AppContext(ApplicationContext):
                     .format(self.install_dir)) 
         else:        
             with open(path_to_bashrc, "a") as f:
-                f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir))
-                    .format(self.install_dir)) 
+                f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir)) 
 
 
         # Set up catkin workspace and install dependencies.
