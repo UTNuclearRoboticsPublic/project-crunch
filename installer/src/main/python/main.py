@@ -199,13 +199,13 @@ class AppContext(ApplicationContext):
         layout.addWidget(dialog)
         item, ok = dialog.getItem(
                      QWidget(),
+                     'Chosen Install Directory',
                      'Once the install process has finished, you must copy the application over into its final destination, which you just chose. Be sure to write it down if needed, the install process can take up to twenty minutes on a clean machine.\nThe install directory you chose is:\n{}'.format(self.install_directory),
                      ['OK'],
         )
         if ok:
             self.catkin_directory()
         return layout
-   
 
     def catkin_directory(self):
         """
@@ -224,9 +224,28 @@ class AppContext(ApplicationContext):
             self.catkin_directory() # TODO Where should this go? What triggers this event?
         else:
             self.catkin_dir = str(text)
-            self.configure_ip()
+            self.catkin_info()
         return layout
 
+    def catkin_info(self):
+        """
+        This function lets the user confirm the catkin directoryp that they selected.
+        """
+        layout = QVBoxLayout()
+        dialog = QInputDialog()
+        layout.addWidget(dialog)
+        item, ok = dialog.getItem(
+                     QWidget(),
+                     'Chosen Catkin Directory',
+                     'The catkin directory you chose is:\n{}\nIf this is incorrect, please hit cancel to select a different directory.'.format(self.catkin_directory),
+                     ['OK'],
+        )
+        if ok:
+            self.configure_ip()
+        else:
+            self.catkin_directory()
+        return layout
+   
     def configure_ip(self):
         """
         Prompt user for whether they want custom IP and hostnames.
