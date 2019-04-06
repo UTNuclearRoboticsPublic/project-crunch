@@ -89,16 +89,52 @@ class AppContext(ApplicationContext):
         ) 
         if ok:
             self.password = str(text)
-            #if password is good
-            #    self.catkin_directory()
-            #else:
-            #    dialog with error and call this function again
-            #TODO
-            self.select_comp()
+            if self.is_password_correct():
+                self.select_comp()
+            else:
+                self.password_incorrect()    
         else:
             self.password = None
             self.first_page()
         return layout 
+
+    def is_password_correct(self):
+        """
+        This function tries the password assigned to self to run a test sudo 
+        command. If the password is correct, the command makes a harmless echo
+        and the function returns true. If incorrect, subprocess throws an 
+        exception and we return false. Warning this has not been checked for
+        security vulnerabilities.
+        """
+        try:
+            out = subprocess.Popen(
+                    ['echo', self.password], stdout=subprocess.PIPE)
+            subprocess.check_output(
+                    ['sudo', '-S', 'echo','testing', 'password'], stdin=out.stdout) 
+            out.wait()
+        except subprocess.CalledProcessError:
+            return False
+        return True
+
+    def password_incorrect(self):
+        """
+        This function tells the user they put in the wrong password and asks
+        them to try again. It returns the user to the password input screen.
+        """
+        layout = QVBoxLayout()
+        dialog = QInputDialog()
+        layout.addWidget(dialog)
+        item, ok = dialog.getItem(
+                     QWidget(),
+                     'Incorrect Password',
+                     'You have entered an incorrect password. Please try again!',
+                     ['OK'],
+        )
+        if ok:
+            # Go back to where we prompt for the password
+            self.on_install_push()
+        return layout
+
 
     def select_comp(self):
         """
