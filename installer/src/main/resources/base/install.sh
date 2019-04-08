@@ -158,7 +158,7 @@ echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
 if [ ! -d "$OPENHMD_INSTALL_DEST" ];
 then
 	echo "[INFO: $MYFILENAME $LINENO] Cloning OpenHMD Lib into $INSTALL."
-    git clone https://github.com/OpenHMD/OpenHMD.git "$OPENHMD_INSTALL_DEST" #TODO extra slash here??
+    git clone https://github.com/OpenHMD/OpenHMD.git "$OPENHMD_INSTALL_DEST" 
     cd "$OPENHMD_INSTALL_DEST" || exit 1
     git checkout 4ca169b49ab4ea4bee2a8ea519d9ba8dcf662bd5
     cmake .
@@ -198,7 +198,9 @@ else
     echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
 fi
 
-# Copy over configuration files #TODO what are these for @Beathan
+# Copy over rules files for using a HMD in Linux.
+# This is required for Linux to allow access to a HMD.
+# For more info: https://github.com/OpenHMD/OpenHMD/wiki/Udev-rules-list
 if ! sudo cp "$OPENHMDRULES" "$OPENHMDRULES_DEST"
 then
 echo "[ERROR: $MYFILENAME $LINENO] Copy $OPENHMDRULES to $OPENHMDRULES_DEST failed"
@@ -209,15 +211,19 @@ fi
 # modified openHMD rules file above.
 sudo udevadm control --reload-rules
 
-# TODO Beathan explain this
+# This config file tells the GPU to allow a HMD to be treated like a regular monitor.
+# Without this, your GPU may block access to the HMD and make it appear as though
+# it does not work.
+# For more info: TODO find more info...
 if ! sudo cp "$VIVECONF" "$VIVECONF_DEST"
 then
     echo "[ERROR: $MYFILENAME $LINENO] Copy $VIVECONF to $VIVECONF_DEST failed"
     exit 1
 fi
 
-# Edit files #TODO fix these comments @Beathan
-# Point source file to location of "resources" file.
+# Point plugin source file to location of "resources" file.
+# The plugin has a hard coded absolute path to point to the resources configuration file.
+# Changing this is requried so the plugin will find the resources directory
 LINETOEDIT=73
 FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST"/"$SRC"/openhmd_display.cpp
 LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
@@ -225,7 +231,9 @@ sed -i "${LINETOEDIT}s|.*|    mResourcesCfg = \"${CATKIN}/src/rviz_openhmd/src/r
 LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
 
-# Point resource file to openHMD plugin source code @Beathan
+# Point resource file to openHMD resources directory.
+# This config file points to the location of the compositor resources used in the plugin.
+# It uses a hard coded absolute path to find the directory, so this needs to be set for each computer.
 LINETOEDIT=3
 FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST"/"$SRC"/resources.cfg
 LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
@@ -233,8 +241,10 @@ sed -i "${LINETOEDIT}s|.*|FileSystem=${CATKIN}/src/rviz_openhmd/src/resources/|"
 LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
 
-# Change permissions on USB ports to all users
-# Note potential vulnerability ? @Beathan
+# Change permissions on USB ports to all users.
+# There is a potential security vulnerability opened by changing these permissions.
+# It is required that the plugin have raw access to the USB port as only the plugin using OpenHMD,
+# and not the OS (who usually intercepts data), knows how to handle the incomming information.
 sudo chmod a+rw /dev/hidraw*
 
 # Export OpenHMD library and header location for CMakeLists in Catkin
