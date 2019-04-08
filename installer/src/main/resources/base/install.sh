@@ -214,7 +214,7 @@ sudo udevadm control --reload-rules
 # This config file tells the GPU to allow a HMD to be treated like a regular monitor.
 # Without this, your GPU may block access to the HMD and make it appear as though
 # it does not work.
-# For more info: TODO find more info...
+# For more info: http://doc-ok.org/?p=1763
 if ! sudo cp "$VIVECONF" "$VIVECONF_DEST"
 then
     echo "[ERROR: $MYFILENAME $LINENO] Copy $VIVECONF to $VIVECONF_DEST failed"
