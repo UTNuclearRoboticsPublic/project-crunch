@@ -121,20 +121,9 @@ class AppContext(ApplicationContext):
         This function tells the user they put in the wrong password and asks
         them to try again. It returns the user to the password input screen.
         """
-        layout = QVBoxLayout()
-        dialog = QInputDialog()
-        layout.addWidget(dialog)
-        item, ok = dialog.getItem(
-                     QWidget(),
-                     'Incorrect Password',
-                     'You have entered an incorrect password. Please try again!',
-                     ['OK'],
-        )
-        if ok:
-            # Go back to where we prompt for the password
-            self.on_install_push()
-        return layout
-
+        QMessageBox.about(self.window, "Incorrect Password", "The password entered was incorrect.\n" +
+                "Please try again.")
+        self.on_install_push()
 
     def select_comp(self):
         """
