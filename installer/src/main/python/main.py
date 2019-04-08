@@ -327,6 +327,7 @@ class AppContext(ApplicationContext):
         """
         
         # Tell the user not to worry about the program appearing to crash.
+        # Note: this will halt the code here until the 'OK' button in the message box is clicked.
         # This will solve the problem for now but should have a better solution in the future.
         QMessageBox.about(self.window, "Installing", "This process can take up to 20 min. The window may appear" +
             "to stop responding, but we are installing in the background. Click 'OK' to begin.")
@@ -429,6 +430,11 @@ class AppContext(ApplicationContext):
         Lets the user know that they are finished with the install.
 
         """
+        # TODO LOOK AT THIS COOL BOX I FOUND
+        # We can use this to pop up the install done message
+        #QMessageBox.about(self.window, "Install Complete", "The installation is complete!\n"+
+        #    "Next you must restart the computer and configure SSH keys before launching.")
+ 
         layout = QVBoxLayout()
         dialog = QInputDialog()
         layout.addWidget(dialog)
@@ -450,7 +456,9 @@ class AppContext(ApplicationContext):
         """
         Tells the user they input the wrong password and sends them back to the password screen.
         """
-        #TODO
+        QMessageBox.about(self.window, "Incorrect Password", "The password you entered was not correct.\n" +
+                "Please try again.")
+        self.on_install_push()
         pass
 
     def on_ssh_config_push(self):
