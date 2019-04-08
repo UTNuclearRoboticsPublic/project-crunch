@@ -325,6 +325,11 @@ class AppContext(ApplicationContext):
           4. Run a bash script to set up the network configurations.
 
         """
+        
+        # Tell the user not to worry about the program appearing to crash.
+        # This will solve the problem for now but should have a better solution in the future.
+        QMessageBox.about(self.window, "Installing", "This process can take up to 20 min. The window may appear" +
+            "to stop responding, but we are installing in the background. Click 'OK' to begin.")
 
         # Export environment variables no matter what machine we are on (robot
         # or base.) We collect the envs from the opposite machine when the
