@@ -39,6 +39,8 @@ class GUIWindow(QMainWindow):
         self.main_widget.setLayout(QVBoxLayout())
         self.headset_refs = []
         self.get_env_vars()
+        #TODO these work for pointing to the repo, not the final 
+        # installed application. They should be fixed eventually.
         if self.robot_project_crunch_path is not None:  
             self.robot_launch = os.path.join(
                     self.robot_project_crunch_path, 
@@ -251,7 +253,7 @@ class GUIWindow(QMainWindow):
         #ssh_robot_launch_cmd = "ssh -f {} bash {} -c {}".format(robot_client, self.robot_launch, self.robot_catkin)
         #print(ssh_robot_launch_cmd)
         #subprocess.call(ssh_robot_launch_cmd.split(" "))
-
+        
         sshProcess = subprocess.Popen(['ssh',
                                     robot_client],
                                     stdin=subprocess.PIPE,
