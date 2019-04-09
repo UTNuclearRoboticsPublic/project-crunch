@@ -249,7 +249,7 @@ class AppContext(ApplicationContext):
                      QWidget(),
                      'Configuring IPs',
                      'Do you have custom IP configurations you would like to enter?',
-                     ['Yes','No'],
+                     ['No', 'Yes'],
         )
         if ok:
             if str(item).lower() == "yes":
