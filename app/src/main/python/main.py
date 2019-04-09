@@ -39,9 +39,22 @@ class GUIWindow(QMainWindow):
         self.main_widget.setLayout(QVBoxLayout())
         self.headset_refs = []
         self.get_env_vars()
-        self.robot_launch = self.robot_proj_dir + "/app/src/main/resources/base/robot_launch.sh"
-        # TODO: 
-        self.kill_launch = self.robot_proj_dir + "/app/src/main/resources/base/kill_launch.sh"
+        if self.robot_project_crunch_path is not None:  
+            self.robot_launch = os.path.join(
+                    self.robot_project_crunch_path, 
+                    "project-crunch", "app", "src", 
+                    "main", "resources", "base",
+                    "robot_launch.sh"
+            )
+            self.kill_launch = os.path.join(
+                    self.robot_project_crunch_path,
+                    "project-crunch", "app", "src", 
+                    "main", "resources", "base", 
+                    "kill_launch.sh"
+            )
+        else:
+            #TODO make this error come back to the user instead of stdout
+            raise "self.robot_project_cruch_path is empty"
         
         self.first_page()
 
@@ -55,7 +68,7 @@ class GUIWindow(QMainWindow):
         self.base_catkin = os.environ.get("BASE_CATKIN_PATH")
         self.robot_hostname = os.environ.get("ROBOT_HOSTNAME")
         self.robot_username = os.environ.get("ROBOT_USERNAME")
-        self.robot_proj_dir = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
+        self.robot_project_crunch_path = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
 
     class ChangeLayout:
         ''' 
