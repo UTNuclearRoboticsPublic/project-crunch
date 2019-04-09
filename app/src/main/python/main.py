@@ -209,7 +209,7 @@ class GUIWindow(QMainWindow):
 
     def launch_system_backend(self):
         self.launch_robot()
-        #self.launch_base()
+        self.launch_base()
         self.position_windows()
 
     def position_windows(self):
