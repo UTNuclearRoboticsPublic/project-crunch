@@ -98,11 +98,7 @@ fi
 #	associated with the environment variable of interest. We copy the
 #	complete export command into our very own /bashrc file.
 ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
-#ROBOT_PROJECT_CRUNCH_INSTALL_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_INSTALL_PATH')
+ROBOT_PROJECT_CRUNCH_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_PATH')
+
 echo "$ROBOT_CATKIN" >> ~/.bashrc
-#echo "$ROBOT_PROJECT_CRUNCH_INSTALL_PATH" >> ~/.bashrc
-
-# stash ssh command
-# ssh root@remoteserver 'screen -S backup -d -m /root/backup.sh'
-# from https://unix.stackexchange.com/questions/30400/execute-remote-commands-completely-detaching-from-the-ssh-connection
-
+echo "$ROBOT_PROJECT_CRUNCH_PATH" >> ~/.bashrc
