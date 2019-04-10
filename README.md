@@ -4,7 +4,11 @@
 
 ## Introduction
 
-Home of the resulting GUI for ece senior design.
+The goal of this project is to build a long distance virtual reality (VR) streaming system for the University of Texas at Austin [Nuclear Robotics Group](https://robotics.me.utexas.edu/) (UT NRG.)
+
+This software allows operators to control a robot which inspects radioactive nuclear facilities. It takes 360° video data, processes and formats it for compatibility with the HTC Vive headset, and transmits the VR stream to the headset. A remote computer is needed onboard the robot to process and transmit the camera stream.
+
+This repository was initially designed and created by an ECE Senior Design team composed of: [Beathen Andersen](https://www.linkedin.com/in/beathan-andersen/), [Kate Baumli](https://www.linkedin.com/in/katebaumli/), [Daniel Diamont](https://www.linkedin.com/in/daniel-diamont/), [Bryce Fuller](https://www.linkedin.com/in/bryce-fuller/), [Caleb Johnson](https://www.linkedin.com/in/caleb-johnson-a96792149/), [John Sigmon](https://www.linkedin.com/in/john-sigmon/). The team was advised by Dr. Mitchell Pyror, head of the University of Texas Nuclear Robotics Group.
 
 ---
 
