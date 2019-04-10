@@ -122,7 +122,7 @@ then
     echo "[INFO: $MYFILENAME $LINENO] One camera launched from ${CAM_ARR[0]}" >> "$LOGFILE"
 elif [[ ${#CAM_ARR[@]} == 2 ]];
 then
-    roslaunch --wait video_stream_opencv $DUAL_CAM_LAUNCH video_stream_provider1:="$CAM1" video_stream_provider2:="$CAM2" &
+    roslaunch --wait video_stream_opencv $DUAL_CAM_LAUNCH video_stream_provider1:="$CAM1" video_stream_provider2:="$CAM2" width:="1440" height:="1440" &
     echo "[INFO: $MYFILENAME $LINENO] Two cameras launched from ${CAM_ARR[0]} and ${CAM_ARR[1]}" >> "$LOGFILE"
 else
     echo "[INFO: $MYFILENAME $LINENO] No cameras launched. Devices found at: $CAMS" >> "$LOGFILE"
