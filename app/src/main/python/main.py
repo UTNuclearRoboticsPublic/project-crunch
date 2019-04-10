@@ -39,26 +39,6 @@ class GUIWindow(QMainWindow):
         self.setCentralWidget(self.main_widget)
         self.main_widget.setLayout(QVBoxLayout())
         self.headset_refs = []
-        self.get_env_vars()
-        #TODO these work for pointing to the repo, not the final 
-        # installed application. They should be fixed eventually.
-        if self.robot_project_crunch_path is not None:  
-            self.robot_launch = os.path.join(
-                    self.robot_project_crunch_path, 
-                    "project-crunch", "app", "src", 
-                    "main", "resources", "base",
-                    "robot_launch.sh"
-            )
-            self.kill_launch = os.path.join(
-                    self.robot_project_crunch_path,
-                    "project-crunch", "app", "src", 
-                    "main", "resources", "base", 
-                    "kill_launch.sh"
-            )
-        else:
-            #TODO make this error come back to the user instead of stdout
-            raise "self.robot_project_cruch_path is empty"
-        
         self.first_page()
 
     def closeEvent(self, event):
@@ -72,7 +52,40 @@ class GUIWindow(QMainWindow):
         self.robot_hostname = os.environ.get("ROBOT_HOSTNAME")
         self.robot_username = os.environ.get("ROBOT_USERNAME")
         self.robot_project_crunch_path = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
-
+        if self.robot_project_crunch_path is not None: 
+            # Use this section for running the launcher via
+            # the zip or tar release, ie normal use.
+            self.robot_launch = os.path.join(
+                    self.robot_project_crunch_path,
+                    "Project-Crunch", "Project-Crunch",
+                    "target", "Project-Crunch",
+                    "robot_launch.sh"
+            )
+            self.kill_launch = os.path.join(
+                    self.robot_project_crunch_path,
+                    "Project-Crunch", "Project-Crunch",
+                    "target", "Project-Crunch",
+                    "kill_launch.sh"
+            )
+            # Use this section for running the launcher
+            # in "debug" mode via fbs run, where the installation 
+            # being considered is actually the repository.
+            #self.robot_launch = os.path.join(
+            #        self.robot_project_crunch_path, 
+            #        "project-crunch", "app", "src", 
+            #        "main", "resources", "base",
+            #        "robot_launch.sh"
+            #)
+            #self.kill_launch = os.path.join(
+            #        self.robot_project_crunch_path,
+            #        "project-crunch", "app", "src", 
+            #        "main", "resources", "base", 
+            #        "kill_launch.sh"
+            #)
+        else:
+            raise 
+        
+    
     class ChangeLayout:
         ''' 
         Decorator to wrap all page-defining functions to set the layout to the
@@ -124,6 +137,10 @@ class GUIWindow(QMainWindow):
    
     @ChangeLayout(size=(300,100))
     def info_page(self):
+        try:
+            self.get_env_vars()
+        except:
+            # return a different layout telling the user they done fucked up and send em back to first page
         layout = QVBoxLayout()
         info = QLabel("Make sure cameras are plugged into robot computer and turned on!")
         ok_button = QPushButton("OK, Got It!")
