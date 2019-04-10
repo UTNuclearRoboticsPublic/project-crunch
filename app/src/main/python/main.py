@@ -20,6 +20,7 @@ import subprocess
 import signal
 import os
 import re
+import time
 from fbs_runtime.application_context import ApplicationContext
 from traceback import print_exc
 #TODO: Add "back"  buttons to each page
@@ -210,6 +211,8 @@ class GUIWindow(QMainWindow):
     def launch_system_backend(self):
         self.launch_robot()
         self.launch_base()
+        #ISSUE: temporary workaround to position windows running before OpenHMD plugin is added
+        time.sleep(30)
         self.position_windows()
 
     def position_windows(self):
@@ -229,19 +232,24 @@ class GUIWindow(QMainWindow):
                 pass
        
         # get HDMI/DP port ID using grep to find window position
-        hmd1, err = subprocess.Popen(["wmctrl","-l","|","grep","HMD1"],
-                stdout=subprocess.PIPE).communicate()
-        self.wid1 = hmd1.split()[0]
-        subprocess.call(["wmctrl","-ir",self.wid1,
-                "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
-        
-        if self.two_headsets:
-            hmd2, err = subprocess.Popen(["wmctrl","-l","|","grep","HMD2"],
-                    stdout=subprocess.PIPE).communicate()
-            self.wid2 = hmd2.split()[0]
+        windows = subprocess.Popen(["wmctrl","-l"],stdout=subprocess.PIPE)
+        hmd1, err = subprocess.Popen(['grep','HMD1'],
+                        stdin=windows.stdout,
+                                stdout=subprocess.PIPE).communicate()
+        wid1 = hmd1.split()[0]
+        print(wid1)
+        subprocess.call(["wmctrl","-ir",wid1,
+            "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
 
-            subprocess.call(["wmctrl","-ir",self.wid2,
-                    "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
+        if self.two_headsets:
+            windows = subprocess.Popen(["wmctrl","-l"],stdout=subprocess.PIPE)
+            hmd2, err = subprocess.Popen(["grep","HMD2"],
+                        stdin=windows.stdout,
+                        stdout=subprocess.PIPE).communicate()
+            print(hmd2)
+            wid2 = hmd2.split()[0]
+            subprocess.call(["wmctrl","-ir",wid2,
+                "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
 
     def launch_robot(self):
         try:
