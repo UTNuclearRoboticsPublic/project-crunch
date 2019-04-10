@@ -3,6 +3,10 @@
 .e/
 .venv/
 
+*log*
+*OpenHMD*
+*build*
+
 # Compiled code
 target/
 __pycache__/

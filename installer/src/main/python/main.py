@@ -121,20 +121,9 @@ class AppContext(ApplicationContext):
         This function tells the user they put in the wrong password and asks
         them to try again. It returns the user to the password input screen.
         """
-        layout = QVBoxLayout()
-        dialog = QInputDialog()
-        layout.addWidget(dialog)
-        item, ok = dialog.getItem(
-                     QWidget(),
-                     'Incorrect Password',
-                     'You have entered an incorrect password. Please try again!',
-                     ['OK'],
-        )
-        if ok:
-            # Go back to where we prompt for the password
-            self.on_install_push()
-        return layout
-
+        QMessageBox.about(self.window, "Incorrect Password", "The password entered was incorrect.\n" +
+                "Please try again.")
+        self.on_install_push()
 
     def select_comp(self):
         """
@@ -260,7 +249,7 @@ class AppContext(ApplicationContext):
                      QWidget(),
                      'Configuring IPs',
                      'Do you have custom IP configurations you would like to enter?',
-                     ['Yes','No'],
+                     ['No', 'Yes'],
         )
         if ok:
             if str(item).lower() == "yes":
@@ -325,6 +314,12 @@ class AppContext(ApplicationContext):
           4. Run a bash script to set up the network configurations.
 
         """
+        
+        # Tell the user not to worry about the program appearing to crash.
+        # Note: this will halt the code here until the 'OK' button in the message box is clicked.
+        # This will solve the problem for now but should have a better solution in the future.
+        QMessageBox.about(self.window, "Installing", "This process can take up to 20 min. The window may appear" +
+            "to stop responding, but we are installing in the background. Click 'OK' to begin.")
 
         # Export environment variables no matter what machine we are on (robot
         # or base.) We collect the envs from the opposite machine when the
@@ -424,6 +419,11 @@ class AppContext(ApplicationContext):
         Lets the user know that they are finished with the install.
 
         """
+        # TODO LOOK AT THIS COOL BOX I FOUND
+        # We can use this to pop up the install done message
+        #QMessageBox.about(self.window, "Install Complete", "The installation is complete!\n"+
+        #    "Next you must restart the computer and configure SSH keys before launching.")
+ 
         layout = QVBoxLayout()
         dialog = QInputDialog()
         layout.addWidget(dialog)
@@ -445,7 +445,9 @@ class AppContext(ApplicationContext):
         """
         Tells the user they input the wrong password and sends them back to the password screen.
         """
-        #TODO
+        QMessageBox.about(self.window, "Incorrect Password", "The password you entered was not correct.\n" +
+                "Please try again.")
+        self.on_install_push()
         pass
 
     def on_ssh_config_push(self):

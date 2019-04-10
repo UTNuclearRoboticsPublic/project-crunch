@@ -57,6 +57,7 @@ else
     echo "Unknown runtime error."
     exit 1
 fi
+
 # Get sudo privileges with the password arg
 # Use it to add IPs and hostnames to files
 echo "$PASSWORD" | sudo -S touch /etc/hosts
@@ -65,6 +66,7 @@ echo "$PASSWORD" | sudo -S touch /etc/hosts
   echo "$BASE_IP        $BASE_NAME"
   echo "$ROBOT_IP        $ROBOT_NAME"
 } | sudo tee -a /etc/hosts
+
 sudo touch /etc/hostname
 if [ "$IS_BASE" == "y" ];
 then
@@ -75,4 +77,15 @@ then
 else
     echo "Unknown runtime error."
     exit 1
+fi
+
+# This allows ROS to use port 11311 permanently.
+# This command only needs to run on the robot computer.
+# If this is a security issue move this funcitonality into robo_launch.sh.
+# Use the following command:
+# sudo iptables -I INPUT -p tcp --dport 11311 --syn -j ACCEPT
+# The port will be closed after a computer restart.
+if [ "$IS_BASE" == "n" ];
+then
+    sudo ufw allow 11311/tcp
 fi

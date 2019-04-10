@@ -20,6 +20,7 @@ import subprocess
 import signal
 import os
 import re
+import time
 from fbs_runtime.application_context import ApplicationContext
 from traceback import print_exc
 #TODO: Add "back"  buttons to each page
@@ -38,11 +39,6 @@ class GUIWindow(QMainWindow):
         self.setCentralWidget(self.main_widget)
         self.main_widget.setLayout(QVBoxLayout())
         self.headset_refs = []
-        self.get_env_vars()
-        self.robot_launch = self.robot_proj_dir + "/app/src/main/resources/base/robot_launch.sh"
-        # TODO: 
-        self.kill_launch = self.robot_proj_dir + "/app/src/main/resources/base/kill_launch.sh"
-        
         self.first_page()
 
     def closeEvent(self, event):
@@ -51,12 +47,64 @@ class GUIWindow(QMainWindow):
         #subprocess.call([self.kill_launch])
 
     def get_env_vars(self):
+        error_msg = ""
+        missing_env_vars = 0
         self.robot_catkin = os.environ.get("ROBOT_CATKIN_PATH")
+        if not self.robot_catkin:
+            error_msg += "ROBOT_CATKIN_PATH\n"
+            missing_env_vars += 1
         self.base_catkin = os.environ.get("BASE_CATKIN_PATH")
+        if not self.base_catkin: 
+            error_msg += "BASE_CATKIN_PATH\n"
+            missing_env_vars += 1
         self.robot_hostname = os.environ.get("ROBOT_HOSTNAME")
+        if not self.robot_hostname:
+            error_msg += "ROBOT_HOSTNAME\n"
+            missing_env_vars += 1
         self.robot_username = os.environ.get("ROBOT_USERNAME")
-        self.robot_proj_dir = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
-
+        if not self.robot_username:
+            error_msg += "ROBOT_USERNAME\n"
+            missing_env_vars += 1
+        self.robot_project_crunch_path = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
+        if not self.robot_project_crunch_path: 
+            error_msg += "ROBOT_PROJECT_CRUNCH_PATH\n"
+            missing_env_vars += 1
+        if missing_env_vars:
+            if missing_env_vars == 1:
+                return "The following environment variable is not properly set:\n\n"+error_msg+"\nPlease close the app, set it (either by rerunning\n the installer and ssh configuration or using\n'export {}=<value>') and try again.".format(error_msg.rstrip())
+            else: 
+                return "The following {} environment variables are not properly set:\n\n".format(missing_env_vars) + error_msg+"\nPlease close the app, set them (either by rerunning\n the installer and ssh configuration or using \n'export <ENVIRONMENT_VARIABLE_NAME>=<value>') and try again."
+        else:
+            # Use this section for running the launcher via
+            # the zip or tar release, ie normal use.
+            self.robot_launch = os.path.join(
+                    self.robot_project_crunch_path,
+                    "Project-Crunch", "Project-Crunch",
+                    "target", "Project-Crunch",
+                    "robot_launch.sh"
+            )
+            self.kill_launch = os.path.join(
+                    self.robot_project_crunch_path,
+                    "Project-Crunch", "Project-Crunch",
+                    "target", "Project-Crunch",
+                    "kill_launch.sh"
+            )
+            # Use this section for running the launcher
+            # in "debug" mode via fbs run, where the installation 
+            # being considered is actually the repository.
+            #self.robot_launch = os.path.join(
+            #        self.robot_project_crunch_path, 
+            #        "project-crunch", "app", "src", 
+            #        "main", "resources", "base",
+            #        "robot_launch.sh"
+            #)
+            #self.kill_launch = os.path.join(
+            #        self.robot_project_crunch_path,
+            #        "project-crunch", "app", "src", 
+            #        "main", "resources", "base", 
+            #        "kill_launch.sh"
+            #)
+    
     class ChangeLayout:
         ''' 
         Decorator to wrap all page-defining functions to set the layout to the
@@ -108,6 +156,12 @@ class GUIWindow(QMainWindow):
    
     @ChangeLayout(size=(300,100))
     def info_page(self):
+        error =  self.get_env_vars() # Either returns error msg or None
+        if error:
+            layout = QVBoxLayout()
+            err_info = QLabel(error)
+            layout.addWidget(err_info)
+            return layout
         layout = QVBoxLayout()
         info = QLabel("Make sure cameras are plugged into robot computer and turned on!")
         ok_button = QPushButton("OK, Got It!")
@@ -194,7 +248,9 @@ class GUIWindow(QMainWindow):
 
     def launch_system_backend(self):
         self.launch_robot()
-        #self.launch_base()
+        self.launch_base()
+        #ISSUE: temporary workaround to position windows running before OpenHMD plugin is added
+        time.sleep(30)
         self.position_windows()
 
     def position_windows(self):
@@ -214,19 +270,24 @@ class GUIWindow(QMainWindow):
                 pass
        
         # get HDMI/DP port ID using grep to find window position
-        hmd1, err = subprocess.Popen(["wmctrl","-l","|","grep","HMD1"],
-                stdout=subprocess.PIPE).communicate()
-        self.wid1 = hmd1.split()[0]
-        subprocess.call(["wmctrl","-ir",self.wid1,
-                "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
-        
-        if self.two_headsets:
-            hmd2, err = subprocess.Popen(["wmctrl","-l","|","grep","HMD2"],
-                    stdout=subprocess.PIPE).communicate()
-            self.wid2 = hmd2.split()[0]
+        windows = subprocess.Popen(["wmctrl","-l"],stdout=subprocess.PIPE)
+        hmd1, err = subprocess.Popen(['grep','HMD1'],
+                        stdin=windows.stdout,
+                                stdout=subprocess.PIPE).communicate()
+        wid1 = hmd1.split()[0]
+        print(wid1)
+        subprocess.call(["wmctrl","-ir",wid1,
+            "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
 
-            subprocess.call(["wmctrl","-ir",self.wid2,
-                    "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
+        if self.two_headsets:
+            windows = subprocess.Popen(["wmctrl","-l"],stdout=subprocess.PIPE)
+            hmd2, err = subprocess.Popen(["grep","HMD2"],
+                        stdin=windows.stdout,
+                        stdout=subprocess.PIPE).communicate()
+            print(hmd2)
+            wid2 = hmd2.split()[0]
+            subprocess.call(["wmctrl","-ir",wid2,
+                "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
 
     def launch_robot(self):
         try:
@@ -238,7 +299,7 @@ class GUIWindow(QMainWindow):
         #ssh_robot_launch_cmd = "ssh -f {} bash {} -c {}".format(robot_client, self.robot_launch, self.robot_catkin)
         #print(ssh_robot_launch_cmd)
         #subprocess.call(ssh_robot_launch_cmd.split(" "))
-
+        
         sshProcess = subprocess.Popen(['ssh',
                                     robot_client],
                                     stdin=subprocess.PIPE,
