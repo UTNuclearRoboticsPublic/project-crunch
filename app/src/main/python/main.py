@@ -47,12 +47,34 @@ class GUIWindow(QMainWindow):
         #subprocess.call([self.kill_launch])
 
     def get_env_vars(self):
+        error_msg = ""
+        missing_env_vars = 0
         self.robot_catkin = os.environ.get("ROBOT_CATKIN_PATH")
+        if not self.robot_catkin:
+            error_msg += "ROBOT_CATKIN_PATH\n"
+            missing_env_vars += 1
         self.base_catkin = os.environ.get("BASE_CATKIN_PATH")
+        if not self.base_catkin: 
+            error_msg += "BASE_CATKIN_PATH\n"
+            missing_env_vars += 1
         self.robot_hostname = os.environ.get("ROBOT_HOSTNAME")
+        if not self.robot_hostname:
+            error_msg += "ROBOT_HOSTNAME\n"
+            missing_env_vars += 1
         self.robot_username = os.environ.get("ROBOT_USERNAME")
+        if not self.robot_username:
+            error_msg += "ROBOT_USERNAME\n"
+            missing_env_vars += 1
         self.robot_project_crunch_path = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
-        if self.robot_project_crunch_path is not None: 
+        if not self.robot_project_crunch_path: 
+            error_msg += "ROBOT_PROJECT_CRUNCH_PATH\n"
+            missing_env_vars += 1
+        if missing_env_vars:
+            if missing_env_vars == 1:
+                return "The following environment variable is not properly set:\n\n"+error_msg+"\nPlease close the app, set it (either by rerunning\n the installer and ssh configuration or using\n'export {}=<value>') and try again.".format(error_msg.rstrip())
+            else: 
+                return "The following {} environment variables are not properly set:\n\n".format(missing_env_vars) + error_msg+"\nPlease close the app, set them (either by rerunning\n the installer and ssh configuration or using \n'export <ENVIRONMENT_VARIABLE_NAME>=<value>') and try again."
+        else:
             # Use this section for running the launcher via
             # the zip or tar release, ie normal use.
             self.robot_launch = os.path.join(
@@ -82,9 +104,6 @@ class GUIWindow(QMainWindow):
             #        "main", "resources", "base", 
             #        "kill_launch.sh"
             #)
-        else:
-            raise 
-        
     
     class ChangeLayout:
         ''' 
@@ -137,10 +156,12 @@ class GUIWindow(QMainWindow):
    
     @ChangeLayout(size=(300,100))
     def info_page(self):
-        try:
-            self.get_env_vars()
-        except:
-            # return a different layout telling the user they done fucked up and send em back to first page
+        error =  self.get_env_vars() # Either returns error msg or None
+        if error:
+            layout = QVBoxLayout()
+            err_info = QLabel(error)
+            layout.addWidget(err_info)
+            return layout
         layout = QVBoxLayout()
         info = QLabel("Make sure cameras are plugged into robot computer and turned on!")
         ok_button = QPushButton("OK, Got It!")
