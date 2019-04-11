@@ -14,13 +14,21 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ---
 
+## Table of Contents
+
+TODO add links here to all h2 and h3 tags
+
+---
+
 ## How to download the app and install it
 
 ### Downloading
 
+TODO how to download from release 
 
 ### Installation
 
+TODO run on both computers, config ssh keys, configure lan etc
 
 ### Troubleshooting
 
@@ -118,10 +126,10 @@ The script will compile the projects and generate a zip and a tar file. All arti
 The script must be run with the version number as an argument. For example:
 
 ```bash
-#TODO
+bash release.sh --version 0.0.1
 ```
 
-#TODO follow instructions to set new release https://help.github.com/en/articles/creating-releases
+This generates the `build/` directory which contains a `.tar.gz` and a `.zip`. Create a release by following the GitHub documentation [here](https://help.github.com/en/articles/creating-releases).
 
-or future #TODO automate it https://developer.github.com/v3/guides/getting-started/
+Future work? #TODO automate it https://developer.github.com/v3/guides/getting-started/
 https://developer.github.com/v3/repos/releases/#create-a-release
