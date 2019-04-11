@@ -50,26 +50,28 @@ class GUIWindow(QMainWindow):
         error_msg = ""
         missing_env_vars = 0
         self.robot_catkin = os.environ.get("ROBOT_CATKIN_PATH")
-        if not self.robot_catkin:
+        self.base_catkin = os.environ.get("BASE_CATKIN_PATH")
+        self.robot_hostname = os.environ.get("ROBOT_HOSTNAME")
+        self.robot_username = os.environ.get("ROBOT_USERNAME")
+        self.robot_project_crunch_path = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
+
+        print(self.robot_catkin, self.base_catkin, self.robot_hostname, self.robot_username)
+        if self.robot_catkin is None:
             error_msg += "ROBOT_CATKIN_PATH\n"
             missing_env_vars += 1
-        self.base_catkin = os.environ.get("BASE_CATKIN_PATH")
-        if not self.base_catkin: 
+        if self.base_catkin is None: 
             error_msg += "BASE_CATKIN_PATH\n"
             missing_env_vars += 1
-        self.robot_hostname = os.environ.get("ROBOT_HOSTNAME")
-        if not self.robot_hostname:
+        if self.robot_hostname is None:
             error_msg += "ROBOT_HOSTNAME\n"
             missing_env_vars += 1
-        self.robot_username = os.environ.get("ROBOT_USERNAME")
-        if not self.robot_username:
+        if self.robot_username is None:
             error_msg += "ROBOT_USERNAME\n"
             missing_env_vars += 1
-        self.robot_project_crunch_path = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
-        if not self.robot_project_crunch_path: 
+        if self.robot_project_crunch_path is None: 
             error_msg += "ROBOT_PROJECT_CRUNCH_PATH\n"
             missing_env_vars += 1
-        if missing_env_vars:
+        if missing_env_vars > 0:
             if missing_env_vars == 1:
                 return "The following environment variable is not properly set:\n\n"+error_msg+"\nPlease close the app, set it (either by rerunning\n the installer and ssh configuration or using\n'export {}=<value>') and try again.".format(error_msg.rstrip())
             else: 
@@ -104,6 +106,8 @@ class GUIWindow(QMainWindow):
             #        "main", "resources", "base", 
             #        "kill_launch.sh"
             #)
+            
+            return None
     
     class ChangeLayout:
         ''' 
@@ -157,19 +161,19 @@ class GUIWindow(QMainWindow):
     @ChangeLayout(size=(300,100))
     def info_page(self):
         error =  self.get_env_vars() # Either returns error msg or None
-        if error:
+        if error is None:
+            layout = QVBoxLayout()
+            info = QLabel("Make sure cameras are plugged into robot computer and turned on!")
+            ok_button = QPushButton("OK, Got It!")
+            ok_button.clicked.connect(self.how_many_headsets)
+            layout.addWidget(info)
+            layout.addWidget(ok_button)
+            return layout
+        else:
             layout = QVBoxLayout()
             err_info = QLabel(error)
             layout.addWidget(err_info)
             return layout
-        layout = QVBoxLayout()
-        info = QLabel("Make sure cameras are plugged into robot computer and turned on!")
-        ok_button = QPushButton("OK, Got It!")
-        ok_button.clicked.connect(self.how_many_headsets)
-        layout.addWidget(info)
-        layout.addWidget(ok_button)
-        return layout
-
 
     @ChangeLayout(size=(300,100),title="One or Two Headsets?")
     def how_many_headsets(self):

@@ -38,6 +38,14 @@ We recommend cloning the repository and running the project from the command lin
 
 ## How to use the app
 
+### From the Release
+
+TODO Put instructions here on how to use the app from the release.
+
+### From the Command Line
+
+Running the app from the command line requires a python environment, and a few minor changes to the code. First install a python environment and set up the project requirements. Instructions are available ![here](#Setting-up-a-virtual-environment).
+
 ---
 
 ## How to modify and maintain this project
@@ -84,6 +92,13 @@ When finished with the repository or environment, you can deactivate it with the
 (.env) $ deactivate
 $ 
 ```
+
+---
+
+### Pointing the app to a repository instead of a release
+
+If you wish to run the main app from the command line, you must first modify `app/src/main/python/main.py`. Go to the `get_env_vars()` function and find the code that assigns a path to `self.robot_launch` and `self.kill_launch`. There are alternate definitions for these variables commented out, they must be uncommented.
+
 ---
 
 ### Creating a new release
