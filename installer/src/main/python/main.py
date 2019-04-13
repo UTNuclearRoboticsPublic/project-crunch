@@ -323,19 +323,28 @@ class AppContext(ApplicationContext):
 
         # Export environment variables no matter what machine we are on (robot
         # or base.) We collect the envs from the opposite machine when the
-        # user runs ssh config. Envs are written to the bashrc. Ideally they
+        # user runs ssh config. Envs are written to the bashrc for shell scripts,
+        # and xsessionrc for GNOME/Unity (X11 sessions). Ideally they
         # are pruned at some point, but for now they just add new ones. This 
-        # is OK because the new var is written to the end of the bashrc and 
-        # so the definition overwrites any previous one. We need to check the 
-        # current computer because the catkin workspace could be different.
+        # is OK because the new var is written to the end of the bashrc and
+        # xsessionrc so the definition overwrites any previous one.
+        # We need to check the current computer because the catkin workspace
+        # could be different.
         path_to_bashrc = os.path.join(os.path.expanduser('~'), '.bashrc')
+        path_to_xsessionrc = os.path.join(os.path.expanduser('~'), '.xsessionrc')
         if self.current_computer_is_robot is True:
             with open(path_to_bashrc, "a") as f:
                 f.write("export ROBOT_CATKIN_PATH={}\n".format(self.catkin_dir))
                 f.write("export ROBOT_PROJECT_CRUNCH_PATH={}\n"\
                     .format(self.install_dir)) 
+            with open(path_to_xsessionrc, "a") as f:
+                f.write("export ROBOT_CATKIN_PATH={}\n".format(self.catkin_dir))
+                f.write("export ROBOT_PROJECT_CRUNCH_PATH={}\n"\
+                    .format(self.install_dir)) 
         else:        
             with open(path_to_bashrc, "a") as f:
+                f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir)) 
+            with open(path_to_xsessionrc, "a") as f:
                 f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir)) 
 
 

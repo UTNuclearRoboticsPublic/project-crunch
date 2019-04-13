@@ -54,6 +54,8 @@ done
 # First export robot username and hostname to bashrc
 echo "export ROBOT_HOSTNAME=${ROBOT_HOSTNAME}" >> ~/.bashrc
 echo "export ROBOT_USERNAME=${ROBOT_USERNAME}" >> ~/.bashrc
+echo "export ROBOT_HOSTNAME=${ROBOT_HOSTNAME}" >> ~/.xsessionrc
+echo "export ROBOT_USERNAME=${ROBOT_USERNAME}" >> ~/.xsessionrc
 
 # If both files are present don't generate keys, use existing.
 if [[ -f ~/.ssh/id_rsa && -f ~/.ssh/id_rsa.pub ]]; 
@@ -100,5 +102,7 @@ fi
 ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
 ROBOT_PROJECT_CRUNCH_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_PATH')
 
-echo "$ROBOT_CATKIN" >> ~/.bashrc
+echo "$ROBOT_CATKIN_PATH" >> ~/.bashrc
 echo "$ROBOT_PROJECT_CRUNCH_PATH" >> ~/.bashrc
+echo "$ROBOT_CATKIN_PATH" >> ~/.xsessionrc
+echo "$ROBOT_PROJECT_CRUNCH_PATH" >> ~/.xsessionrc
