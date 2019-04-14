@@ -20,19 +20,80 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ---
 
-## How to download the app and install it
+## Downloading and Installation
+    Table:
+    System-Requirements
+    Download-compiled-executable
+    Download-source
+    Navigating-the-installer-GUI
+    Configuring SSH keys
 
-# Downloading
+### System Requirements:
+Ubuntu 16.04 etc, Nvidia grpahics card
 
-TODO how to download from release 
+### Download compiled executable
+    In the project-crunch github GUI, navigate to the Release tab.
+    Download either the .zip or .tar.gz version of project-crunch-*** and expand the directory where you want project-crunch to reside. 
+    
+     > 'cd Project-Crunch'
+     > './Install.run
+   
 
-### Installation
+-> Link to Navigating-the-Installer-GUI
 
-TODO run on both computers, config ssh keys, configure lan etc
+### Download source
+    Table:
+    Set-up-environment
+    Download Latest Version (source)
+    Download Earlier Release (source)
+    Build and run installer from source
 
-### Troubleshooting
+#### Set up environment
 
-#### FAQ
+    Download and install venv, FBS,  and other required packages
+    Set up venv, then install the other stuff.
+    
+#### Download Latest Version (source)
+    In a terminal, Navigate to the directory where the project-crunch folder will reside and enter. 
+   > 'git clone https://github.com/UTNuclearRoboticsPublic/project-crunch.git' 
+   
+#### Download Earlier Release (source)
+    In the project-crunch github GUI, navigate to the Release tab.
+    Download either the Source_Code.zip, or Source_Code.tar.gz and expand the directory where you want project-crunch to reside. 
+  
+  
+#### Build and run installer using fbs
+    From the terminal, navigate into the Installer directory of project-crunch and enter:
+    
+   > 'cd project-crunch*/installer'
+   
+    Build and run the installer 
+    
+   > 'fbs run'
+
+-> Link to Navigating-the-Installer-GUI
+   
+
+### Navigating the Installer GUI
+
+    (bullet) Select /'Install Project Crunch/'
+    (bullet) Enter the system administrator password
+    (bullet) Specify whether you are installing on the robot computer, or the base station computer
+    (bullet) Select the directory where you would like to install project-crunch
+    (bullet) Click OK when you are given a warning about catkin workspaces
+    (bullet) If you aren't sure about IP configs, select 'NO' when asked about custom IP configs
+    
+### Configuring SSH keys
+    
+    Launch Installer GUI
+    Select Configure SSH keys
+    If the RPS and LPS both have existing SSH configurations, enter them.
+    If you aren't sure about custom SSH configurations, a default configuration will be created for you. 
+ 
+
+## Troubleshooting
+
+### FAQ
 
 > When I configure ssh keys, there is an error that says I only have one ssh key and I must manually reconfigure it. How do I do this?
 
