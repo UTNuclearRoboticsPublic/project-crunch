@@ -25,7 +25,7 @@ This repository was initially designed and created by an ECE Senior Design team 
    * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
    * [Configuring SSH Keys](#Configuring-SSH-Keys) 
 
-### [Launching project-crunch](#Launching-Project-Crunch) 
+### [Launching Project Crunch](#Launching-Project-Crunch) 
    * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
    * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
    * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
@@ -38,11 +38,6 @@ This repository was initially designed and created by an ECE Senior Design team 
        * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
    * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
    * [Configuring SSH Keys](#Configuring-SSH-Keys)
-
-### [Launching project-crunch](#Launching-Project-Crunch) 
-   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)     
-   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)     
-   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
 
 ### [FAQ](#FAQ)
 
