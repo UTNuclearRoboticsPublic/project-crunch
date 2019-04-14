@@ -16,29 +16,46 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ## Table of Contents
 [Downloading and Installation](#Downloading-and-Installation)
-    * [System Requirements](#System-Requirements)
-    * [Download Compiled Executable](#Download-Compiled-Executable)
-    * [Download Source](#Download-Source)
-        * [Set Up Environment](#Set-Up-Environment)
-        * [Download Latest Version (source)](#Download-Latest-Version-(source))
-        * [Download Earlier Release (source)](#Download-Earlier-Release-(source))
-        * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)
-    * [Navigating the Installer GUI](#Navigating-the-Installer-GUI)
-    * [Configuring SSH Keys](#Configuring-SSH-Keys)
+
+   * [System Requirements](#System-Requirements)
+    
+   * [Download Compiled Executable](#Download-Compiled-Executable)
+   
+   * [Download Source](#Download-Source)
+   
+       * [Set Up Environment](#Set-Up-Environment)
+       
+       * [Download Latest Version (source)](#Download-Latest-Version-(source))
+       
+       * [Download Earlier Release (source)](#Download-Earlier-Release-(source))
+       
+       * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)
+        
+   * [Navigating the Installer GUI](#Navigating-the-Installer-GUI)
+   
+   * [Configuring SSH Keys](#Configuring-SSH-Keys)
 
 [Launching project-crunch](#Launching-Project-Crunch)
-    * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)
-    * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)
-    * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI)
+
+   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)
+    
+   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)
+    
+   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI)
 
 [FAQ](#FAQ)
 
 [Modifying and Maintaining the Project](#Modifying-and-Maintaining-the-Project)
-    * [Navigating the Repository](#Navigating-the-Repository)
-    * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)
-    * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release)
-    * [Creating a New Release](#Creating-a-New-Release)
-    * [Release.sh Usage](#Release.sh-Usage)
+
+   * [Navigating the Repository](#Navigating-the-Repository)
+    
+   * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)
+    
+   * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release)
+    
+   * [Creating a New Release](#Creating-a-New-Release)
+    
+   * [Release.sh Usage](#Release.sh-Usage)
     
 ---
 
