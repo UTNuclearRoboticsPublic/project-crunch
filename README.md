@@ -15,48 +15,131 @@ This repository was initially designed and created by an ECE Senior Design team 
 ---
 
 ## Table of Contents
+[Downloading and Installation](#Downloading-and-Installation)
 
-[Usage](#Usage)
+[Launching project-crunch](#Launching-Project-Crunch)
+
+[FAQ](#FAQ)
+
+[Modifying and Maintaining Project](#Modifying-and-Maintaining-Project)
 
 ---
 
-## How to download the app and install it
+## Downloading and Installation
+    Table of Contents:
+    System-Requirements
+    Download-compiled-executable
+    Download-source
+    Navigating-the-installer-GUI
+    Configuring SSH keys
 
-# Downloading
+### System Requirements:
+Ubuntu 16.04 etc, Nvidia grpahics card
 
-TODO how to download from release 
+### Download compiled executable
+   In the project-crunch github GUI, navigate to the Release tab.
+   Download either the .zip or .tar.gz version of project-crunch-*** and expand the directory where you want project-crunch to reside. 
+    
+     > 'cd Project-Crunch'
+     > './Install.run
+   
 
-### Installation
+-> Link to Navigating-the-Installer-GUI
 
-TODO run on both computers, config ssh keys, configure lan etc
+### Download source
+    Table:
+    Set-up-environment
+    Download Latest Version (source)
+    Download Earlier Release (source)
+    Build and run installer from source
 
-### Troubleshooting
+#### Set up environment
 
-#### FAQ
+   Download and install venv, FBS,  and other required packages
+   Set up venv [->Link to venv section below]
+   Then install fbs [-> Link to fbs installation page]
+   
+    
+#### Download Latest Version (source)
+    In a terminal, Navigate to the directory where the project-crunch folder will reside and enter. 
+   > 'git clone https://github.com/UTNuclearRoboticsPublic/project-crunch.git' 
+   
+#### Download Earlier Release (source)
+    In the project-crunch github GUI, navigate to the Release tab.
+    Download either the Source_Code.zip, or Source_Code.tar.gz and expand the directory where you want project-crunch to reside. 
+  
+  
+#### Build and run installer using fbs
+    From the terminal, navigate into the Installer directory of project-crunch and enter:
+    
+   > 'cd project-crunch*/installer'
+   
+    Build and run the installer 
+    
+   > 'fbs run'
+
+-> Link to Navigating-the-Installer-GUI
+   
+
+### Navigating the Installer GUI
+
+    (bullet) Select /'Install Project Crunch/'
+    (bullet) Enter the system administrator password
+    (bullet) Specify whether you are installing on the robot computer, or the base station computer
+    (bullet) Select the directory where you would like to install project-crunch
+    (bullet) Click OK when you are given a warning about catkin workspaces
+    (bullet) If you aren't sure about IP configs, select 'NO' when asked about custom IP configs
+    
+### Configuring SSH keys
+    
+    Launch Installer GUI
+    Select Configure SSH keys
+    If the RPS and LPS both have existing SSH configurations, enter them.
+    If you aren't sure about custom SSH configurations, a default configuration will be created for you. 
+ 
+## Launching Project Crunch
+    
+    After project-crunch has been installed and SSH keys have been configured for the LPS and RPS, the system will be launched from the LPS.
+    
+    Table:
+    Launching-project/-crunch-executable
+    Launching-project/-crunch-from-source
+    Navigating-project/-crunch-GUI
+
+   ### Launching-project-crunch-executable
+   TODO figure out where the launch executable is after installing from executable.
+       
+   ### Launching-project-crunch-from-source
+   From the terminal, navigate into the project-crunch directory and enter:
+    
+   > 'cd project-crunch*/app'
+   
+    Build and run the Launcher 
+    
+   > 'fbs run'
+   
+   
+   ### Navigating-project-crunch-GUI
+       Once the project-crunch GUI launches, follow the step-by step instructions
+       -> Confirm the cameras and headsets are plugged in
+       -> Select how many headsets will be used
+       -> TODO: Cannot proceed further until I actually build and connect the LPS and RPS
+
+
+
+## FAQ
 
 > When I configure ssh keys, there is an error that says I only have one ssh key and I must manually reconfigure it. How do I do this?
 
 * You typically generate an ssh key pair, which includes a private key and a public key. The installer was only able to find one of the keys. If you do not have any need for your current key setup or it is a mistake, you can simply delete the extra key and re-run the configuration. If your key was moved by mistake, you can move it back and re-run the configuration. The program looks for keys in the default location, which is `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`. If the program finds a key pair, it will just use the existing keys.
 
-#### In Depth Troubleshooting
+### In Depth Troubleshooting
 
 We recommend cloning the repository and running the project from the command line to debug more in depth errors. You may also reference the code documentation at #TODO. #TODO add more here as we come across it. Also include instructions for gathering stdout and stderr from the project. 
 
 ---
 
-## How to use the app
-
-### From the Release
-
-TODO Put instructions here on how to use the app from the release.
-
-### From the Command Line
-
-Running the app from the command line requires a python environment, and a few minor changes to the code. First install a python environment and set up the project requirements. Instructions are available ![here](#Setting-up-a-virtual-environment).
-
----
-
-## How to modify and maintain this project
+## Modifying and Maintaining the Project
 
 ---
 
@@ -111,8 +194,6 @@ If you wish to run the main app from the command line, you must first modify `ap
 
 ### Creating a new release
 
-#### Introduction
-
 There is a provided build script for generating a new release called `release.sh`. Before running it make sure:
 
 * Be sure your repository is on master by typing `git status`. 
@@ -121,7 +202,7 @@ There is a provided build script for generating a new release called `release.sh
 
 The script will compile the projects and generate a zip and a tar file. All artifacts of the process are left in a `build/` directory. Running the script again automatically deletes the `build/` directory. You must follow the GitHub instructions to post the release to the repository. Be prepared to provide a short description of the changes and have a new version number ready. For more information on software versioning, please see [https://en.wikipedia.org/wiki/Software_versioning](https://en.wikipedia.org/wiki/Software_versioning).
 
-#### Usage
+### Release.sh Usage
 
 The script must be run with the version number as an argument. For example:
 
