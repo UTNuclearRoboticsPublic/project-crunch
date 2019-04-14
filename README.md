@@ -17,10 +17,8 @@ This repository was initially designed and created by an ECE Senior Design team 
 ## Table of Contents
 ### [Downloading and Installation](#Downloading-and-Installation) 
    * [System Requirements](#System-Requirements)     
-   * [Download Compiled Executable](#Download-Compiled-Executable)
-   
-   * [Download Source](#Download-Source)
-   
+   * [Download Compiled Executable](#Download-Compiled-Executable) 
+   * [Download Source](#Download-Source) 
        * [Set Up Environment](#Set-Up-Environment)
        
        * [Download Latest Version (source)](#Download-Latest-Version-(source))
