@@ -519,7 +519,7 @@ class AppContext(ApplicationContext):
         Lets the user know that they are finished with the install.
 
         """
-        QMessageBox.about(QWidget(),
+        reply = QMessageBox.question(QWidget(),
                      'Install Complete!',
                      'You have completed the install process! ' +
                      'Copy the Project-Crunch directory to the ' +
@@ -527,15 +527,39 @@ class AppContext(ApplicationContext):
                      'Project Crunch by navigating to {} and clicking on the ' +
                      'FIX ME icon.\n\n You must restart your computer and ' + #TODO
                      'configure SSH keys (in this order) before the ' +
-                     'application is fully functional.'
-        )
-        self.first_page()
+                     'application is fully functional.' +
+                     '\n\nWould you like us to restart now?',
+                     QMessageBox.Yes, QMessageBox.No
+        if reply == QMessageBox.Yes:
+            try:
+                out = subprocess.Popen(
+                        ['echo', self.password], stdout=subprocess.PIPE)
+                subprocess.Popen(
+                        ['sudo','-S','shutdown','-r', 'now'], stdin=out.stdout) 
+                out.wait()
+            except subprocess.CalledProcessError:
+                self.error_during_restart()
+        else:
+            self.first_page()
    
+    def error_during_restart(self):
+        """
+        Tells the user there was an error during restart.
+        """
+        QMessageBox.about(self.window,
+                            "Error Restarting",
+                            "There was an error restarting through the " +
+                            "Installer. Please reboot computer manually."
+        self.first_page()
+        pass
+
     def wrong_password(self):
         """
         Tells the user they input the wrong password and sends them back to the password screen.
         """
-        QMessageBox.about(self.window, "Incorrect Password", "The password you entered was not correct.\n" +
+        QMessageBox.about(self.window,
+                     "Incorrect Password",
+                 "The password you entered was not correct.\n" +
                 "Please try again.")
         self.on_install_push()
         pass
