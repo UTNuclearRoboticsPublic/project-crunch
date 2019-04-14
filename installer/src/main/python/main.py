@@ -179,8 +179,10 @@ class AppContext(ApplicationContext):
         This function tells the user they put in the wrong password and asks
         them to try again. It returns the user to the password input screen.
         """
-        QMessageBox.about(self.window, "Incorrect Password", "The password entered was incorrect.\n" +
-                "Please try again.")
+        QMessageBox.about(self.window,
+                    "Incorrect Password",
+                    "The password entered was incorrect.\n" +
+                    "Please try again.")
         self.on_install_push()
 
     def select_comp(self):
@@ -517,27 +519,17 @@ class AppContext(ApplicationContext):
         Lets the user know that they are finished with the install.
 
         """
-        # TODO LOOK AT THIS COOL BOX I FOUND
-        # We can use this to pop up the install done message
-        #QMessageBox.about(self.window, "Install Complete", "The installation is complete!\n"+
-        #    "Next you must restart the computer and configure SSH keys before launching.")
-        # YOU CAN ADD OK AND CANCEL BUTTONS TO THIS TOO BY USING QMessageBox.question 
-        layout = QVBoxLayout()
-        dialog = QInputDialog()
-        layout.addWidget(dialog)
-        item, ok = dialog.getItem(
-                     QWidget(),
+        QMessageBox.about(QWidget(),
                      'Install Complete!',
-                     'You have completed the install process! Copy the Project-Crunch directory to the location of your choosing. You can run ' +
+                     'You have completed the install process! ' +
+                     'Copy the Project-Crunch directory to the ' +
+                     ' location of your choosing. You can run ' +
                      'Project Crunch by navigating to {} and clicking on the ' +
                      'FIX ME icon.\n\n You must restart your computer and ' + #TODO
                      'configure SSH keys before the application is fully ' +
-                     'functional.',
-                     ['OK'],
+                     'functional.'
         )
-        if ok:
-            self.first_page()
-        return layout
+        self.first_page()
    
     def wrong_password(self):
         """
