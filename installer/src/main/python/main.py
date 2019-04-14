@@ -680,6 +680,11 @@ class AppContext(ApplicationContext):
                 ], 
                 check=True
         )
+
+        QMessageBox.about(self.window,
+                    "SSH Configuration Complete",
+                    "Both computers should be able to connect to each other " +
+                    "over SSH through port 22.")
         
 
 if __name__ == "__main__":
