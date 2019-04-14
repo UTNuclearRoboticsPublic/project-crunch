@@ -15,8 +15,10 @@ This repository was initially designed and created by an ECE Senior Design team 
 ---
 
 ## Table of Contents
-
-[Usage](#Usage)
+[Downloading and Installation](#Downloading-and-Installation)
+[Launching project-crunch](#Launching-project/-crunch)
+[FAQ](#FAQ)
+[Modifying and Maintaining Project](#Modifying-and-Maintaining-Project)
 
 ---
 
@@ -32,8 +34,8 @@ This repository was initially designed and created by an ECE Senior Design team 
 Ubuntu 16.04 etc, Nvidia grpahics card
 
 ### Download compiled executable
-    In the project-crunch github GUI, navigate to the Release tab.
-    Download either the .zip or .tar.gz version of project-crunch-*** and expand the directory where you want project-crunch to reside. 
+   In the project-crunch github GUI, navigate to the Release tab.
+   Download either the .zip or .tar.gz version of project-crunch-*** and expand the directory where you want project-crunch to reside. 
     
      > 'cd Project-Crunch'
      > './Install.run
@@ -50,8 +52,10 @@ Ubuntu 16.04 etc, Nvidia grpahics card
 
 #### Set up environment
 
-    Download and install venv, FBS,  and other required packages
-    Set up venv, then install the other stuff.
+   Download and install venv, FBS,  and other required packages
+   Set up venv [->Link to venv section below]
+   Then install fbs [-> Link to fbs installation page]
+   
     
 #### Download Latest Version (source)
     In a terminal, Navigate to the directory where the project-crunch folder will reside and enter. 
@@ -99,10 +103,10 @@ Ubuntu 16.04 etc, Nvidia grpahics card
     Launching-project/-crunch-from-source
     Navigating-project/-crunch-GUI
 
-   ### Launching-project/-crunch-executable
+   ### Launching-project-crunch-executable
    TODO figure out where the launch executable is after installing from executable.
        
-   ### Launching-project/-crunch-from-source
+   ### Launching-project-crunch-from-source
    From the terminal, navigate into the project-crunch directory and enter:
     
    > 'cd project-crunch*/app'
@@ -112,39 +116,27 @@ Ubuntu 16.04 etc, Nvidia grpahics card
    > 'fbs run'
    
    
-   ### Navigating-project/-crunch-GUI
+   ### Navigating-project-crunch-GUI
        Once the project-crunch GUI launches, follow the step-by step instructions
        -> Confirm the cameras and headsets are plugged in
        -> Select how many headsets will be used
        -> TODO: Cannot proceed further until I actually build and connect the LPS and RPS
 
-## Troubleshooting
 
-### FAQ
+
+## FAQ
 
 > When I configure ssh keys, there is an error that says I only have one ssh key and I must manually reconfigure it. How do I do this?
 
 * You typically generate an ssh key pair, which includes a private key and a public key. The installer was only able to find one of the keys. If you do not have any need for your current key setup or it is a mistake, you can simply delete the extra key and re-run the configuration. If your key was moved by mistake, you can move it back and re-run the configuration. The program looks for keys in the default location, which is `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`. If the program finds a key pair, it will just use the existing keys.
 
-#### In Depth Troubleshooting
+### In Depth Troubleshooting
 
 We recommend cloning the repository and running the project from the command line to debug more in depth errors. You may also reference the code documentation at #TODO. #TODO add more here as we come across it. Also include instructions for gathering stdout and stderr from the project. 
 
 ---
 
-## How to use the app
-
-### From the Release
-
-TODO Put instructions here on how to use the app from the release.
-
-### From the Command Line
-
-Running the app from the command line requires a python environment, and a few minor changes to the code. First install a python environment and set up the project requirements. Instructions are available ![here](#Setting-up-a-virtual-environment).
-
----
-
-## How to modify and maintain this project
+## Modifying and Maintaining the Project
 
 ---
 
@@ -199,8 +191,6 @@ If you wish to run the main app from the command line, you must first modify `ap
 
 ### Creating a new release
 
-#### Introduction
-
 There is a provided build script for generating a new release called `release.sh`. Before running it make sure:
 
 * Be sure your repository is on master by typing `git status`. 
@@ -209,7 +199,7 @@ There is a provided build script for generating a new release called `release.sh
 
 The script will compile the projects and generate a zip and a tar file. All artifacts of the process are left in a `build/` directory. Running the script again automatically deletes the `build/` directory. You must follow the GitHub instructions to post the release to the repository. Be prepared to provide a short description of the changes and have a new version number ready. For more information on software versioning, please see [https://en.wikipedia.org/wiki/Software_versioning](https://en.wikipedia.org/wiki/Software_versioning).
 
-#### Usage
+### Release.sh Usage
 
 The script must be run with the version number as an argument. For example:
 
