@@ -16,8 +16,11 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ## Table of Contents
 [Downloading and Installation](#Downloading-and-Installation)
+
 [Launching project-crunch](#Launching-project/-crunch)
+
 [FAQ](#FAQ)
+
 [Modifying and Maintaining Project](#Modifying-and-Maintaining-Project)
 
 ---
