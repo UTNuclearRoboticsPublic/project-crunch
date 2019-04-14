@@ -315,19 +315,29 @@ class AppContext(ApplicationContext):
         If yes, next window is called and gets them. Else we execute
         the install process.
         """
+        QMessageBox.about(self.window,
+                "Custom IP Address Configuration",
+                "The remote computer and the base computer each need to know " +
+                "their Internet Protocol (IP) addresses in order to " +
+                "communicate with each other across an Ethernet network.\n\n" +
+                "The next screen will ask if you would like to use some default "+
+                "IP addresses we have assigned, or if you would like to input " +
+                "your own.\n\nOur IP addresses are:\n\nRemote (robot): 10.0.0.2 " +
+                "\nLocal (base): 10.0.0.1")
+
         layout = QVBoxLayout()
         dialog = QInputDialog()
         layout.addWidget(dialog)
         item, ok = dialog.getItem(
                      QWidget(),
                      'Configuring IPs',
-                     'Do you have custom IP configurations you would like to enter?',
+                     'Use default IP configurations?',
                      ['No', 'Yes'],
         )
         if ok:
-            if str(item).lower() == "yes":
+            if str(item).lower() == "no":
                 self.get_custom_ip_settings()
-            elif str(item).lower() == "no":
+            elif str(item).lower() == "yes":
                 self.exec_install()
         else:
             self.first_page()
