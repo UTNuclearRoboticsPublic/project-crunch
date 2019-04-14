@@ -15,7 +15,7 @@ This repository was initially designed and created by an ECE Senior Design team 
 ---
 
 ## Table of Contents
-[#### Downloading and Installation](#Downloading-and-Installation)
+### [Downloading and Installation](#Downloading-and-Installation)
 
    * [System Requirements](#System-Requirements)
     
@@ -35,7 +35,7 @@ This repository was initially designed and created by an ECE Senior Design team 
    
    * [Configuring SSH Keys](#Configuring-SSH-Keys)
 
-#### [Launching project-crunch](#Launching-Project-Crunch)
+### [Launching project-crunch](#Launching-Project-Crunch)
 
    * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)
     
@@ -43,9 +43,9 @@ This repository was initially designed and created by an ECE Senior Design team 
     
    * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI)
 
-[FAQ](#FAQ)
+### [FAQ](#FAQ)
 
-[Modifying and Maintaining the Project](#Modifying-and-Maintaining-the-Project)
+### [Modifying and Maintaining the Project](#Modifying-and-Maintaining-the-Project)
 
    * [Navigating the Repository](#Navigating-the-Repository)
     
