@@ -16,13 +16,13 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ## Table of Contents
 
-TODO add links here to all h2 and h3 tags
+[Downloading](#Downloading)
 
 ---
 
 ## How to download the app and install it
 
-### Downloading
+#Downloading
 
 TODO how to download from release 
 
