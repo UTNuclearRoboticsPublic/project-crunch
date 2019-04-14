@@ -14,7 +14,7 @@ This repository was initially designed and created by an ECE Senior Design team 
 ---
 
 ## Table of Contents
-### [Downloading and Installation](#Downloading-and-Installation) 
+### [Download and Install](#Downloading-and-Installation) 
    * [System Requirements](#System-Requirements) 
    * [Download Compiled Executable](#Download-Compiled-Executable) 
    * [Download Source](#Download-Source) 
@@ -25,7 +25,7 @@ This repository was initially designed and created by an ECE Senior Design team 
    * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
    * [Configuring SSH Keys](#Configuring-SSH-Keys) 
 
-### [Launching Project Crunch](#Launching-Project-Crunch) 
+### [Launch Project Crunch](#Launching-Project-Crunch) 
    * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
    * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
    * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
@@ -39,9 +39,9 @@ This repository was initially designed and created by an ECE Senior Design team 
    * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
    * [Configuring SSH Keys](#Configuring-SSH-Keys)
 
-### [FAQ](#FAQ)
+### [Frequently Asked Questions](#FAQ)
 
-### [Modifying and Maintaining the Project](#Modifying-and-Maintaining-the-Project) 
+### [Modify and Maintain the Project](#Modifying-and-Maintaining-the-Project) 
    * [Navigating the Repository](#Navigating-the-Repository) 
    * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)   
    * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release) 
