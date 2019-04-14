@@ -57,21 +57,77 @@ class AppContext(ApplicationContext):
         Create layout of the first page.
         """
         layout = QVBoxLayout()
+        instructions_button = QPushButton('Instructions')
+        instructions_button.clicked.connect(self.on_instructions_push)
         install_button = QPushButton('Install Project Crunch')
         install_button.clicked.connect(self.on_install_push)
+        LAN_walkthrough_button = QPushButton('Local Area Network Walkthrough')
+        LAN_walkthrough_button.clicked.connect(self.on_LAN_walkthrough_push)
         ssh_config_button = QPushButton('Configure SSH Keys')
         ssh_config_button.clicked.connect(self.on_ssh_config_push)
         exit_button = QPushButton('Exit')
         exit_button.clicked.connect(self.on_exit_push)
 
         # Add buttons 
+        layout.addWidget(instructions_button)
         layout.addWidget(install_button)
+        layout.addWidget(LAN_walkthrough_button)
         layout.addWidget(ssh_config_button)
         layout.addWidget(exit_button)
         return layout
 
     def on_exit_push(self):
         sys.exit()        
+
+    def on_instructions_push(self):
+        """
+        Describe Project Crunch, function of Installer, LAN setup,
+        Config SSH Keys, and the runtime app.
+        """
+        QMessageBox.about(self.window, 
+                        "Instructions",
+                        "Welcome to the Installer for Project Crunch!\n\n" +
+                        "Project Crunch provides a graphical interface for " +
+                        "improved situational awareness by interfacing " +
+                        "virtual reality (VR) headsets with the Robotics " + 
+                        "Operating System (ROS).\n\nThe role of this installer " +
+                        "is to download and set up ROS, OpenHMD (the open source) " +
+                        "software to interface with the VR headsets, and other " +
+                        "peripheral software. Perform installation of this " +
+                        "software package by hitting 'Ok' below, and clicking on " +
+                        "'Install Project Crunch'.\n\nIf this project is to be run " +
+                        "on two machines, e.g., local machine and remote machine, " +
+                        "then you will need to follow the steps under " +
+                        "'Local Area Network Walkthrough' and " +
+                        "'Configure SSH Keys' on the next screen directly " +
+                        "after installation of Project Crunch.\n\nAfter " +
+                        "installation, and optionally SSH Key configuration " +
+                        "is finished, this Installer has done its job, and " +
+                        "Project Crunch can be executed via the <INSERT NAME> executable.")
+                        #TODO agree on name of launcher/app/runtime. 
+        
+    def on_LAN_walkthrough_push(self):
+       reply = QMessageBox.question(QWidget(),
+                        "LAN Walkthrough",
+                        "If you wish to set up a Local Area Network (LAN)" +
+                        "between two machines, click 'Ok' and follow " +
+                        "the steps on both machines to set up the LAN",
+                        QMessageBox.Ok, QMessageBox.Cancel)
+       if reply == QMessageBox.Ok:
+           pass
+           #TODO
+           #Make windows with the following steps:
+           # 1. Connect w/ crossover ethernet cable
+           # 2. Open connections menu --> edit connections
+           # 3. Add
+           # 4. Choose connection type (ethernet)
+           # 5. Select Ethernet tab and choose ethernet card
+           # 6. IPV4 settings tab: 'method' = Manual; Add IP addresses.
+           # 7. Ensure process done on both machines
+           # 8. Perform Ping Test
+           # 9. Succesful network setup!
+       else:
+           self.first_page()
 
     def on_install_push(self): 
         """
@@ -109,8 +165,10 @@ class AppContext(ApplicationContext):
         try:
             out = subprocess.Popen(
                     ['echo', self.password], stdout=subprocess.PIPE)
+            # check_output was returning output of 
+            # dummy echo command, which was always 0.
             subprocess.check_output(
-                    ['sudo', '-S', 'echo','testing', 'password'], stdin=out.stdout) 
+                    ['sudo','-S','whoami'], stdin=out.stdout) 
             out.wait()
         except subprocess.CalledProcessError:
             return False
@@ -137,7 +195,7 @@ class AppContext(ApplicationContext):
         item, ok = dialog.getItem(
                      QWidget(),
                      'Select Computer: Robot or Base',
-                     "Are you currently installing on the robot computer?",
+                     "Are you on the robot computer?",
                      ['Yes','No'],
         )
         if ok:
@@ -154,24 +212,31 @@ class AppContext(ApplicationContext):
             self.first_page()
         return layout
     
+
     def install_directory(self):
         """
         Prompt user for directory to install app.
         
         Assigns the install directory to self as a full path.
         """
+        QMessageBox.about(self.window, 
+                        "Installation Directory",
+                        "Hit 'Ok', to chose a directory in which to install "+
+                        "Project Crunch.")
+ 
         layout = QVBoxLayout()
         dialog = QFileDialog()
         layout.addWidget(dialog)
         text = dialog.getExistingDirectory(
                 QWidget(), 
-                'Please choose the directory where you wish to install Project Crunch.' 
+                'Choose directory to install Project Crunch.' 
         )
         if text == "":
-            self.install_directory() # TODO Where should this go? What triggers this event?
+            self.first_page() # Event triggered by hitting 'Cancel'
         else:    
             self.install_dir = str(text)
-            self.catkin_directory() # change to dialog box
+            self.install_info()
+            #self.catkin_directory() # change to dialog box
         return layout
 
     def install_info(self):
@@ -184,16 +249,20 @@ class AppContext(ApplicationContext):
         """
         #TODO make note of this in the FAQ- moving into wrong dir could break the app
         layout = QVBoxLayout()
-        dialog = QInputDialog()
-        layout.addWidget(dialog)
-        item, ok = dialog.getItem(
-                     QWidget(),
-                     'Chosen Install Directory',
-                     'Once the install process has finished, you must copy the application over into its final destination, which you just chose. Be sure to write it down if needed, the install process can take up to twenty minutes on a clean machine.\nThe install directory you chose is:\n{}'.format(self.install_directory),
-                     ['OK'],
-        )
-        if ok:
+        reply = QMessageBox.question(QWidget(), 
+                'Chosen Install Directory',
+                'Once the install process has finished, ' +
+                'you must copy the application over into ' +
+                'its final destination, which you just chose. ' +
+                'Be sure to write it down if needed, the install ' +
+                'process can take up to twenty minutes on a ' +
+                'clean machine.\n\nThe install directory you ' +
+                'chose is:\n{}'.format(self.install_dir),
+                QMessageBox.Ok, QMessageBox.Cancel)
+        if reply == QMessageBox.Ok:
             self.catkin_directory()
+        else:
+            self.first_page()
         return layout
 
     def catkin_directory(self):
@@ -202,15 +271,20 @@ class AppContext(ApplicationContext):
 
         Assigns the catkin directory to self as a full path.
         """
+        QMessageBox.about(self.window, 
+                        "Catkin Workspace Directory",
+                        "Hit 'Ok', to chose a directory in which to create "+
+                        "a catkin workspace, i.e., a directory in which to " +
+                        "place all ROS packages and plugins for Project Crunch.")
         layout = QVBoxLayout()
         dialog = QFileDialog()
         layout.addWidget(dialog)
         text = QFileDialog.getExistingDirectory(
                 QWidget(), 
-                'Please choose the directory where you wish to create your catkin workspace.', 
+                'Choose directory to create catkin workspace.', 
         )
         if text == "":
-            self.catkin_directory() # TODO Where should this go? What triggers this event?
+            self.first_page() # Event triggered by hitting 'Cancel'
         else:
             self.catkin_dir = str(text)
             self.catkin_info()
@@ -221,15 +295,14 @@ class AppContext(ApplicationContext):
         This function lets the user confirm the catkin directoryp that they selected.
         """
         layout = QVBoxLayout()
-        dialog = QInputDialog()
-        layout.addWidget(dialog)
-        item, ok = dialog.getItem(
-                     QWidget(),
+        reply = QMessageBox.question(QWidget(),
                      'Chosen Catkin Directory',
-                     'The catkin directory you chose is:\n{}\nIf this is incorrect, please hit cancel to select a different directory.'.format(self.catkin_directory),
-                     ['OK'],
-        )
-        if ok:
+                     'The catkin directory you chose is:\n\n' +
+                     self.catkin_dir +
+                     '\nIf this is incorrect, please hit cancel to ' +
+                     'select a different directory.',
+                     QMessageBox.Ok, QMessageBox.Cancel)
+        if reply == QMessageBox.Ok:
             self.configure_ip()
         else:
             self.catkin_directory()
@@ -318,8 +391,14 @@ class AppContext(ApplicationContext):
         # Tell the user not to worry about the program appearing to crash.
         # Note: this will halt the code here until the 'OK' button in the message box is clicked.
         # This will solve the problem for now but should have a better solution in the future.
-        QMessageBox.about(self.window, "Installing", "This process can take up to 20 min. The window may appear" +
-            "to stop responding, but we are installing in the background. Click 'OK' to begin.")
+        QMessageBox.about(self.window, 
+                        "Installing",
+                        "Installation and setup of the Robot Operating " +
+                        "System, NVIDIA drivers, OpenHMD software, and " +
+                        "peripheral software can take up to 20 min. " +
+                        "The window may appear to stop responding, but " +
+                        "we are installing in the background. Click 'OK' " +
+                        "to begin the Installation and Setup.")
 
         # Export environment variables no matter what machine we are on (robot
         # or base.) We collect the envs from the opposite machine when the
@@ -432,7 +511,7 @@ class AppContext(ApplicationContext):
         # We can use this to pop up the install done message
         #QMessageBox.about(self.window, "Install Complete", "The installation is complete!\n"+
         #    "Next you must restart the computer and configure SSH keys before launching.")
- 
+        # YOU CAN ADD OK AND CANCEL BUTTONS TO THIS TOO BY USING QMessageBox.question 
         layout = QVBoxLayout()
         dialog = QInputDialog()
         layout.addWidget(dialog)
