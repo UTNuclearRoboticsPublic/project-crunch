@@ -109,9 +109,9 @@ class AppContext(ApplicationContext):
     def on_LAN_walkthrough_push(self):
        reply = QMessageBox.question(QWidget(),
                         "LAN Walkthrough",
-                        "If you wish to set up a Local Area Network (LAN)" +
+                        "If you wish to set up a Local Area Network (LAN) " +
                         "between two machines, click 'Ok' and follow " +
-                        "the steps on both machines to set up the LAN",
+                        "the steps on both machines to set up the LAN.",
                         QMessageBox.Ok, QMessageBox.Cancel)
        if reply == QMessageBox.Ok:
            pass
@@ -526,8 +526,8 @@ class AppContext(ApplicationContext):
                      ' location of your choosing. You can run ' +
                      'Project Crunch by navigating to {} and clicking on the ' +
                      'FIX ME icon.\n\n You must restart your computer and ' + #TODO
-                     'configure SSH keys before the application is fully ' +
-                     'functional.'
+                     'configure SSH keys (in this order) before the ' +
+                     'application is fully functional.'
         )
         self.first_page()
    
