@@ -16,13 +16,13 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ## Table of Contents
 
-[Downloading](#Downloading)
+[Usage](#Usage)
 
 ---
 
 ## How to download the app and install it
 
-#Downloading
+# Downloading
 
 TODO how to download from release 
 
@@ -121,7 +121,7 @@ There is a provided build script for generating a new release called `release.sh
 
 The script will compile the projects and generate a zip and a tar file. All artifacts of the process are left in a `build/` directory. Running the script again automatically deletes the `build/` directory. You must follow the GitHub instructions to post the release to the repository. Be prepared to provide a short description of the changes and have a new version number ready. For more information on software versioning, please see [https://en.wikipedia.org/wiki/Software_versioning](https://en.wikipedia.org/wiki/Software_versioning).
 
-#### Usage
+# Usage
 
 The script must be run with the version number as an argument. For example:
 
