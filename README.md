@@ -16,6 +16,22 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ## Table of Contents
 ### [Downloading and Installation](#Downloading-and-Installation) 
+<<<<<<< HEAD
+   * [System Requirements](#System-Requirements) 
+   * [Download Compiled Executable](#Download-Compiled-Executable) 
+   * [Download Source](#Download-Source) 
+       * [Set Up Environment](#Set-Up-Environment) 
+       * [Download Latest Version (source)](#Download-Latest-Version-(source))       
+       * [Download Earlier Release (source)](#Download-Earlier-Release-(source))       
+       * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
+   * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
+   * [Configuring SSH Keys](#Configuring-SSH-Keys) 
+
+### [Launching project-crunch](#Launching-Project-Crunch) 
+   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
+   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
+   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
+=======
    * [System Requirements](#System-Requirements)     
    * [Download Compiled Executable](#Download-Compiled-Executable) 
    * [Download Source](#Download-Source) 
@@ -38,29 +54,29 @@ This repository was initially designed and created by an ECE Senior Design team 
    * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)
     
    * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI)
+>>>>>>> f548e1304519ca6055cc16e07741aa9ab7dbf916
 
 ### [FAQ](#FAQ)
 
-### [Modifying and Maintaining the Project](#Modifying-and-Maintaining-the-Project)
-
-   * [Navigating the Repository](#Navigating-the-Repository)
-    
-   * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)
-    
-   * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release)
-    
-   * [Creating a New Release](#Creating-a-New-Release)
-    
-   * [Release.sh Usage](#Release.sh-Usage)
+### [Modifying and Maintaining the Project](#Modifying-and-Maintaining-the-Project) 
+   * [Navigating the Repository](#Navigating-the-Repository) 
+   * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)   
+   * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release) 
+   * [Creating a New Release](#Creating-a-New-Release)   
+   * [Release.sh Usage](#Release.sh-Usage) 
     
 ---
 
 ## Downloading and Installation
-    System-Requirements
-    Download-compiled-executable
-    Download-source
-    Navigating-the-installer-GUI
-    Configuring SSH keys
+   * [System Requirements](#System-Requirements) 
+   * [Download Compiled Executable](#Download-Compiled-Executable) 
+   * [Download Source](#Download-Source) 
+       * [Set Up Environment](#Set-Up-Environment) 
+       * [Download Latest Version (source)](#Download-Latest-Version-(source))       
+       * [Download Earlier Release (source)](#Download-Earlier-Release-(source))       
+       * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
+   * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
+   * [Configuring SSH Keys](#Configuring-SSH-Keys) 
 
 ### System Requirements:
 Ubuntu 16.04 etc, Nvidia grpahics card
@@ -76,11 +92,10 @@ Ubuntu 16.04 etc, Nvidia grpahics card
 -> Link to Navigating-the-Installer-GUI
 
 ### Download Source
-    Table:
-    Set-up-environment
-    Download Latest Version (source)
-    Download Earlier Release (source)
-    Build and run installer from source
+   * [Set Up Environment](#Set-Up-Environment) 
+   * [Download Latest Version (source)](#Download-Latest-Version-(source))       
+   * [Download Earlier Release (source)](#Download-Earlier-Release-(source))       
+   * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)  
 
 #### Set Up Environment
 
@@ -127,13 +142,9 @@ Ubuntu 16.04 etc, Nvidia grpahics card
     If you aren't sure about custom SSH configurations, a default configuration will be created for you. 
  
 ## Launching Project Crunch
-    
-    After project-crunch has been installed and SSH keys have been configured for the LPS and RPS, the system will be launched from the LPS.
-    
-    Table:
-    Launching-project/-crunch-executable
-    Launching-project/-crunch-from-source
-    Navigating-project/-crunch-GUI
+   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
+   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
+   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
 
    ### Launching Project Crunch from Executable
    TODO figure out where the launch executable is after installing from executable.
@@ -165,7 +176,11 @@ Ubuntu 16.04 etc, Nvidia grpahics card
 ---
 
 ## Modifying and Maintaining the Project
-
+   * [Navigating the Repository](#Navigating-the-Repository) 
+   * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)   
+   * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release) 
+   * [Creating a New Release](#Creating-a-New-Release)   
+   * [Release.sh Usage](#Release.sh-Usage) 
 ---
 
 ### Navigating the Repository
