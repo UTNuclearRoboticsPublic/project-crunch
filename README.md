@@ -3,7 +3,6 @@
 ---
 
 ## Introduction
-
 The goal of this project is to build a long distance virtual reality (VR) streaming system for the University of Texas at Austin [Nuclear Robotics Group](https://robotics.me.utexas.edu/) (UT NRG.)
 
 This software allows operators to control a robot which inspects radioactive nuclear facilities. It takes 360° video data, processes and formats it for compatibility with the HTC Vive headset, and transmits the VR stream to the headset. A remote computer is needed onboard the robot to process and transmit the camera stream.
@@ -16,7 +15,6 @@ This repository was initially designed and created by an ECE Senior Design team 
 
 ## Table of Contents
 ### [Downloading and Installation](#Downloading-and-Installation) 
-<<<<<<< HEAD
    * [System Requirements](#System-Requirements) 
    * [Download Compiled Executable](#Download-Compiled-Executable) 
    * [Download Source](#Download-Source) 
@@ -31,30 +29,20 @@ This repository was initially designed and created by an ECE Senior Design team 
    * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
    * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
    * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
-=======
    * [System Requirements](#System-Requirements)     
    * [Download Compiled Executable](#Download-Compiled-Executable) 
    * [Download Source](#Download-Source) 
-       * [Set Up Environment](#Set-Up-Environment)
-       
-       * [Download Latest Version (source)](#Download-Latest-Version-(source))
-       
-       * [Download Earlier Release (source)](#Download-Earlier-Release-(source))
-       
-       * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)
-        
-   * [Navigating the Installer GUI](#Navigating-the-Installer-GUI)
-   
+       * [Set Up Environment](#Set-Up-Environment)   
+       * [Download Latest Version (source)](#Download-Latest-Version-(source))      
+       * [Download Earlier Release (source)](#Download-Earlier-Release-(source))     
+       * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
+   * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
    * [Configuring SSH Keys](#Configuring-SSH-Keys)
 
-### [Launching project-crunch](#Launching-Project-Crunch)
-
-   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)
-    
-   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)
-    
-   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI)
->>>>>>> f548e1304519ca6055cc16e07741aa9ab7dbf916
+### [Launching project-crunch](#Launching-Project-Crunch) 
+   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)     
+   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)     
+   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
 
 ### [FAQ](#FAQ)
 
