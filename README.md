@@ -17,7 +17,7 @@ This repository was initially designed and created by an ECE Senior Design team 
 ## Table of Contents
 [Downloading and Installation](#Downloading-and-Installation)
 
-[Launching project-crunch](#Launching-project/-crunch)
+[Launching project-crunch](#Launching-Project-Crunch)
 
 [FAQ](#FAQ)
 
@@ -26,7 +26,7 @@ This repository was initially designed and created by an ECE Senior Design team 
 ---
 
 ## Downloading and Installation
-    Table:
+    Table of Contents:
     System-Requirements
     Download-compiled-executable
     Download-source
@@ -97,7 +97,7 @@ Ubuntu 16.04 etc, Nvidia grpahics card
     If the RPS and LPS both have existing SSH configurations, enter them.
     If you aren't sure about custom SSH configurations, a default configuration will be created for you. 
  
-## Launching project-crunch
+## Launching Project Crunch
     
     After project-crunch has been installed and SSH keys have been configured for the LPS and RPS, the system will be launched from the LPS.
     
