@@ -110,12 +110,12 @@ Ubuntu 16.04 etc, Nvidia grpahics card
 
 ### Navigating the Installer GUI
 
-    (bullet) Select /'Install Project Crunch/'
-    (bullet) Enter the system administrator password
-    (bullet) Specify whether you are installing on the robot computer, or the base station computer
-    (bullet) Select the directory where you would like to install project-crunch
-    (bullet) Click OK when you are given a warning about catkin workspaces
-    (bullet) If you aren't sure about IP configs, select 'NO' when asked about custom IP configs
+  * Select /'Install Project Crunch/'
+  * Enter the system administrator password
+  * Specify whether you are installing on the robot computer, or the base station computer
+  * Select the directory where you would like to install project-crunch
+  * Click OK when you are given a warning about catkin workspaces
+  * If you aren't sure about IP configs, select 'NO' when asked about custom IP configs
     
 ### Configuring SSH keys
     
