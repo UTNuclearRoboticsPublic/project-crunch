@@ -3,7 +3,7 @@
 # This script reads in a version number, creates a build directory
 # and freezes both the launcher/app fbs project and the installer 
 # fbs project. It links to the created executables and creates a 
-# tar and a zip.
+# tar.
 
 # Print usage
 if [ $# -lt 2 ];
@@ -52,7 +52,6 @@ cd build/Project-Crunch
 ln -s Install/target/Install/Install Install.run
 cd ../../
 
-# Create zip and tar in build folder
+# Create tar in build folder
 cd build
-zip -r $RELEASE_NAME.zip Project-Crunch
 tar -cvf $RELEASE_NAME.tar.gz Project-Crunch
