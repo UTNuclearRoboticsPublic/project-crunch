@@ -3,7 +3,7 @@
   <node pkg="rviz" 
 	type="rviz" 
 	name="rviz"
-	args="-l -d $(find rviz_textured_sphere)/rviz_cfg/full_launch_config.rviz"
+	args="-l -d $(find rviz_textured_sphere)/rviz_cfg/full_launch.rviz"
 	output="screen"
 	/>
 </launch>
