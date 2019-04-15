@@ -477,7 +477,7 @@ class AppContext(ApplicationContext):
         vive_launch = 'vive.launch'
         opencv_dir = 'video_stream_opencv'
         txtsphere_dir = 'rviz_textured_sphere'
-
+        rviz_cfg = 'full_launch.rviz'
         txtsphere_dest_dir = os.path.join(self.catkin_dir, 'src', txtsphere_dir, 'launch')
         opencv_dest_dir = os.path.join(self.catkin_dir, 'src', opencv_dir, 'launch')
 
@@ -495,6 +495,11 @@ class AppContext(ApplicationContext):
         file_dest = os.path.join(txtsphere_dest_dir, vive_launch)
         if not os.path.isfile(file_dest):
             copyfile(self.get_resource(vive_launch), file_dest)
+        
+        # Copy rviz config file
+        file_dest=os.path.join(os.path.join(self.catkin_dir,'src',txtsphere_dir,"rviz_cfg",rviz_cfg))
+        if not os.path.isfile(filed_dest):
+            copyfile(self.get_resource(rviz_cfg),file_dest)
 
         # Set up network configurations via /etc/hostnames
         if self.current_computer_is_robot == True:

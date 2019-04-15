@@ -44,8 +44,17 @@ class GUIWindow(QMainWindow):
     def closeEvent(self, event):
         # Override main window's function called when the red X is clicked 
         print("You closed the app!")
-        #subprocess.call([self.kill_launch])
-
+        print(self.kill_launch)
+        robot_client = self.robot_username + "@" + self.robot_hostname
+        sshProcess = subprocess.Popen(['ssh',
+                                    robot_client],
+                                    stdin=subprocess.PIPE,
+                                    universal_newlines=True,
+                                    bufsize=0,
+                                    preexec_fn=os.setsid)
+        sshProcess.stdin.write("source {}\n".format(self.kill_launch))
+        sshProcess.stdin.close()
+        print("here")
     def get_env_vars(self):
         error_msg = ""
         missing_env_vars = 0
@@ -55,7 +64,6 @@ class GUIWindow(QMainWindow):
         self.robot_username = os.environ.get("ROBOT_USERNAME")
         self.robot_project_crunch_path = os.environ.get("ROBOT_PROJECT_CRUNCH_PATH")
 
-        print(self.robot_catkin, self.base_catkin, self.robot_hostname, self.robot_username)
         if self.robot_catkin is None:
             error_msg += "ROBOT_CATKIN_PATH\n"
             missing_env_vars += 1

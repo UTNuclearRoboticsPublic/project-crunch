@@ -57,7 +57,7 @@ Ubuntu 16.04 etc, Nvidia grpahics card
 
 ### Download Compiled Executable
    In the project-crunch github GUI, navigate to the Release tab.
-   Download either the .zip or .tar.gz version of project-crunch-*** and expand the directory where you want project-crunch to reside. 
+   Download the .tar.gz version of project-crunch-*** and expand the directory where you want project-crunch to reside. 
     
      > 'cd Project-Crunch'
      > './Install.run
@@ -84,7 +84,7 @@ Ubuntu 16.04 etc, Nvidia grpahics card
    
 #### Download Earlier Release (source)
     In the project-crunch github GUI, navigate to the Release tab.
-    Download either the Source_Code.zip, or Source_Code.tar.gz and expand the directory where you want project-crunch to reside. 
+    Download the Source_Code.tar.gz and expand the directory where you want project-crunch to reside. 
   
   
 #### Build and Run Installer from Source
@@ -214,7 +214,7 @@ There is a provided build script for generating a new release called `release.sh
 * Be sure your [virtual environment](#Setting up a virtual environment) is activated.
 * You have the Ubuntu `zip` utility installed. (`sudo apt-get install zip`)
 
-The script will compile the projects and generate a zip and a tar file. All artifacts of the process are left in a `build/` directory. Running the script again automatically deletes the `build/` directory. You must follow the GitHub instructions to post the release to the repository. Be prepared to provide a short description of the changes and have a new version number ready. For more information on software versioning, please see [https://en.wikipedia.org/wiki/Software_versioning](https://en.wikipedia.org/wiki/Software_versioning).
+The script will compile the projects and generate a tar file. All artifacts of the process are left in a `build/` directory. Running the script again automatically deletes the `build/` directory. You must follow the GitHub instructions to post the release to the repository. Be prepared to provide a short description of the changes and have a new version number ready. For more information on software versioning, please see [https://en.wikipedia.org/wiki/Software_versioning](https://en.wikipedia.org/wiki/Software_versioning).
 
 ### Release.sh Usage
 
@@ -224,7 +224,7 @@ The script must be run with the version number as an argument. For example:
 bash release.sh --version 0.0.1
 ```
 
-This generates the `build/` directory which contains a `.tar.gz` and a `.zip`. Create a release by following the GitHub documentation [here](https://help.github.com/en/articles/creating-releases).
+This generates the `build/` directory which contains a `.tar.gz`. Create a release by following the GitHub documentation [here](https://help.github.com/en/articles/creating-releases).
 
 Future work? #TODO automate it https://developer.github.com/v3/guides/getting-started/
 https://developer.github.com/v3/repos/releases/#create-a-release
