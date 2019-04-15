@@ -114,7 +114,7 @@ class AppContext(ApplicationContext):
                         "the steps on both machines to set up the LAN.",
                         QMessageBox.Ok, QMessageBox.Cancel)
        if reply == QMessageBox.Ok:
-           pass
+           self.LAN_part_1()
            #TODO
            #Make windows with the following steps:
            # 1. Connect w/ crossover ethernet cable
@@ -128,6 +128,16 @@ class AppContext(ApplicationContext):
            # 9. Succesful network setup!
        else:
            self.first_page()
+
+    def LAN_part_1(self):
+        QMessageBox.question(self.window,
+                "Crossover Cable",
+                "Make sure to connect both computers with a cross-over " +
+                "Ethernet cable.",
+                QIcon(self.get_resource("crossover_cable.png")),
+                QMessageBox.Next, QMessageBox.Back
+        )
+
 
     def on_install_push(self): 
         """
@@ -529,7 +539,7 @@ class AppContext(ApplicationContext):
                      'configure SSH keys (in this order) before the ' +
                      'application is fully functional.' +
                      '\n\nWould you like us to restart now?',
-                     QMessageBox.Yes, QMessageBox.No
+                     QMessageBox.Yes, QMessageBox.No)
         if reply == QMessageBox.Yes:
             try:
                 out = subprocess.Popen(
@@ -549,7 +559,7 @@ class AppContext(ApplicationContext):
         QMessageBox.about(self.window,
                             "Error Restarting",
                             "There was an error restarting through the " +
-                            "Installer. Please reboot computer manually."
+                            "Installer. Please reboot computer manually.")
         self.first_page()
         pass
 
