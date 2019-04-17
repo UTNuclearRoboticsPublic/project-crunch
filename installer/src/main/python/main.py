@@ -6,7 +6,8 @@ from fbs_runtime.application_context import ApplicationContext
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QVBoxLayout,
                             QMessageBox, QInputDialog, QLineEdit, QFileDialog,
                            QDialogButtonBox, QMainWindow, QLabel)
-from PyQt5.QtCore import QObjectCleanupHandler
+from PyQt5.QtCore import QObjectCleanupHandler, QSize
+from PyQt5.QtGui import QIcon, QPixmap
 
 class AppContext(ApplicationContext):
     """
@@ -61,8 +62,6 @@ class AppContext(ApplicationContext):
         instructions_button.clicked.connect(self.on_instructions_push)
         install_button = QPushButton('Install Project Crunch')
         install_button.clicked.connect(self.on_install_push)
-        LAN_walkthrough_button = QPushButton('Local Area Network Walkthrough')
-        LAN_walkthrough_button.clicked.connect(self.on_LAN_walkthrough_push)
         ssh_config_button = QPushButton('Configure SSH Keys')
         ssh_config_button.clicked.connect(self.on_ssh_config_push)
         exit_button = QPushButton('Exit')
@@ -71,7 +70,6 @@ class AppContext(ApplicationContext):
         # Add buttons 
         layout.addWidget(instructions_button)
         layout.addWidget(install_button)
-        layout.addWidget(LAN_walkthrough_button)
         layout.addWidget(ssh_config_button)
         layout.addWidget(exit_button)
         return layout
@@ -91,53 +89,21 @@ class AppContext(ApplicationContext):
                         "improved situational awareness by interfacing " +
                         "virtual reality (VR) headsets with the Robotics " + 
                         "Operating System (ROS).\n\nThe role of this installer " +
-                        "is to download and set up ROS, OpenHMD (the open source) " +
+                        "is to download and set up ROS, OpenHMD " +
                         "software to interface with the VR headsets, and other " +
                         "peripheral software. Perform installation of this " +
-                        "software package by hitting 'Ok' below, and clicking on " +
-                        "'Install Project Crunch'.\n\nIf this project is to be run " +
-                        "on two machines, e.g., local machine and remote machine, " +
-                        "then you will need to follow the steps under " +
-                        "'Local Area Network Walkthrough' and " +
-                        "'Configure SSH Keys' on the next screen directly " +
-                        "after installation of Project Crunch.\n\nAfter " +
-                        "installation, and optionally SSH Key configuration " +
-                        "is finished, this Installer has done its job, and " +
-                        "Project Crunch can be executed via the <INSERT NAME> executable.")
-                        #TODO agree on name of launcher/app/runtime. 
+                        "software package by hitting 'OK' below, and clicking on " +
+                        "'Install Project Crunch'.\n\n" +
+                        "You will have to run the installation on both machines, then " +
+                        "follow the instructions in " +
+                        "'Configure SSH Keys' to complete the installation. " +
+                        "The 'Configure SSH Keys' step should be run from the base station "+
+                        "and with the remote computer hooked up via LAN. There is a walkthrough " +
+                        "after clicking SSH Key.\n\nAfter " +
+                        "installation and SSH Key configuration " +
+                        "is finished, " +
+                        "Project Crunch can be executed via the Project-Crunch.run executable.")
         
-    def on_LAN_walkthrough_push(self):
-       reply = QMessageBox.question(QWidget(),
-                        "LAN Walkthrough",
-                        "If you wish to set up a Local Area Network (LAN) " +
-                        "between two machines, click 'Ok' and follow " +
-                        "the steps on both machines to set up the LAN.",
-                        QMessageBox.Ok, QMessageBox.Cancel)
-       if reply == QMessageBox.Ok:
-           self.LAN_part_1()
-           #TODO
-           #Make windows with the following steps:
-           # 1. Connect w/ crossover ethernet cable
-           # 2. Open connections menu --> edit connections
-           # 3. Add
-           # 4. Choose connection type (ethernet)
-           # 5. Select Ethernet tab and choose ethernet card
-           # 6. IPV4 settings tab: 'method' = Manual; Add IP addresses.
-           # 7. Ensure process done on both machines
-           # 8. Perform Ping Test
-           # 9. Succesful network setup!
-       else:
-           self.first_page()
-
-    def LAN_part_1(self):
-        QMessageBox.question(self.window,
-                "Crossover Cable",
-                "Make sure to connect both computers with a cross-over " +
-                "Ethernet cable.",
-                QIcon(self.get_resource("crossover_cable.png")),
-                QMessageBox.Next, QMessageBox.Back
-        )
-
 
     def on_install_push(self): 
         """
@@ -586,6 +552,177 @@ class AppContext(ApplicationContext):
         robot username and password, as well as any custom hostname. The 
         configuration happens in the final step in exec_ssh_config().
         """
+        reply = QMessageBox.question(QWidget(),
+                        "LAN Walkthrough",
+                        "To set up SSH keys, first setup a " +
+                        "Local Area Network (LAN) " +
+                        "between the two machines. Click 'Ok' to follow " +
+                        "our tutorial to set-up the LAN.",
+                        QMessageBox.Ok, QMessageBox.Cancel)
+        if reply == QMessageBox.Ok:
+           self.LAN_part_1()
+           #TODO
+           #Make windows with the following steps:
+           # 1. Connect w/ crossover ethernet cable
+           # 2. Open connections menu --> edit connections
+           # 3. Add
+           # 4. Choose connection type (ethernet)
+           # 5. Select Ethernet tab and choose ethernet card
+           # 6. IPV4 settings tab: 'method' = Manual; Add IP addresses.
+           # 7. Ensure process done on both machines
+           # 8. Perform Ping Test
+           # 9. Succesful network setup!
+           # 10. SSH config
+        else:
+           self.first_page()
+
+    def LAN_part_1(self):
+        msg = QMessageBox()
+        #msg.setText("Crossover Cable")
+        msg.setInformativeText("Make sure to connect both computers with " +
+        "a cross-over Ethernet cable. An example of cross-over wiring is " +
+        "shown on the left.")
+        msg.setDetailedText("A straight-through cable is used to connect " +
+                "routers to computers. In this case, to connect two computers " +
+                "to each other, we need one computers TX wire to be the other's " +
+                "RX wire, and vice versa. A crossover cable takes care of this. "
+        )
+        msg.setWindowTitle('Step 1) Crossover Cable')
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('crossover_cable.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_2()
+        else:
+            self.on_ssh_config_push()
+
+    def LAN_part_2(self):
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("Click on the Wi-Fi symbol on the " +
+            "Ubuntu toolbar, and select 'Edit Connections'")
+        msg.setWindowTitle('Step 2) Find the "Edit Connections" Menu')
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('wireless_menu.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_3()
+        else:
+            self.LAN_part_1()
+
+    def LAN_part_3(self):
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("Select 'Add'")
+        msg.setWindowTitle('Step 3) Add Network Connection')
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('edit_connections_menu.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_4()
+        else:
+            self.LAN_part_2()
+    
+    def LAN_part_4(self):
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("Choose 'Ethernet'")
+        msg.setWindowTitle('Step 4) Choose Connection Type: Ethernet')
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('choose_connection_type.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_5()
+        else:
+            self.LAN_part_3()
+
+    def LAN_part_5(self):
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("Under the 'Ethernet' tab:\n\n" +
+                "Edit the connection name, and choose " +
+                "the 'Device' to be your machine's network card."
+        )
+        msg.setWindowTitle('Step 5) Choose Device (Network Card)')
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('choose_device.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_6()
+        else:
+            self.LAN_part_4()
+    
+    def LAN_part_6(self):
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("Under the 'IPv4 Settings' tab:\n\n" +
+                "Under 'Addresses' click 'Add' to enter the desired IP " +
+                "address. Network mask can be 255.255.255.0")
+        msg.setWindowTitle("Step 6) Input IP Addresses")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('input_ip_addresses.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_7()
+        else:
+            self.LAN_part_5()
+    
+    def LAN_part_7(self):
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_8()
+        else:
+            self.LAN_part_6()
+    def LAN_part_8(self):
+
+        if retval == QMessageBox.Ok:
+            self.LAN_part_9()
+        else:
+            self.LAN_part_7()
+    def LAN_part_9(self):
+
+        if retval == QMessageBox.Ok:
+            self.ssh_config_dialog()
+        else:
+            self.LAN_part_8()
+    
+    def ssh_config_dialog(self):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         msg.setText(
@@ -611,6 +748,7 @@ class AppContext(ApplicationContext):
             return
         elif retval == OK_BUTTON:
             self.get_robot_username()
+
    
     def get_robot_username(self):
         """
