@@ -497,8 +497,8 @@ class AppContext(ApplicationContext):
             copyfile(self.get_resource(vive_launch), file_dest)
         
         # Copy rviz config file
-        file_dest=os.path.join(os.path.join(self.catkin_dir,'src',txtsphere_dir,"rviz_cfg",rviz_cfg))
-        if not os.path.isfile(filed_dest):
+        file_dest=os.path.join(self.catkin_dir,'src',txtsphere_dir,"rviz_cfg",rviz_cfg)
+        if not os.path.isfile(file_dest):
             copyfile(self.get_resource(rviz_cfg),file_dest)
 
         # Set up network configurations via /etc/hostnames
