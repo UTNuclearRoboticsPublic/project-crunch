@@ -66,7 +66,6 @@ OPENHMDRULES_DEST="/etc/udev/rules.d/"
 VIVECONF_DEST="/usr/share/X11/xorg.conf.d/"
 BUILD="build"
 SRC="src"
-OPENHMD_INSTALL_DEST="$INSTALL/OpenHMD"
 
 mkdir -p "$CATKIN"/"$BUILD"
 mkdir -p "$CATKIN"/"$SRC"
@@ -130,7 +129,7 @@ else
 fi
 
 #####################################################################
-# Install OpenHMD plugin
+# Install OpenHMD plugin dependencies
 #####################################################################
 echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
                         libglu1-mesa-dev \
@@ -154,24 +153,7 @@ echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
                         libhidapi-dev \
                         freeglut3-dev
 
-# Install OpenHMD Lib inside our install folder
-if [ ! -d "$OPENHMD_INSTALL_DEST" ];
-then
-	echo "[INFO: $MYFILENAME $LINENO] Cloning OpenHMD Lib into $INSTALL."
-    git clone https://github.com/OpenHMD/OpenHMD.git "$OPENHMD_INSTALL_DEST" 
-    cd "$OPENHMD_INSTALL_DEST" || exit 1
-    git checkout 4ca169b49ab4ea4bee2a8ea519d9ba8dcf662bd5
-    cmake .
-    make
-    ./autogen.sh
-    ./configure
-    make
-    cd - || exit 1
-else
-    echo "[INFO: $MYFILENAME $LINENO] OpenHMD Lib is already cloned, skipping installation."
-fi
-
-# Install the OpenHMD plugin
+# Install the OpenHMD plugin, this provides the OpenHMD dynamic library
 if [ ! -d "$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST" ];
 then
 	echo "[INFO: $MYFILENAME $LINENO] Cloning $OPENHMD_PLUGIN_DEST into $CATKIN/$SRC."
@@ -246,9 +228,6 @@ echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LIN
 # It is required that the plugin have raw access to the USB port as only the plugin using OpenHMD,
 # and not the OS (who usually intercepts data), knows how to handle the incomming information.
 sudo chmod a+rw /dev/hidraw*
-
-# Export OpenHMD library and header location for CMakeLists in Catkin
-echo "export OPENHMD_INSTALL_DEST=$OPENHMD_INSTALL_DEST" >> ~/.bashrc
 
 # Update port rules to allow for ssh configuration
 sudo ufw allow 22
