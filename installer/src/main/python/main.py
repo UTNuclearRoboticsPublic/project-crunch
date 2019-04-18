@@ -24,7 +24,7 @@ class AppContext(ApplicationContext):
     end of the current chain.
 
     A similar chain of events happens for the ssh config button, prompting the
-    user, then the core action happens inside #TODO function.
+    user, then the core action happens inside exec_ssh_config function.
     """
     
     password = None
@@ -437,7 +437,6 @@ class AppContext(ApplicationContext):
         )
 
         # Copy over necessary configuration files
-        # Still need openhmd file ## TODO fix last launch file #TODO 4/4/19 are these comments still accurate?
         single_cam_launch = 'single-cam.launch'
         dual_cam_launch = 'dual-cam.launch'
         vive_launch = 'vive.launch'
@@ -491,7 +490,6 @@ class AppContext(ApplicationContext):
         )
         
         # TODO catkin build /make
-        # Set up icons?
 
         self.install_finished()
 
@@ -504,9 +502,9 @@ class AppContext(ApplicationContext):
                      'Install Complete!',
                      'You have completed the install process! ' +
                      'Copy the Project-Crunch directory to the ' +
-                     ' location of your choosing. You can run ' +
-                     'Project Crunch by navigating to {} and clicking on the ' +
-                     'FIX ME icon.\n\n You must restart your computer and ' + #TODO
+                     ' {} directory you specified earlier. You can run '.format(self.install_dir) +
+                     'Project Crunch by navigating to the installation directory and clicking on the ' +
+                     'Project-Crunch.run icon.\n\n You must restart your computer and ' + 
                      'configure SSH keys (in this order) before the ' +
                      'application is fully functional.' +
                      '\n\nWould you like us to restart now?',
@@ -834,10 +832,11 @@ class AppContext(ApplicationContext):
                 check=True
         )
 
-        QMessageBox.about(self.window,
-                    "SSH Configuration Complete",
-                    "Both computers should be able to connect to each other " +
-                    "over SSH through port 22.")
+        QMessageBox.about(
+                self.window,
+                "SSH Configuration Complete",
+                "Both computers should be able to connect via SSH without entering a password."
+        )
         
 
 if __name__ == "__main__":
