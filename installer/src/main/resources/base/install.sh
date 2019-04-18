@@ -166,19 +166,23 @@ fi
 #####################################################################
 # Vive and OpenHMD configuration
 #####################################################################
+# IMPORTANT: NVIDIA drivers are no longer a requirement of the project. The code is 
+# left here to facilitate any future requirements that may need NVIDIA
+# drivers. 
+
 # NVIDIA drivers
 # Add apt-repo updates list of available drivers (which requires the user to hit enter)
 # Checks for recommended drivers and installs them
-echo | sudo add-apt-repository ppa:graphics-drivers/ppa
-sudo apt update
-DRIVER=$(sudo ubuntu-drivers devices | grep "recommended" | awk '{print $3}')
-if dpkg -s "$DRIVER" &> /dev/null
-then
-    echo "[INFO: $MYFILENAME $LINENO] The recommended graphics drivers ($DRIVER) are already installed." 
-else
-    sudo apt-get -y install "$DRIVER" &&
-    echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
-fi
+#echo | sudo add-apt-repository ppa:graphics-drivers/ppa
+#sudo apt update
+#DRIVER=$(sudo ubuntu-drivers devices | grep "recommended" | awk '{print $3}')
+#if dpkg -s "$DRIVER" &> /dev/null
+#then
+#    echo "[INFO: $MYFILENAME $LINENO] The recommended graphics drivers ($DRIVER) are already installed." 
+#else
+#    sudo apt-get -y install "$DRIVER" &&
+#    echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
+#fi
 
 # Copy over rules files for using a HMD in Linux.
 # This is required for Linux to allow access to a HMD.
