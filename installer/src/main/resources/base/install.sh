@@ -233,5 +233,9 @@ echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LIN
 # and not the OS (who usually intercepts data), knows how to handle the incomming information.
 sudo chmod a+rw /dev/hidraw*
 
-# Update port rules to allow for ssh configuration
-sudo ufw allow 22
+# We disable the firewall here. The reason is that we can predict port 22 (ssh) and 
+# port 11311 (roscore), but the camera topics post to random ports and cannot be 
+# predicted. There may be a method to pass in ports to the cameras via launch files,
+# but this was not explored. The firewall is disabled by default, so we simply disable
+# it. Check the documentation for ufw to go back to specifying specific ports.
+sudo ufw disable
