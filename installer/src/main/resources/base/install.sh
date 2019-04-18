@@ -177,7 +177,7 @@ then
     echo "[INFO: $MYFILENAME $LINENO] The recommended graphics drivers ($DRIVER) are already installed." 
 else
     #sudo apt-get -y install "$DRIVER" &&
-    #echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
+    echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
 fi
 
 # Copy over rules files for using a HMD in Linux.
