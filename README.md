@@ -20,7 +20,6 @@ This repository was initially designed and created by an ECE Senior Design team 
    * [Download Source](#Download-Source) 
        * [Set Up Environment](#Set-Up-Environment) 
        * [Download Latest Version (source)](#Download-Latest-Version-(source))       
-       * [Download Earlier Release (source)](#Download-Earlier-Release-(source))       
        * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
    * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
    * [Configuring SSH Keys](#Configuring-SSH-Keys) 
@@ -53,23 +52,15 @@ This repository was initially designed and created by an ECE Senior Design team 
    * [Configuring SSH Keys](#Configuring-SSH-Keys) 
 
 ### System Requirements:
-Ubuntu 16.04 etc, Nvidia grpahics card
+Ubuntu 16.04
 
 ### Download Compiled Executable
-   In the project-crunch github GUI, navigate to the Release tab.
-   Download the .tar.gz version of project-crunch-*** and expand the directory where you want project-crunch to reside. 
+   Navigate to [https://github.com/UTNuclearRoboticsPublic/project-crunch/releases](https://github.com/UTNuclearRoboticsPublic/project-crunch/releases).
+   Download the `.tar.gz` and extract the contents. Open the folder and click on the Install.run icon. 
     
-     > 'cd Project-Crunch'
-     > './Install.run
-   
-
 -> Link to Navigating-the-Installer-GUI
 
 ### Download Source
-   * [Set Up Environment](#Set-Up-Environment) 
-   * [Download Latest Version (source)](#Download-Latest-Version-(source))       
-   * [Download Earlier Release (source)](#Download-Earlier-Release-(source))       
-   * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)  
 
 #### Set Up Environment
 
@@ -79,14 +70,9 @@ Ubuntu 16.04 etc, Nvidia grpahics card
    
     
 #### Download Latest Version (source)
-    In a terminal, Navigate to the directory where the project-crunch folder will reside and enter. 
+    You can download the latest version by cloning directly from master.
    > 'git clone https://github.com/UTNuclearRoboticsPublic/project-crunch.git' 
    
-#### Download Earlier Release (source)
-    In the project-crunch github GUI, navigate to the Release tab.
-    Download the Source_Code.tar.gz and expand the directory where you want project-crunch to reside. 
-  
-  
 #### Build and Run Installer from Source
     From the terminal, navigate into the Installer directory of project-crunch and enter:
     
@@ -126,12 +112,10 @@ Ubuntu 16.04 etc, Nvidia grpahics card
    ### Launching Project Crunch from Source
    From the terminal, navigate into the project-crunch directory and enter:
     
-   > 'cd project-crunch*/app'
-   
-    Build and run the Launcher 
-    
-   > 'fbs run'
-   
+   ```
+   cd app
+   fbs run
+   ``` 
    
    ### Navigating Project Crunch GUI
        Once the project-crunch GUI launches, follow the step-by step instructions
@@ -159,6 +143,7 @@ Ubuntu 16.04 etc, Nvidia grpahics card
    * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release) 
    * [Creating a New Release](#Creating-a-New-Release)   
    * [Release.sh Usage](#Release.sh-Usage) 
+
 ---
 
 ### Navigating the Repository
