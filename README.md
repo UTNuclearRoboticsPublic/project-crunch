@@ -147,6 +147,10 @@ Ubuntu 16.04 etc, Nvidia grpahics card
 
 * You typically generate an ssh key pair, which includes a private key and a public key. The installer was only able to find one of the keys. If you do not have any need for your current key setup or it is a mistake, you can simply delete the extra key and re-run the configuration. If your key was moved by mistake, you can move it back and re-run the configuration. The program looks for keys in the default location, which is `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`. If the program finds a key pair, it will just use the existing keys.
 
+> When I install Nvidia drivers, the headset no longer works.
+
+* If you are on a laptop, the built in display affects the device numbers in an unknown way. This prevents our configuration for allowing HMDs on the GPU from working properly. For now we do not use Nvidia drivers on laptops as nouveau seems to be enough to run the program. 
+
 ---
 
 ## Modifying and Maintaining the Project
