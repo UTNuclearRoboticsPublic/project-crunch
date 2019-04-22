@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /SphereDisplay1
       Splitter Ratio: 0.5
     Tree Height: 565
   - Class: rviz/Selection
@@ -27,6 +28,8 @@ Panels:
     Name: Time
     SyncMode: 0
     SyncSource: ""
+Toolbars:
+  toolButtonStyle: 2
 Visualization Manager:
   Class: ""
   Displays:
@@ -53,10 +56,10 @@ Visualization Manager:
       Enabled: true
       FOV front: 235
       FOV rear: 235
-      Front camera image: ""
+      Front camera image: /camera1/image_raw
       Name: SphereDisplay
       Radius: 10
-      Rear camera image: ""
+      Rear camera image: /camera2/image_raw
       Reference frame: <Fixed Frame>
       Ring count: 64
       Segment count: 64
@@ -90,7 +93,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 10
+      Distance: 34.2845879
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
