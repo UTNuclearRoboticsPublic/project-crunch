@@ -151,7 +151,8 @@ echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
                         libglewmx1.5-dev \
                         libglewmx-dev \
                         libhidapi-dev \
-                        freeglut3-dev
+                        freeglut3-dev \
+			wmctrl
 
 # Install the OpenHMD plugin, this provides the OpenHMD dynamic library
 if [ ! -d "$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST" ];
