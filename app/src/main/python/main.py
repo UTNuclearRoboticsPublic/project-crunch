@@ -44,7 +44,6 @@ class GUIWindow(QMainWindow):
     def closeEvent(self, event):
         # Override main window's function called when the red X is clicked 
         print("You closed the app!")
-        print(self.kill_launch)
         robot_client = self.robot_username + "@" + self.robot_hostname
         sshProcess = subprocess.Popen(['ssh',
                                     robot_client],
@@ -52,9 +51,10 @@ class GUIWindow(QMainWindow):
                                     universal_newlines=True,
                                     bufsize=0,
                                     preexec_fn=os.setsid)
-        sshProcess.stdin.write("source {}\n".format(self.kill_launch))
+        sshProcess.stdin.write("pkill /opt/ros -f\n")        
         sshProcess.stdin.close()
-        print("here")
+        p = subprocess.Popen(['rosnode','kill','-a'])
+
     def get_env_vars(self):
         error_msg = ""
         missing_env_vars = 0
@@ -87,33 +87,21 @@ class GUIWindow(QMainWindow):
         else:
             # Use this section for running the launcher via
             # the zip or tar release, ie normal use.
-            self.robot_launch = os.path.join(
-                    self.robot_project_crunch_path,
-                    "Project-Crunch", "Project-Crunch",
-                    "target", "Project-Crunch",
-                    "robot_launch.sh"
-            )
-            self.kill_launch = os.path.join(
-                    self.robot_project_crunch_path,
-                    "Project-Crunch", "Project-Crunch",
-                    "target", "Project-Crunch",
-                    "kill_launch.sh"
-            )
+            #self.robot_launch = os.path.join(
+            #        self.robot_project_crunch_path,
+            #        "Project-Crunch", "Project-Crunch",
+            #        "target", "Project-Crunch",
+            #        "robot_launch.sh"
+            #)
             # Use this section for running the launcher
             # in "debug" mode via fbs run, where the installation 
             # being considered is actually the repository.
-            #self.robot_launch = os.path.join(
-            #        self.robot_project_crunch_path, 
-            #        "project-crunch", "app", "src", 
-            #        "main", "resources", "base",
-            #        "robot_launch.sh"
-            #)
-            #self.kill_launch = os.path.join(
-            #        self.robot_project_crunch_path,
-            #        "project-crunch", "app", "src", 
-            #        "main", "resources", "base", 
-            #        "kill_launch.sh"
-            #)
+            self.robot_launch = os.path.join(
+                    self.robot_project_crunch_path, 
+                    "project-crunch", "app", "src", 
+                    "main", "resources", "base",
+                    "robot_launch.sh"
+            )
             
             return None
     
@@ -262,7 +250,7 @@ class GUIWindow(QMainWindow):
         self.launch_robot()
         self.launch_base()
         #ISSUE: temporary workaround to position windows running before OpenHMD plugin is added
-        time.sleep(30)
+        time.sleep(15)
         self.position_windows()
 
     def position_windows(self):
@@ -308,10 +296,6 @@ class GUIWindow(QMainWindow):
             # Prints the exception to stdout
             print_exc() #TODO make sure this works
 
-        #ssh_robot_launch_cmd = "ssh -f {} bash {} -c {}".format(robot_client, self.robot_launch, self.robot_catkin)
-        #print(ssh_robot_launch_cmd)
-        #subprocess.call(ssh_robot_launch_cmd.split(" "))
-        
         sshProcess = subprocess.Popen(['ssh',
                                     robot_client],
                                     stdin=subprocess.PIPE,
@@ -338,7 +322,6 @@ class GUIWindow(QMainWindow):
                             "--catkin",
                             self.base_catkin],
                             env=my_env)
-        #subprocess.call([self.base_launch,"--catkin",self.base_catkin])
     
 
 class AppContext(ApplicationContext):
