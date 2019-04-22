@@ -227,6 +227,10 @@ sed -i "${LINETOEDIT}s|.*|FileSystem=${CATKIN}/src/rviz_openhmd/src/resources/|"
 LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
 
+# Run catkin_make to build ROS packages in catkin workspace
+cd "$CATKIN"
+catkin_make
+
 # Change permissions on USB ports to all users.
 # There is a potential security vulnerability opened by changing these permissions.
 # It is required that the plugin have raw access to the USB port as only the plugin using OpenHMD,
