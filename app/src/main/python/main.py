@@ -11,6 +11,8 @@ from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import QEvent
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QObjectCleanupHandler
 from PyQt5.QtCore import QSize
@@ -228,7 +230,8 @@ class GUIWindow(QMainWindow):
             if self.two_headsets and len(self.headset_refs) == 1:
                 self.plug_in_headset(extra_str=" second ")
             else: 
-                self.launch_page()
+                #self.launch_page()
+                #self.runtime_page()
                 self.launch_system_backend()
         else:
             self.plug_in_headset(error=True)
@@ -240,10 +243,28 @@ class GUIWindow(QMainWindow):
         return "dummy"
 
     @ChangeLayout()
+    def runtime_page(self):
+        layout = QVBoxLayout()
+        text = QLabel("System is Launched")
+        layout.addWidget(text)
+
+        #TODO figure out how to make the close button work, issue may be with imports
+        kill = QPushButton('Kill System')
+        kill.clicked.connect(close())
+        layout.addWidget(kill)
+        
+        swap = QPushButton('Swap Windows')
+        swap.clicked.connect(self.swap_windows())
+        layout.addWidget(swap)
+        
+        return layout
+
+    @ChangeLayout()
     def launch_page(self):
         layout = QVBoxLayout()
         text = QLabel("Launching system...")
         layout.addWidget(text)
+        
         return layout
 
     def launch_system_backend(self):
@@ -274,9 +295,9 @@ class GUIWindow(QMainWindow):
         hmd1, err = subprocess.Popen(['grep','HMD1'],
                         stdin=windows.stdout,
                                 stdout=subprocess.PIPE).communicate()
-        wid1 = hmd1.split()[0]
-        print(wid1)
-        subprocess.call(["wmctrl","-ir",wid1,
+        self.wid1 = hmd1.split()[0]
+        print(self.wid1)
+        subprocess.call(["wmctrl","-ir",selfwid1,
             "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
 
         if self.two_headsets:
@@ -284,9 +305,15 @@ class GUIWindow(QMainWindow):
             hmd2, err = subprocess.Popen(["grep","HMD2"],
                         stdin=windows.stdout,
                         stdout=subprocess.PIPE).communicate()
-            print(hmd2)
-            wid2 = hmd2.split()[0]
-            subprocess.call(["wmctrl","-ir",wid2,
+            self.wid2 = hmd2.split()[0]
+            subprocess.call(["wmctrl","-ir",self.wid2,
+                "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
+
+    def swap_windows(self):
+        if self.two_headsets:
+            subprocess.call(["wmctrl","-ir",self.wid2,
+                "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
+            subprocess.call(["wmctrl","-ir",self.wid1,
                 "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
 
     def launch_robot(self):
