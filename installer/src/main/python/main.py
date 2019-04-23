@@ -703,17 +703,57 @@ class AppContext(ApplicationContext):
     
     def LAN_part_7(self):
 
+        retval = QMessageBox.question(self.window,
+                "Step 7) Ensure steps 1-6 done on both computers",
+                "Make sure that steps 1-6 are complete on both computers " +
+                "before proceeding to the next step",
+                QMessageBox.Ok, QMessageBox.Cancel)
+
         if retval == QMessageBox.Ok:
             self.LAN_part_8()
         else:
             self.LAN_part_6()
+    
     def LAN_part_8(self):
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("From each computer, right click the wireless connections " +
+                "menu, and select the LAN you just created. You should see, " +
+                "'Connection Established' as shown in the picture on the left.")
+        msg.setWindowTitle("Step 8) Check for 'Connection Established'")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('connection_established.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
 
         if retval == QMessageBox.Ok:
             self.LAN_part_9()
         else:
             self.LAN_part_7()
+
     def LAN_part_9(self):
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("To confirm that Ethernet cable is working properly, "+
+                " open a terminal "+
+                "and type 'ping <IP Address>', "+
+                "where <IP Address is the IP of the other computer."+
+                "\n\nIf ping test succeeds, then the LAN setup succeded"+
+                " and you should see 0% packet loss like in the image " +
+                "below.")
+        msg.setWindowTitle("Step 8) Input IP Addresses")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('ping_test.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
 
         if retval == QMessageBox.Ok:
             self.ssh_config_dialog()
