@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QVBoxLayout,
                             QMessageBox, QInputDialog, QLineEdit, QFileDialog,
                            QDialogButtonBox, QMainWindow, QLabel)
 from PyQt5.QtCore import QObjectCleanupHandler, QSize
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import (QIcon, QPixmap)
 
 class AppContext(ApplicationContext):
     """
@@ -41,6 +41,8 @@ class AppContext(ApplicationContext):
         self.window = QWidget()
         self.window.setLayout(self.first_page())
         self.window.resize(250,150)
+        x , y = self.centerOnScreen()
+        self.window.move(x,y)
         self.window.show()
         
         # Set default params
@@ -52,7 +54,17 @@ class AppContext(ApplicationContext):
         }
         self.use_default_net_config = True
         return self.app.exec_()
-    
+
+    def centerOnScreen(self):
+        '''
+        centerOnScreen()
+        Centers the window on the screen.
+        '''
+        resolution = QApplication.desktop().screenGeometry()
+        x = (resolution.width() - self.window.width()) / 2
+        y = (resolution.height() - self.window.height()) / 2
+        return x , y
+
     def first_page(self):
         """
         Create layout of the first page.
@@ -550,14 +562,19 @@ class AppContext(ApplicationContext):
         robot username and password, as well as any custom hostname. The 
         configuration happens in the final step in exec_ssh_config().
         """
-        reply = QMessageBox.question(QWidget(),
-                        "LAN Walkthrough",
-                        "To set up SSH keys, first setup a " +
+        msg = QMessageBox()
+        msg.setInformativeText("To set up SSH keys, first setup a " +
                         "Local Area Network (LAN) " +
                         "between the two machines. Click 'Ok' to follow " +
-                        "our tutorial to set-up the LAN.",
-                        QMessageBox.Ok, QMessageBox.Cancel)
-        if reply == QMessageBox.Ok:
+                        "our tutorial to set-up the LAN.")
+        msg.setWindowTitle('LAN Walkthrough')
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
            self.LAN_part_1()
            #TODO
            #Make windows with the following steps:
@@ -703,11 +720,20 @@ class AppContext(ApplicationContext):
     
     def LAN_part_7(self):
 
-        retval = QMessageBox.question(self.window,
-                "Step 7) Ensure steps 1-6 done on both computers",
-                "Make sure that steps 1-6 are complete on both computers " +
-                "before proceeding to the next step",
-                QMessageBox.Ok, QMessageBox.Cancel)
+        msg = QMessageBox()
+        #msg.setText("Connections Menu")
+        msg.setInformativeText("Make sure that steps 1-6 are complete " +
+                "on both computers " +
+                "before proceeding to the next step")
+        msg.setWindowTitle("Step 7) Ensure steps 1-6 done on both computers")
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setFixedHeight(131)
+        msg.setFixedWidth(224)
+        pixmap = QPixmap(self.get_resource('connection_established.png'))
+        pixmap.scaled(129, 222)
+        msg.setIconPixmap(pixmap)
+        
+        retval = msg.exec_()
 
         if retval == QMessageBox.Ok:
             self.LAN_part_8()
