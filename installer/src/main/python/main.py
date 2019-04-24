@@ -111,7 +111,7 @@ class AppContext(ApplicationContext):
                         "'Configure SSH Keys' to complete the installation. " +
                         "The 'Configure SSH Keys' step should be run from the base station "+
                         "and with the remote computer hooked up via LAN. There is a walkthrough " +
-                        "after clicking SSH Key.\n\nAfter " +
+                        "after clicking 'Configure SSH Keys'.\n\nAfter " +
                         "installation and SSH Key configuration " +
                         "is finished, " +
                         "Project Crunch can be executed via the Project-Crunch.run executable.")
@@ -311,9 +311,13 @@ class AppContext(ApplicationContext):
                 "their Internet Protocol (IP) addresses in order to " +
                 "communicate with each other across an Ethernet network.\n\n" +
                 "The next screen will ask if you would like to use some default "+
-                "IP addresses we have assigned, or if you would like to input " +
-                "your own.\n\nOur IP addresses are:\n\nRemote (robot): 10.0.0.2 " +
-                "\nLocal (base): 10.0.0.1")
+                "IP addresses and hostnames that" +
+                "we have assigned, or if you would like to input " +
+                "your own.\n\n"+
+                "[Hostname]\t[IP]"+
+                "\n--------------------------------------------------"+
+                "\nrobot\t\t10.0.0.2" +
+                "\nbase\t\t10.0.0.1")
 
         layout = QVBoxLayout()
         dialog = QInputDialog()
