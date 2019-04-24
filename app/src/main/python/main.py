@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QVBoxLayout,QHBoxLayout
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QLabel
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QEvent
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtGui import QIcon
@@ -199,7 +200,6 @@ class GUIWindow(QMainWindow):
         layout.addLayout(btn_hbox)
         return layout
 
-
     def one_headset_config(self):
         self.two_headsets = False
         self.plug_in_headset()
@@ -229,10 +229,10 @@ class GUIWindow(QMainWindow):
             self.headset_refs.append(new_vive_ref)
             if self.two_headsets and len(self.headset_refs) == 1:
                 self.plug_in_headset(extra_str=" second ")
-            else: 
-                #self.launch_page()
-                #self.runtime_page()
+            else:
+                #self.launch_page() #TODO unknown error -- QLabel not refreshing
                 self.launch_system_backend()
+                self.runtime_page()
         else:
             self.plug_in_headset(error=True)
 
@@ -242,6 +242,13 @@ class GUIWindow(QMainWindow):
         # vives plugged in, return port of most recently plugged in vive
         return "dummy"
 
+    @ChangeLayout(size=(200,200), title='Launching')
+    def launch_page(self):
+        layout = QVBoxLayout()
+        text = QLabel("Launching System ...")
+        layout.addWidget(text)
+        return layout
+
     @ChangeLayout()
     def runtime_page(self):
         layout = QVBoxLayout()
@@ -250,20 +257,12 @@ class GUIWindow(QMainWindow):
 
         #TODO figure out how to make the close button work, issue may be with imports
         kill = QPushButton('Kill System')
-        kill.clicked.connect(close())
+        kill.clicked.connect(self.closeEvent)
         layout.addWidget(kill)
         
         swap = QPushButton('Swap Windows')
-        swap.clicked.connect(self.swap_windows())
+        swap.clicked.connect(self.swap_windows)
         layout.addWidget(swap)
-        
-        return layout
-
-    @ChangeLayout()
-    def launch_page(self):
-        layout = QVBoxLayout()
-        text = QLabel("Launching system...")
-        layout.addWidget(text)
         
         return layout
 
@@ -271,7 +270,7 @@ class GUIWindow(QMainWindow):
         self.launch_robot()
         self.launch_base()
         #ISSUE: temporary workaround to position windows running before OpenHMD plugin is added
-        time.sleep(15)
+        time.sleep(5)
         self.position_windows()
 
     def position_windows(self):
@@ -360,8 +359,20 @@ class AppContext(ApplicationContext):
         two_headset_img = self.get_resource("two-headset.png")
         # base_launch.sh
         base_launch = self.get_resource("base_launch.sh")
-        main_window = GUIWindow(one_headset_img,two_headset_img, base_launch)
+        self.main_window = GUIWindow(one_headset_img,two_headset_img, base_launch)
+        x , y = self.centerOnScreen()
+        self.main_window.move(x,y)
         return self.app.exec_()
+
+    def centerOnScreen(self):
+        '''
+        centerOnScreen()
+        Centers the window on the screen.
+        '''
+        resolution = QApplication.desktop().screenGeometry()
+        x = (resolution.width() - self.main_window.width()) / 2
+        y = (resolution.height() - self.main_window.height()) / 2
+        return x , y
         
 if __name__ == "__main__":
     appctxt = AppContext()

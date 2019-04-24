@@ -87,8 +87,8 @@ class AppContext(ApplicationContext):
         return layout
 
     def on_exit_push(self):
-        sys.exit()        
-
+        sys.exit()
+ 
     def on_instructions_push(self):
         """
         Describe Project Crunch, function of Installer, LAN setup,
