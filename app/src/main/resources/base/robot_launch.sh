@@ -118,7 +118,7 @@ CAM2=${CAM_ARR[1]:$i:1}
 
 if [[ ${#CAM_ARR[@]} == 1 ]];
 then
-    roslaunch --wait video_stream_opencv $SINGLE_CAM_LAUNCH video_stream_provider1:="$CAM1" &
+    roslaunch --wait video_stream_opencv $SINGLE_CAM_LAUNCH video_stream_provider1:="$CAM1" width:="1440" height:="1440" &
     echo "[INFO: $MYFILENAME $LINENO] One camera launched from ${CAM_ARR[0]}" >> "$LOGFILE"
 elif [[ ${#CAM_ARR[@]} == 2 ]];
 then
