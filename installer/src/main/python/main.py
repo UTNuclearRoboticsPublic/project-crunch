@@ -193,7 +193,8 @@ class AppContext(ApplicationContext):
                 self.current_computer_is_robot = True
             elif str(item).lower() == "no":
                 self.current_computer_is_robot = False
-            # We only need the install directory if the user is on the robot
+            # If user on robot, we need install dir and catkin dir
+            # If user on base, we only need catkin dir
             if self.current_computer_is_robot is True:
                 self.install_directory()
             else:
@@ -261,11 +262,19 @@ class AppContext(ApplicationContext):
 
         Assigns the catkin directory to self as a full path.
         """
+        if self.current_computer_is_robot:
+            extra = "\n\n*Note:"+
+            "Create catkin workspace in a different location " \
+            "than project-crunch."
+        else:
+            extra = ""
+        
         QMessageBox.about(self.window, 
                         "Catkin Workspace Directory",
-                        "Hit 'Ok', to chose a directory in which to create "+
+                        "Hit 'Ok', to choose or create "+
                         "a catkin workspace, i.e., a directory in which to " +
-                        "place all ROS packages and plugins for Project Crunch.")
+                        "place all ROS packages and plugins for Project Crunch." +
+                        extra)
         layout = QVBoxLayout()
         dialog = QFileDialog()
         layout.addWidget(dialog)
