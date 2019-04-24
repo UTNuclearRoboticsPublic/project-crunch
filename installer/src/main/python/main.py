@@ -193,12 +193,7 @@ class AppContext(ApplicationContext):
                 self.current_computer_is_robot = True
             elif str(item).lower() == "no":
                 self.current_computer_is_robot = False
-            # If user on robot, we need install dir and catkin dir
-            # If user on base, we only need catkin dir
-            if self.current_computer_is_robot is True:
-                self.install_directory()
-            else:
-                self.catkin_directory()
+            self.install_directory()
         else:
             self.first_page()
         return layout
@@ -264,7 +259,7 @@ class AppContext(ApplicationContext):
         """
         if self.current_computer_is_robot:
             extra = "\n\n*Note:"\
-            "Create catkin workspace in a different location " \
+            " Create catkin workspace in a different location " \
             "than project-crunch."
         else:
             extra = ""
@@ -274,7 +269,9 @@ class AppContext(ApplicationContext):
                         "Hit 'Ok', to choose or create "+
                         "a catkin workspace, i.e., a directory in which to " +
                         "place all ROS packages and plugins for Project Crunch." +
-                        extra)
+                        "\n\n*Note:" +
+                        "Create catkin workspace in a different location " +
+                        "than project-crunch.")
         layout = QVBoxLayout()
         dialog = QFileDialog()
         layout.addWidget(dialog)
@@ -523,11 +520,13 @@ class AppContext(ApplicationContext):
         Lets the user know that they are finished with the install.
 
         """
+        print(self.install_dir)
         reply = QMessageBox.question(QWidget(),
                      'Install Complete!',
                      'You have completed the install process! ' +
                      'Copy the Project-Crunch directory to the ' +
-                     ' {} directory you specified earlier. You can run '.format(self.install_dir) +
+                     self.install_dir +
+                     ' directory you specified earlier. You can run ' +
                      'Project Crunch by navigating to the installation directory and clicking on the ' +
                      'Project-Crunch.run icon.\n\n You must restart your computer and ' + 
                      'configure SSH keys (in this order) before the ' +
