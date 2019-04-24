@@ -263,7 +263,7 @@ class AppContext(ApplicationContext):
         Assigns the catkin directory to self as a full path.
         """
         if self.current_computer_is_robot:
-            extra = "\n\n*Note:"+
+            extra = "\n\n*Note:"\
             "Create catkin workspace in a different location " \
             "than project-crunch."
         else:
