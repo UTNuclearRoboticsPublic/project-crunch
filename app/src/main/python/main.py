@@ -101,7 +101,7 @@ class GUIWindow(QMainWindow):
             # being considered is actually the repository.
             self.robot_launch = os.path.join(
                     self.robot_project_crunch_path, 
-                    "project-crunch", "app", "src", 
+                    "app", "src", 
                     "main", "resources", "base",
                     "robot_launch.sh"
             )
@@ -230,9 +230,8 @@ class GUIWindow(QMainWindow):
             if self.two_headsets and len(self.headset_refs) == 1:
                 self.plug_in_headset(extra_str=" second ")
             else:
-                #self.launch_page() #TODO unknown error -- QLabel not refreshing
-                self.launch_system_backend()
                 self.runtime_page()
+                self.launch_system_backend()
         else:
             self.plug_in_headset(error=True)
 
@@ -249,7 +248,7 @@ class GUIWindow(QMainWindow):
         layout.addWidget(text)
         return layout
 
-    @ChangeLayout()
+    @ChangeLayout(size=(200,200), title="LAUNCHING SYSTEM...")
     def runtime_page(self):
         layout = QVBoxLayout()
         text = QLabel("System is Launched")
@@ -263,7 +262,7 @@ class GUIWindow(QMainWindow):
         swap = QPushButton('Swap Windows')
         swap.clicked.connect(self.swap_windows)
         layout.addWidget(swap)
-        
+
         return layout
 
     def launch_system_backend(self):
@@ -272,6 +271,7 @@ class GUIWindow(QMainWindow):
         #ISSUE: temporary workaround to position windows running before OpenHMD plugin is added
         time.sleep(5)
         self.position_windows()
+        print("HERE")
 
     def position_windows(self):
         p1 = subprocess.Popen(['xrandr'], stdout=subprocess.PIPE)
@@ -307,6 +307,7 @@ class GUIWindow(QMainWindow):
             self.wid2 = hmd2.split()[0]
             subprocess.call(["wmctrl","-ir",self.wid2,
                 "-e","0,{},{},2160,1200".format(self.coords[1][0],self.coords[1][1])])
+        self.runtime_page()
 
     def swap_windows(self):
         if self.two_headsets:
