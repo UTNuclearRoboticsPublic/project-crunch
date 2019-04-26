@@ -1,8 +1,8 @@
-###############################################################
+##############################################################
 # Purpose:      Creates GUI for the system launcher to wrap the
 #               configuration and launch scripts.
-# Written by:   Kate Baumli
-# Modified:     Monday March 4, 2019
+# Written by:   Kate Baumli, Daniel Diamont, John Sigmon.
+# Modified:     Friday April 26, 2019
 ###############################################################
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QWidget
@@ -271,7 +271,6 @@ class GUIWindow(QMainWindow):
         #ISSUE: temporary workaround to position windows running before OpenHMD plugin is added
         time.sleep(5)
         self.position_windows()
-        print("HERE")
 
     def position_windows(self):
         p1 = subprocess.Popen(['xrandr'], stdout=subprocess.PIPE)
@@ -295,8 +294,8 @@ class GUIWindow(QMainWindow):
                         stdin=windows.stdout,
                                 stdout=subprocess.PIPE).communicate()
         self.wid1 = hmd1.split()[0]
-        print(self.wid1)
-        subprocess.call(["wmctrl","-ir",selfwid1,
+        #print(self.wid1)
+        subprocess.call(["wmctrl","-ir",self.wid1,
             "-e","0,{},{},2160,1200".format(self.coords[0][0],self.coords[0][1])])
 
         if self.two_headsets:
