@@ -2,7 +2,7 @@
 # Purpose:      Creates GUI for the system launcher to wrap the
 #               configuration and launch scripts.
 # Written by:   Kate Baumli, Daniel Diamont, John Sigmon.
-# Modified:     Friday April 26, 2019
+# Last Modified:     Saturday April 27, 2019
 ###############################################################
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtWidgets import QWidget
@@ -26,8 +26,6 @@ import re
 import time
 from fbs_runtime.application_context import ApplicationContext
 from traceback import print_exc
-#TODO: Add "back"  buttons to each page
-#TODO: Make layout pretty
 
 class GUIWindow(QMainWindow):
 
@@ -320,7 +318,8 @@ class GUIWindow(QMainWindow):
             robot_client = self.robot_username + "@" + self.robot_hostname
         except TypeError:
             # Prints the exception to stdout
-            print_exc() #TODO make sure this works
+            #TODO Is this exception still needed? Does it need to be hooked up to the env var error?
+            print_exc()
 
         sshProcess = subprocess.Popen(['ssh',
                                     robot_client],
@@ -342,12 +341,15 @@ class GUIWindow(QMainWindow):
     def launch_base(self):
         my_env = os.environ.copy()
         my_env["PATH"] = "/usr/sbin:/sbin:" + my_env["PATH"]
-        print(my_env)
-        subprocess.Popen(["bash",
-                            self.base_launch,
-                            "--catkin",
-                            self.base_catkin],
-                            env=my_env)
+        subprocess.Popen(
+                [
+                    "bash",
+                    self.base_launch,
+                    "--catkin",
+                    self.base_catkin
+                ],
+                env=my_env
+        )
     
 
 class AppContext(ApplicationContext):
