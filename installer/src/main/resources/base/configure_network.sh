@@ -45,6 +45,7 @@ done
 # Set ROS environment variables and set up network files
 ####################################################################
 echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.bashrc
+echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.xsessionrc
 
 # Append ROS_IP to bashrc depending on which computer you are
 if [ "$IS_BASE" == "y" ];
