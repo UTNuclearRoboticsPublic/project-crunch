@@ -1,8 +1,7 @@
 # Project Crunch
 
----
-
 ## Introduction
+TODO give better project overview
 The goal of this project is to build a long distance virtual reality (VR) streaming system for the University of Texas at Austin [Nuclear Robotics Group](https://robotics.me.utexas.edu/) (UT NRG.)
 
 This software allows operators to control a robot which inspects radioactive nuclear facilities. It takes 360° video data, processes and formats it for compatibility with the HTC Vive headset, and transmits the VR stream to the headset. A remote computer is needed onboard the robot to process and transmit the camera stream.
@@ -14,116 +13,91 @@ This repository was initially designed and created by an ECE Senior Design team 
 ---
 
 ## Table of Contents
-### [Download and Install](#Downloading-and-Installation) 
-   * [System Requirements](#System-Requirements) 
-   * [Download Compiled Executable](#Download-Compiled-Executable) 
-   * [Download Source](#Download-Source) 
-       * [Set Up Environment](#Set-Up-Environment) 
-       * [Download Latest Version (source)](#Download-Latest-Version-(source))       
-       * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
-   * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
-   * [Configuring SSH Keys](#Configuring-SSH-Keys) 
+1) [Download and Install](#Downloading-and-Installation) 
+    * [System Requirements](#System-Requirements) 
+    * [Download Compiled Executable](#Download-Compiled-Executable) 
+    * [Download Source](#Download-Source) 
+        * [Set Up Environment](#Set-Up-Environment) 
+        * [Download Latest Version (source)](#Download-Latest-Version-(source))       
+        * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
+    * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
+    * [Configuring SSH Keys](#Configuring-SSH-Keys) 
 
-### [Launch Project Crunch](#Launching-Project-Crunch) 
-   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
-   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
-   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
+2) [Launch Project Crunch](#Launching-Project-Crunch) 
+    * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
+    * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
+    * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
 
-### [Frequently Asked Questions](#FAQ)
+3) [Frequently Asked Questions](#FAQ)
 
-### [Modify and Maintain the Project](#Modifying-and-Maintaining-the-Project) 
-   * [Navigating the Repository](#Navigating-the-Repository) 
-   * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)   
-   * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release) 
-   * [Creating a New Release](#Creating-a-New-Release)   
-   * [Release.sh Usage](#Release.sh-Usage) 
+4) [Modify and Maintain the Project](#Modifying-and-Maintaining-the-Project) 
+    * [Navigating the Repository](#Navigating-the-Repository) 
+    * [Setting Up a Virtual Environment](#Setting-Up-a-Virtual-Environment)   
+    * [Pointing the App to a Repository Instead of a Release](#Pointing-the-App-to-a-Repository-Instead-of-a-Release) 
+    * [Creating a New Release](#Creating-a-New-Release)   
+    * [Release.sh Usage](#Release.sh-Usage) 
     
 ---
 
 ## Downloading and Installation
-   * [System Requirements](#System-Requirements) 
-   * [Download Compiled Executable](#Download-Compiled-Executable) 
-   * [Download Source](#Download-Source) 
-       * [Set Up Environment](#Set-Up-Environment) 
-       * [Download Latest Version (source)](#Download-Latest-Version-(source))       
-       * [Download Earlier Release (source)](#Download-Earlier-Release-(source))       
-       * [Build and Run Installer from Source](#Build-and-Run-Installer-from-Source)        
-   * [Navigating the Installer GUI](#Navigating-the-Installer-GUI) 
-   * [Configuring SSH Keys](#Configuring-SSH-Keys) 
+The two installation methods are: [Compiled Executable](#Download-Compiled-Executable) or [Compile from Source](#Download-Source). TODO mention why you would download one vs the other
 
 ### System Requirements:
-Ubuntu 16.04
+Ubuntu 16.04 on both the base and remote computers. All other software dependancies are installed by our installer. TODO should we list what we install?
 
 ### Download Compiled Executable
-   Navigate to [https://github.com/UTNuclearRoboticsPublic/project-crunch/releases](https://github.com/UTNuclearRoboticsPublic/project-crunch/releases).
-   Download the `.tar.gz` and extract the contents. Open the folder and click on the Install.run icon. 
-    
--> Link to Navigating-the-Installer-GUI
+
+1) Got to [Releases](https://github.com/UTNuclearRoboticsPublic/project-crunch/releases).
+2) Download the `project-crunch-<version>.tar.gz` under assets 
+3) Extract the contents and click on the Install.run icon. 
+4) Follow the [GUI installer](#navigating-the-installer-gui) 
 
 ### Download Source
 
-#### Set Up Environment
-
-   Download and install venv, FBS,  and other required packages
-   Set up venv [->Link to venv section below]
-   Then install fbs [-> Link to fbs installation page]
-   
-    
-#### Download Latest Version (source)
-    You can download the latest version by cloning directly from master.
-   > 'git clone https://github.com/UTNuclearRoboticsPublic/project-crunch.git' 
-   
-#### Build and Run Installer from Source
-    From the terminal, navigate into the Installer directory of project-crunch and enter:
-    
-   > 'cd project-crunch*/installer'
-   
-    Build and run the installer 
-    
-   > 'fbs run'
-
--> Link to Navigating-the-Installer-GUI
-   
+1) Set up a virtual environment, see [how to](#Setting-Up-a-Virtual-environment)
+2) Install requirements with ```pip install -r requirements.txt```
+3) Download Latest Version with ```git clone https://github.com/UTNuclearRoboticsPublic/project-crunch.git```
+4) Go to the project directory and run ```fbs run```
+5) Follow the [GUI installer](#navigating-the-installer-gui)
 
 ### Navigating the Installer GUI
 
-  * Select /'Install Project Crunch/'
-  * Enter the system administrator password
-  * Specify whether you are installing on the robot computer, or the base station computer
-  * Select the directory where you would like to install project-crunch
-  * Click OK when you are given a warning about catkin workspaces
-  * If you aren't sure about IP configs, select 'NO' when asked about custom IP configs
+TODO double check the steps are the same
+
+1) Select /'Install Project Crunch/'
+2) Enter the system administrator password
+3) Specify whether you are installing on the robot computer, or the base station computer
+4) Select the directory where you would like to install project-crunch
+5) Click OK when you are given a warning about catkin workspaces
+6) If you aren't sure about IP configs, select 'NO' when asked about custom IP configs
     
 ### Configuring SSH keys
+
+TODO explain what this does
     
-    Launch Installer GUI
-    Select Configure SSH keys
-    If the RPS and LPS both have existing SSH configurations, enter them.
-    If you aren't sure about custom SSH configurations, a default configuration will be created for you. 
+1) Launch Installer GUI
+2) Select Configure SSH keys
+3) If the RPS and LPS both have existing SSH configurations, enter them.
+4) If you aren't sure about custom SSH configurations, a default configuration will be created for you. 
  
+--- 
+
 ## Launching Project Crunch
-   * [Launching Project Crunch from Executable](#Launching-Project-Crunch-from-Executable)   
-   * [Launching Project Crunch from Source](#Launching-Project-Crunch-from-Source)    
-   * [Navigating Project Crunch GUI](#Navigating-Project-Crunch-GUI) 
 
-   ### Launching Project Crunch from Executable
-   TODO figure out where the launch executable is after installing from executable.
-       
-   ### Launching Project Crunch from Source
-   From the terminal, navigate into the project-crunch directory and enter:
-    
-   ```
-   cd app
-   fbs run
-   ``` 
+### Launching from Release
+TODO figure out where the launch executable is after installing from executable.
    
-   ### Navigating Project Crunch GUI
-       Once the project-crunch GUI launches, follow the step-by step instructions
-       -> Confirm the cameras and headsets are plugged in
-       -> Select how many headsets will be used
-       -> TODO: Cannot proceed further until I actually build and connect the LPS and RPS
+### Launching from Source
+1) Navigate to project crunch directory and run ```fbs run``` 
+2) Follow the [GUI prompts](#navigating-the-launcher-gui)
 
+### Navigating the Launcher GUI
+   Once the project-crunch GUI launches, follow the step-by step instructions
+   -> Confirm the cameras and headsets are plugged in
+   -> Select how many headsets will be used
+   -> TODO: Cannot proceed further until I actually build and connect the LPS and RPS
 
+---
 
 ## FAQ
 
@@ -133,7 +107,12 @@ Ubuntu 16.04
 
 > When I install Nvidia drivers, the headset no longer works.
 
-* If you are on a laptop, the built in display affects the device numbers in an unknown way. This prevents our configuration for allowing HMDs on the GPU from working properly. For now we do not use Nvidia drivers on laptops as nouveau seems to be enough to run the program. 
+* If you are on a laptop, the Nvidia drivers have unknown issues with recognizing HMD devices as monitors. This is due (we think) to the built in desplay and its interaction with the graphics card. The configuration file we add that allows HMDs to be recognized on a given device does not seem to work when a built in display is being used. You can use the nouveau drivers with a single headset but this driver does not work for 2 headsets.
+
+TODO create new sections for:
+* TODO networking ports and firewall access how-to information
+* TODO talk about choosing cameras for future use.
+* TODO surround view information
 
 ---
 
@@ -144,56 +123,41 @@ Ubuntu 16.04
    * [Creating a New Release](#Creating-a-New-Release)   
    * [Release.sh Usage](#Release.sh-Usage) 
 
----
-
 ### Navigating the Repository
 
 The installer lives under `installer/` and the main app lives under `app/`.
 
 There is a minimal example with a working call to a bash script in `examples/src/`. Run it with `fbs run`.
 
----
-
 ### Setting Up a Virtual Environment
 
-<p>
-It is recommended to set up a virtual environment to contain the required python dependencies. (There are several ways to do this, the author's favorite is below)
+It is recommended to set up a virtual environment to contain the required python dependencies. Our prefered method is found below. 
 Further reading on virtual environments in python can be found <a href="https://docs.python-guide.org/dev/virtualenvs/">here</a>, <a href="">here</a>, <a href="https://python-guide-cn.readthedocs.io/en/latest/dev/virtualenvs.html">here</a> and <a href="https://docs.python.org/3/tutorial/venv.html">here</a>.
-</p>
 
 From the top level of the repository (but inside of it), run:
-
 ```bash
-virtualenv -p python3 .env
+$ virtualenv -p python3 .env
 ```
 
-This sets up an entire python installation as an environment under the name `.env` which is not descriptive, but keeps you from having to remember how to activate all my different environments.
-
-<p>
-Next activate the environment, and install all the python dependencies via the requirements file. When the environment is active it will display to the left of the prompt, as shown below (where the $ symbol indicates your prompt.)
-</p>
+This sets up an entire python installation as an environment under the name `.env` which is not descriptive, but keeps you from having to remember how to activate all my different environments. 
+Next activate the environment, and install all the python dependencies via the requirements file. 
+When the environment is active it will display to the left of the prompt, as shown below (where the $ symbol indicates your prompt.)
 
 ```bash
 $ source .env/bin/activate
 (.env) $ pip install -r requirements
 ```
 
-<p>
 When finished with the repository or environment, you can deactivate it with the simple command deactivate.
-</p>
 
 ```bash
 (.env) $ deactivate
 $ 
 ```
 
----
-
 ### Pointing the App to a Repository Instead of a Release
 
 If you wish to run the main app from the command line, you must first modify `app/src/main/python/main.py`. Go to the `get_env_vars()` function and find the code that assigns a path to `self.robot_launch` and `self.kill_launch`. There are alternate definitions for these variables commented out, they must be uncommented.
-
----
 
 ### Creating a New Release
 
