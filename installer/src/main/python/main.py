@@ -173,6 +173,24 @@ class AppContext(ApplicationContext):
                     "Please try again.")
         self.on_install_push()
 
+    def input_invalid(self):
+        """
+        This function tells the user that they gave the program invalid input asks
+        them to try again. It returns and the calling function must return the user 
+        to the screen they were already at.
+        """
+        msg = QMessageBox()
+        msg.setInformativeText(
+                    "You entered an invalid entry.\n" +
+                    "Please try again."
+        )
+        msg.setWindowTitle("Invalid Input")
+        msg.setStandardButtons(QMessageBox.Ok)
+        retval = msg.exec_()
+
+        if retval == QMessageBox.Ok:
+            return
+
     def select_comp(self):
         """
         Prompt user for whether they are on robot or base computer.
@@ -193,6 +211,9 @@ class AppContext(ApplicationContext):
                 self.current_computer_is_robot = True
             elif str(item).lower() == "no":
                 self.current_computer_is_robot = False
+            else:
+                self.input_invalid()
+                self.select_comp()
             self.install_directory()
         else:
             self.first_page()
@@ -332,13 +353,16 @@ class AppContext(ApplicationContext):
                      QWidget(),
                      'Configuring IPs',
                      'Use default IP configurations?',
-                     ['No', 'Yes'],
+                     ['Yes', 'No'],
         )
         if ok:
             if str(item).lower() == "no":
                 self.get_custom_ip_settings()
             elif str(item).lower() == "yes":
                 self.exec_install()
+            else:
+                self.invalid_input()
+                self.configure_ip()
         else:
             self.first_page()
         return layout
