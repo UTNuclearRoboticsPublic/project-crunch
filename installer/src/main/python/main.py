@@ -544,7 +544,6 @@ class AppContext(ApplicationContext):
         Lets the user know that they are finished with the install.
 
         """
-        print(self.install_dir)
         reply = QMessageBox.question(QWidget(),
                      'Install Complete!',
                      'You have completed the install process! ' +
