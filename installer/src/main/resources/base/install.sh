@@ -99,6 +99,7 @@ then
     sudo rosdep init
     rosdep update
     echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+    echo "source /opt/ros/kinetic/setup.bash" >> ~/.xsessionrc
     # shellcheck disable=SC1090
     source ~/.bashrc
     echo "[INFO: $MYFILENAME $LINENO] Installed ros-kinetic-desktop-full."
@@ -167,10 +168,6 @@ fi
 #####################################################################
 # Vive and OpenHMD configuration
 #####################################################################
-# IMPORTANT: NVIDIA drivers are no longer a requirement of the project. The code is 
-# left here to facilitate any future requirements that may need NVIDIA
-# drivers. 
-
 # NVIDIA drivers
 # Add apt-repo updates list of available drivers (which requires the user to hit enter)
 # Checks for recommended drivers and installs them
@@ -227,10 +224,6 @@ LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 sed -i "${LINETOEDIT}s|.*|FileSystem=${CATKIN}/src/rviz_openhmd/src/resources/|" "$FILETOEDIT"
 LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
-
-# Run catkin_make to build ROS packages in catkin workspace
-cd "$CATKIN"
-catkin_make
 
 # Change permissions on USB ports to all users.
 # There is a potential security vulnerability opened by changing these permissions.
