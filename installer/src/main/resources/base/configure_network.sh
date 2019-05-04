@@ -51,9 +51,11 @@ echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.xsessionrc
 if [ "$IS_BASE" == "y" ];
 then
     echo "export ROS_IP=$BASE_IP" >> ~/.bashrc
+    echo "export ROS_IP=$BASE_IP" >> ~/.xsessionrc
 elif [ "$IS_BASE" == "n" ];
 then
     echo "export ROS_IP=$ROBOT_IP" >> ~/.bashrc
+    echo "export ROS_IP=$ROBOT_IP" >> ~/.xsessionrc
 else
     echo "Unknown runtime error."
     exit 1
