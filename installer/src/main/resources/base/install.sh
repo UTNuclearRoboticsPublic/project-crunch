@@ -173,13 +173,26 @@ fi
 # Checks for recommended drivers and installs them
 echo | sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt update
-DRIVER=$(sudo ubuntu-drivers devices | grep "recommended" | awk '{print $3}')
-if dpkg -s "$DRIVER" &> /dev/null
+
+# The following code searches for the recommended NVIDIA graphics driver and installs it.
+# Use either this code block or nvidia-396 specified in the code block below this one.
+#DRIVER=$(sudo ubuntu-drivers devices | grep "recommended" | awk '{print $3}')
+#if dpkg -s "$DRIVER" &> /dev/null
+#then
+#    echo "[INFO: $MYFILENAME $LINENO] The recommended graphics drivers ($DRIVER) are already installed." 
+#else
+#    sudo apt-get -y install "$DRIVER" &&
+#    echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
+#fi
+
+# The following installs nvidia-396 driver. If recommended driver is preferred over
+# nvidia-396, comment out this code block and uncomment the code block above this one.
+if dpkg -s nvidia-396 &> /dev/null
 then
-    echo "[INFO: $MYFILENAME $LINENO] The recommended graphics drivers ($DRIVER) are already installed." 
+    echo "[INFO: $MYFILENAME $LINENO] nvidia-396 graphics driver is already installed." 
 else
-    sudo apt-get -y install "$DRIVER" &&
-    echo "[INFO: $MYFILENAME $LINENO] $DRIVER installed."
+    sudo apt-get -y install nvidia-396
+    echo "[INFO: $MYFILENAME $LINENO] nvidia-396 installed."
 fi
 
 # Copy over rules files for using a HMD in Linux.
