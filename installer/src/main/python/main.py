@@ -49,7 +49,7 @@ class AppContext(ApplicationContext):
         self.ip_configs = {
             "robot_ip": "10.0.0.2",
             "base_ip": "10.0.0.1",
-            "robot_hostname": "robot",
+            "robot_hostname": "remote",
             "base_hostname": "base"
         }
         self.use_default_net_config = True
