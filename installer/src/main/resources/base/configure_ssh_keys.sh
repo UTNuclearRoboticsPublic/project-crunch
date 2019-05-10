@@ -99,7 +99,7 @@ fi
 #	we search through the remote's /.bashrc file for the 'export' command
 #	associated with the environment variable of interest. We copy the
 #	complete export command into our very own /bashrc file.
-ROBOT_CATKIN=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
+ROBOT_CATKIN_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
 ROBOT_PROJECT_CRUNCH_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_PATH')
 
 echo "$ROBOT_CATKIN_PATH" >> ~/.bashrc
