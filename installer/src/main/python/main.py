@@ -611,18 +611,6 @@ class AppContext(ApplicationContext):
 
         if retval == QMessageBox.Ok:
            self.LAN_part_1()
-           #TODO
-           #Make windows with the following steps:
-           # 1. Connect w/ crossover ethernet cable
-           # 2. Open connections menu --> edit connections
-           # 3. Add
-           # 4. Choose connection type (ethernet)
-           # 5. Select Ethernet tab and choose ethernet card
-           # 6. IPV4 settings tab: 'method' = Manual; Add IP addresses.
-           # 7. Ensure process done on both machines
-           # 8. Perform Ping Test
-           # 9. Succesful network setup!
-           # 10. SSH config
         else:
            self.first_page()
 
@@ -737,7 +725,7 @@ class AppContext(ApplicationContext):
         #msg.setText("Connections Menu")
         msg.setInformativeText("Under the 'IPv4 Settings' tab:\n\n" +
                 "Under 'Addresses' click 'Add' to enter the desired IP " +
-                "address. Network mask can be 255.255.255.0")
+                "address. The default for the base station is 10.0.0.1 and the default for the remote computer is 10.0.0.2. Network mask can be 255.255.255.0")
         msg.setWindowTitle("Step 6) Input IP Addresses")
         msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         msg.setFixedHeight(131)

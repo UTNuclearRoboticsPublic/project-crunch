@@ -88,21 +88,21 @@ class GUIWindow(QMainWindow):
         else:
             # Use this section for running the launcher via
             # the zip or tar release, ie normal use.
-            #self.robot_launch = os.path.join(
-            #        self.robot_project_crunch_path,
-            #        "Project-Crunch", "Project-Crunch",
-            #        "target", "Project-Crunch",
-            #        "robot_launch.sh"
-            #)
+            self.robot_launch = os.path.join(
+                    self.robot_project_crunch_path,
+                    "Project-Crunch", "Project-Crunch",
+                    "target", "Project-Crunch",
+                    "robot_launch.sh"
+            )
             # Use this section for running the launcher
             # in "debug" mode via fbs run, where the installation 
             # being considered is actually the repository.
-            self.robot_launch = os.path.join(
-                    self.robot_project_crunch_path, 
-                    "app", "src", 
-                    "main", "resources", "base",
-                    "robot_launch.sh"
-            )
+            #self.robot_launch = os.path.join(
+            #        self.robot_project_crunch_path, 
+            #        "app", "src", 
+            #        "main", "resources", "base",
+            #        "robot_launch.sh"
+            #)
             
             return None
     
