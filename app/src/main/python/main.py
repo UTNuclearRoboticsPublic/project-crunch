@@ -90,7 +90,7 @@ class GUIWindow(QMainWindow):
             # the zip or tar release, ie normal use.
             self.robot_launch = os.path.join(
                     self.robot_project_crunch_path,
-                    "Project-Crunch",
+                    "Project-Crunch", "Project-Crunch",
                     "target", "Project-Crunch",
                     "robot_launch.sh"
             )
