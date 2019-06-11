@@ -218,16 +218,6 @@ then
     exit 1
 fi
 
-# Point plugin source file to location of "resources" file.
-# The plugin has a hard coded absolute path to point to the resources configuration file.
-# Changing this is requried so the plugin will find the resources directory
-LINETOEDIT=73
-FILETOEDIT="$CATKIN"/"$SRC"/"$OPENHMD_PLUGIN_DEST"/"$SRC"/openhmd_display.cpp
-LINEBEFORE=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
-sed -i "${LINETOEDIT}s|.*|    mResourcesCfg = \"${CATKIN}/src/rviz_openhmd/src/resources.cfg\";|" "$FILETOEDIT"
-LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
-echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
-
 # Point resource file to openHMD resources directory.
 # This config file points to the location of the compositor resources used in the plugin.
 # It uses a hard coded absolute path to find the directory, so this needs to be set for each computer.
