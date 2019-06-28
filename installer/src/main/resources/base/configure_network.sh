@@ -44,18 +44,15 @@ done
 ####################################################################
 # Set ROS environment variables and set up network files
 ####################################################################
-echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.bashrc
-echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.xsessionrc
+echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.setuppc.sh
 
 # Append ROS_IP to bashrc depending on which computer you are
 if [ "$IS_BASE" == "y" ];
 then
-    echo "export ROS_IP=$BASE_IP" >> ~/.bashrc
-    echo "export ROS_IP=$BASE_IP" >> ~/.xsessionrc
+    echo "export ROS_IP=$BASE_IP" >> ~/.setuppc.sh
 elif [ "$IS_BASE" == "n" ];
 then
-    echo "export ROS_IP=$ROBOT_IP" >> ~/.bashrc
-    echo "export ROS_IP=$ROBOT_IP" >> ~/.xsessionrc
+    echo "export ROS_IP=$ROBOT_IP" >> ~/.setuppc.sh
 else
     echo "Unknown runtime error."
     exit 1
