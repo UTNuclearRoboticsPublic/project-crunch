@@ -110,19 +110,13 @@ CAMS=$(find_cam_dev_name);
 echo "[INFO: $MYFILENAME $LINENO] Cameras found at $CAMS"
 CAM_ARR=($CAMS)
 
-# Get the video number of each camera
-i=$((${#CAM_ARR[0]}-1))
-CAM1=${CAM_ARR:$i:1}
-i=$((${#CAM_ARR[1]}-1))
-CAM2=${CAM_ARR[1]:$i:1}
-
 if [[ ${#CAM_ARR[@]} == 1 ]];
 then
-    roslaunch --wait video_stream_opencv $SINGLE_CAM_LAUNCH video_stream_provider1:="$CAM1" width:="1440" height:="1440" &
+    roslaunch --wait video_stream_opencv $SINGLE_CAM_LAUNCH video_stream_provider1:="${CAM_ARR[0]}" width:="1440" height:="1440" &
     echo "[INFO: $MYFILENAME $LINENO] One camera launched from ${CAM_ARR[0]}"
 elif [[ ${#CAM_ARR[@]} == 2 ]];
 then
-    roslaunch --wait video_stream_opencv $DUAL_CAM_LAUNCH video_stream_provider1:="$CAM1" video_stream_provider2:="$CAM2" width:="1440" height:="1440" &
+    roslaunch --wait video_stream_opencv $DUAL_CAM_LAUNCH video_stream_provider1:="${CAM_ARR[0]}" video_stream_provider2:="${CAM_ARR[1]}" width:="1440" height:="1440" &
     echo "[INFO: $MYFILENAME $LINENO] Two cameras launched from ${CAM_ARR[0]} and ${CAM_ARR[1]}"
 else
     echo "[INFO: $MYFILENAME $LINENO] No cameras launched. Devices found at: $CAMS"
