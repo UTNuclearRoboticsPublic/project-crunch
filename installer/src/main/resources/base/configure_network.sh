@@ -44,15 +44,15 @@ done
 ####################################################################
 # Set ROS environment variables and set up network files
 ####################################################################
-echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.setuppc.sh
+echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.setup_crunch.sh
 
 # Append ROS_IP to bashrc depending on which computer you are
 if [ "$IS_BASE" == "y" ];
 then
-    echo "export ROS_IP=$BASE_IP" >> ~/.setuppc.sh
+    echo "export ROS_IP=$BASE_IP" >> ~/.setup_crunch.sh
 elif [ "$IS_BASE" == "n" ];
 then
-    echo "export ROS_IP=$ROBOT_IP" >> ~/.setuppc.sh
+    echo "export ROS_IP=$ROBOT_IP" >> ~/.setup_crunch.sh
 else
     echo "Unknown runtime error."
     exit 1
