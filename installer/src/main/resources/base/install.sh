@@ -229,8 +229,8 @@ LINEAFTER=$(head -"$LINETOEDIT" "$FILETOEDIT" | tail -1)
 echo "[INFO: $MYFILENAME $LINENO] $FILETOEDIT Line $LINETOEDIT changed from $LINEBEFORE to $LINEAFTER"
 
 #Adds a ubuntu command to run crunch using a bash alias
-echo "alias setupcrunch='source ~/.setup_crunch.sh'" >> ~/.bash_aliases
-echo "alias 'crunch && cd ~/Project-Crunch/Project-Crunch && ./Project-Crunch.run'" >> ~/.bash_aliases
+echo "alias setup_crunch='source ~/.setup_crunch.sh'" >> ~/.bash_aliases
+echo "alias crunch='setup_crunch && cd ~/Project-Crunch/Project-Crunch && ./Project-Crunch.run'" >> ~/.bash_aliases
 
 # Run catkin_make to build ROS packages in catkin workspace
 cd "$CATKIN"
