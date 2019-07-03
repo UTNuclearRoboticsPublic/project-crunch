@@ -46,7 +46,7 @@ done
 ####################################################################
 echo "export ROS_MASTER_URI=http://$ROBOT_IP:11311" >> ~/.setup_crunch.sh
 
-# Append ROS_IP to bashrc depending on which computer you are
+# Append ROS_IP to setup_crunch.sh depending on which computer you are
 if [ "$IS_BASE" == "y" ];
 then
     echo "export ROS_IP=$BASE_IP" >> ~/.setup_crunch.sh
