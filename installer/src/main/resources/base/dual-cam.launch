@@ -26,7 +26,7 @@
     <arg name="width" default="0"/>
     <arg name="height" default="0"/>
     <!-- if show a image_view window subscribed to the generated stream -->
-    <arg name="visualize" default="true"/>
+    <arg name="visualize" default="false"/>
 
    
     <!-- images will be published at /camera_name/image with the image transports plugins (e.g.: compressed) installed -->
