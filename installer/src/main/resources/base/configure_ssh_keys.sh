@@ -51,11 +51,9 @@ done
 #ping $ROBOT_HOSTNAME -c 4
 # TODO grab output and use to provide feedback
 
-# First export robot username and hostname to bashrc
-echo "export ROBOT_HOSTNAME=${ROBOT_HOSTNAME}" >> ~/.bashrc
-echo "export ROBOT_USERNAME=${ROBOT_USERNAME}" >> ~/.bashrc
-echo "export ROBOT_HOSTNAME=${ROBOT_HOSTNAME}" >> ~/.xsessionrc
-echo "export ROBOT_USERNAME=${ROBOT_USERNAME}" >> ~/.xsessionrc
+# First export robot username and hostname to setup_crunch.sh
+echo "export ROBOT_HOSTNAME=${ROBOT_HOSTNAME}" >> ~/.setup_crunch.sh
+echo "export ROBOT_USERNAME=${ROBOT_USERNAME}" >> ~/.setup_crunch.sh
 
 # If both files are present don't generate keys, use existing.
 if [[ -f ~/.ssh/id_rsa && -f ~/.ssh/id_rsa.pub ]]; 
@@ -91,18 +89,16 @@ fi
 
 # You can delete these keys via ssh-add -D
     
-# Search through remote's .bashrc file for catkin workspace filepath.
+# Search through remote's .setup_crunch.sh file for catkin workspace filepath.
 # Note:
 #	Vanilla ssh login only allows us to see a subset of the remote's
 #	environment variables. Specifically, we can only see variables listed
 #	under the remote's /.ssh/environment file. To bypass this problem,
-#	we search through the remote's /.bashrc file for the 'export' command
+#	we search through the remote's /.setup_crunch.sh file for the 'export' command
 #	associated with the environment variable of interest. We copy the
-#	complete export command into our very own /bashrc file.
-ROBOT_CATKIN_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_CATKIN')
-ROBOT_PROJECT_CRUNCH_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.bashrc | grep ROBOT_PROJECT_CRUNCH_PATH')
+#	complete export command into our very own /setup_crunch.sh file.
+ROBOT_CATKIN_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.setup_crunch.sh | grep ROBOT_CATKIN')
+ROBOT_PROJECT_CRUNCH_PATH=$(ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes $ROBOT_USERNAME@$ROBOT_HOSTNAME 'cat ~/.setup_crunch.sh | grep ROBOT_PROJECT_CRUNCH_PATH')
 
-echo "$ROBOT_CATKIN_PATH" >> ~/.bashrc
-echo "$ROBOT_PROJECT_CRUNCH_PATH" >> ~/.bashrc
-echo "$ROBOT_CATKIN_PATH" >> ~/.xsessionrc
-echo "$ROBOT_PROJECT_CRUNCH_PATH" >> ~/.xsessionrc
+echo "$ROBOT_CATKIN_PATH" >> ~/.setup_crunch.sh
+echo "$ROBOT_PROJECT_CRUNCH_PATH" >> ~/.setup_crunch.sh
