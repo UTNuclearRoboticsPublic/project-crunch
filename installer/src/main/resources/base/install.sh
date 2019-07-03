@@ -99,7 +99,6 @@ then
     sudo rosdep init
     rosdep update
     echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
-    echo "source /opt/ros/kinetic/setup.bash" >> ~/.xsessionrc
     # shellcheck disable=SC1090
     source ~/.bashrc
     echo "[INFO: $MYFILENAME $LINENO] Installed ros-kinetic-desktop-full."
