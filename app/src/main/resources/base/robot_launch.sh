@@ -89,7 +89,10 @@ function find_cam_dev_name {
 				then
 					if [[ "$ID_SERIAL" == *"KODAK"* ]]
 						then
-							echo "/dev/$devname"
+							if [[ "$DEVLINKS" == *"index0"* ]]
+								then
+									echo "/dev/$devname"
+							fi
 					fi
 			fi
 		)
@@ -112,11 +115,11 @@ CAM_ARR=($CAMS)
 
 if [[ ${#CAM_ARR[@]} == 1 ]];
 then
-    roslaunch --wait video_stream_opencv $SINGLE_CAM_LAUNCH video_stream_provider1:="${CAM_ARR[0]}" width:="1440" height:="1440" &
+    eval "source ~/.setup_crunch.sh" && roslaunch --wait video_stream_opencv $SINGLE_CAM_LAUNCH video_stream_provider1:="${CAM_ARR[0]}" width:="1440" height:="1440" &
     echo "[INFO: $MYFILENAME $LINENO] One camera launched from ${CAM_ARR[0]}"
 elif [[ ${#CAM_ARR[@]} == 2 ]];
 then
-    roslaunch --wait video_stream_opencv $DUAL_CAM_LAUNCH video_stream_provider1:="${CAM_ARR[0]}" video_stream_provider2:="${CAM_ARR[1]}" width:="1440" height:="1440" &
+    eval "source ~/.setup_crunch.sh" && roslaunch --wait video_stream_opencv $DUAL_CAM_LAUNCH video_stream_provider1:="${CAM_ARR[0]}" video_stream_provider2:="${CAM_ARR[1]}" width:="1440" height:="1440" &
     echo "[INFO: $MYFILENAME $LINENO] Two cameras launched from ${CAM_ARR[0]} and ${CAM_ARR[1]}"
 else
     echo "[INFO: $MYFILENAME $LINENO] No cameras launched. Devices found at: $CAMS"
