@@ -83,27 +83,27 @@ echo "$PASSWORD" | sudo -S apt-get update && sudo apt-get -y install\
                         v4l-utils=1.10.0-1 2>&1
 
 #####################################################################
-# Install ros-kinetic
+# Install ros-melodic
 #####################################################################
 sudo apt-get update
 
-if ! dpkg -s ros-kinetic-desktop-full > /dev/null
+if ! dpkg -s ros-melodic-desktop-full > /dev/null
 then
     # Replaced $(lsb_release -sc) with xenial 
     # shellcheck disable=SC2016
-    sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros-latest.list'
+    sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
     sudo apt-key adv \
-        --keyserver hkp://ha.pool.sks-keyservers.net:80 \
-        --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
-    sudo apt-get update && sudo apt-get -y install ros-kinetic-desktop-full
+        --keyserver 'hkp://keyserver.ubuntu.com:80' \
+        --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+    sudo apt-get update && sudo apt-get -y install ros-melodic-desktop-full
     sudo rosdep init
     rosdep update
-    echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+    echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
     # shellcheck disable=SC1090
     source ~/.bashrc
-    echo "[INFO: $MYFILENAME $LINENO] Installed ros-kinetic-desktop-full."
+    echo "[INFO: $MYFILENAME $LINENO] Installed ros-melodic-desktop-full."
 fi
-    echo "[INFO: $MYFILENAME $LINENO] ros-kinetic-desktop-full already installed."
+    echo "[INFO: $MYFILENAME $LINENO] ros-melodic-desktop-full already installed."
 
 #####################################################################
 # Install OpenCV Video streaming package
