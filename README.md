@@ -27,38 +27,59 @@ The provided installer must be run separately on the remote computer and the loc
  
 ### System Requirements:
 
-Ubuntu 16.04 is required on both computers. Other Ubuntu versions may work, but have not been tested. If you find that one works, please let us know! 
+Ubuntu 18.04 is required on both computers.
 
-The installer will also install ROS Kinetic Desktop. 
+The installer will also install ROS Melodic Desktop. 
 
 Various other libraries are installed, to see all of them please check [this bash script](https://github.com/UTNuclearRoboticsPublic/project-crunch/blob/master/installer/src/main/resources/base/install.sh).
 
-### Downloading
+### Downloading from Release
 
-1) Go to [Releases](https://github.com/UTNuclearRoboticsPublic/project-crunch/releases).
-2) Download the `project-crunch-<version>.tar.gz` under assets.
-3) Extract the contents of the archive.
+1) Go to [Releases](https://github.com/UTNuclearRoboticsPublic/project-crunch/releases)
+2) Download the `project-crunch-<version>.tar.gz` under assets
+3) Extract the contents of the archive
+4) Go to ```Project-Crunch``` and execute Install.run (Double click in finder, or ./Install.run from terminal)
 
-### Installing
-1) Click on the `Install.run` icon. 
-2) Choose the Install Project Crunch option.
-2) Follow the on-screen prompts.
-3) Restart the computer.
-4) Repeat steps 1-4 on the other computer. 
-5) Repeat step 1 on the local computer.
-6) Choose SSH Key Configuration.
-7) Follow the on-screen prompts.
+### Download from Source
+
+1) Set up a virtual environment, see [how to](#Setting-Up-a-Virtual-environment)
+2) Download Latest Version with ```git clone https://github.com/UTNuclearRoboticsPublic/project-crunch.git```
+3) Install requirements by first using cd to navigate to ```project-crunch``` then using  ```pip install -r requirements.txt```
+4) Go to the ```installer``` directory and run ```fbs run```
+5) Follow the [GUI installer](#navigating-the-installer-gui)
+
+### Navigating the gui installer
+1) Choose the Install Project Crunch option
+2) Follow the on-screen prompts
+3) Repeat steps 1-4 on the other computer
+4) Choose SSH Key Configuration
+5) Follow the on-screen prompts
 
 --- 
 
-## Launching Project Crunch
+## Setting-up Project Crunch
+1) Connect the computers via ethernet
+2) Plug the headset(s) into the local (base) computer
+3) Connect the cameras to the remote computer and turn them on
 
-1) Connect the computers via ethernet.
-2) Plug the headset(s) into the local (base) computer.
-3) Connect the cameras to the remote computer.
+## Running Project Crunch from Release from finder
 4) On the local (base) computer, navigate to the directory where you installed Project Crunch. 
 5) Open the `Project-Crunch` directory, and click `Project-Crunch.run`.
 6) Follow the on-screen prompts.
+
+## Running Project Crunch from Release from terminal
+4) Run ```crunch``` in terminal
+5) Follow the on-screen prompts
+
+## Running Project Crunch from Source
+4) On the local (base) computer, navigate to the directory where you installed project Crunch.
+5) Run ```cd app/src/main/python```
+6) Open main.py in the text editor of choice
+7) Navigate to the comment on running from debug, comment the section above and uncomment it (As per the instructions there)
+8) Run ```cd ../../../..```
+9) Run ```setup_crunch```
+10) run ```fbs run```
+11) Follow the on-screen prompts
    
 ---
 
@@ -71,14 +92,6 @@ TODO add explanation here
 The installer lives under `installer/` and the main app lives under `app/`.
 
 There is a minimal example with a working call to a bash script in `examples/src/`. Run it with `fbs run`.
-
-### Download Source
-
-1) Set up a virtual environment, see [how to](#Setting-Up-a-Virtual-environment)
-2) Install requirements with ```pip install -r requirements.txt```
-3) Download Latest Version with ```git clone https://github.com/UTNuclearRoboticsPublic/project-crunch.git```
-4) Go to the project directory and run ```fbs run```
-5) Follow the [GUI installer](#navigating-the-installer-gui)
 
 ### Setting Up a Virtual Environment
 
