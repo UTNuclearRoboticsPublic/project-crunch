@@ -410,8 +410,7 @@ class AppContext(ApplicationContext):
         
         This executes the core functionality of the install process. In a
         nutshell, the steps are as follows:
-
-          1. Export necessary environment variables to bashrc that are 
+          1. Export necessary environment variables to setup_crunch.sh that are 
              needed for the main app.
           2. Run a bash script to set up a catkin workspace, install 
              dependencies via apt, and set up all the source code for the 
@@ -419,7 +418,6 @@ class AppContext(ApplicationContext):
           3. Copy over any necessary configuration and launch files into
              the catkin workspace.
           4. Run a bash script to set up the network configurations.
-
         """
         
         # Tell the user not to worry about the program appearing to crash.
@@ -436,29 +434,21 @@ class AppContext(ApplicationContext):
 
         # Export environment variables no matter what machine we are on (robot
         # or base.) We collect the envs from the opposite machine when the
-        # user runs ssh config. Envs are written to the bashrc for shell scripts,
-        # and xsessionrc for GNOME/Unity (X11 sessions). Ideally they
+        # user runs ssh config. Envs are written to setup_crunch.sh. Ideally they
         # are pruned at some point, but for now they just add new ones. This 
-        # is OK because the new var is written to the end of the bashrc and
-        # xsessionrc so the definition overwrites any previous one.
+        # is OK because the new var is written to the end of the file
+	# so the definition overwrites any previous one.
         # We need to check the current computer because the catkin workspace
         # could be different.
-        path_to_bashrc = os.path.join(os.path.expanduser('~'), '.bashrc')
-        path_to_xsessionrc = os.path.join(os.path.expanduser('~'), '.xsessionrc')
+        path_to_setup_crunch = os.path.join(os.path.expanduser('~'), '.setup_crunch.sh')
         if self.current_computer_is_robot is True:
-            with open(path_to_bashrc, "a") as f:
-                f.write("export ROBOT_CATKIN_PATH={}\n".format(self.catkin_dir))
-                f.write("export ROBOT_PROJECT_CRUNCH_PATH={}\n"\
-                    .format(self.install_dir)) 
-            with open(path_to_xsessionrc, "a") as f:
+            with open(path_to_setup_crunch, "a") as f:
                 f.write("export ROBOT_CATKIN_PATH={}\n".format(self.catkin_dir))
                 f.write("export ROBOT_PROJECT_CRUNCH_PATH={}\n"\
                     .format(self.install_dir)) 
         else:        
-            with open(path_to_bashrc, "a") as f:
-                f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir)) 
-            with open(path_to_xsessionrc, "a") as f:
-                f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir)) 
+            with open(path_to_setup_crunch, "a") as f:
+		f.write("export BASE_CATKIN_PATH={}\n".format(self.catkin_dir))
 
 
         # Set up catkin workspace and install dependencies.
