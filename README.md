@@ -109,7 +109,7 @@ When the environment is active it will display to the left of the prompt, as sho
 
 ```bash
 $ source .env/bin/activate
-(.env) $ pip install -r requirements
+(.env) $ pip install -r requirements.txt
 ```
 
 When finished with the repository or environment, you can deactivate it with the simple command deactivate.
