@@ -593,9 +593,9 @@ class AppContext(ApplicationContext):
         msg.setInformativeText("To set up SSH keys, first setup a " +
                         "Local Area Network (LAN) " +
                         "between the two machines. Click 'Ok' to follow " +
-                        "our tutorial to set-up the LAN.")
+                        "our tutorial to set-up the LAN and No to skip.")
         msg.setWindowTitle('LAN Walkthrough')
-        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        msg.setStandardButtons(QMessageBox.Ok | QMessageBox.No | QMessageBox.Cancel)
         msg.setFixedHeight(131)
         msg.setFixedWidth(224)
         
@@ -603,6 +603,8 @@ class AppContext(ApplicationContext):
 
         if retval == QMessageBox.Ok:
            self.LAN_part_1()
+        elif retval == QMessageBox.No:
+           self.ssh_config_dialog()
         else:
            self.first_page()
 
